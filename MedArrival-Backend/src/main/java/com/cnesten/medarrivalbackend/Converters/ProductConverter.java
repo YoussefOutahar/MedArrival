@@ -18,7 +18,7 @@ public class ProductConverter {
     private final ProductCategoryConverter categoryConverter;
     private final PriceComponentConverter priceComponentConverter;
 
-    public ProductDTO toDTO(Product product, Client client) {
+    public ProductDTO toDTO(Product product) {
         if (product == null) return null;
 
         ProductDTO dto = new ProductDTO();
@@ -27,36 +27,19 @@ public class ProductConverter {
         dto.setDescription(product.getDescription());
         dto.setCategory(categoryConverter.toDTO(product.getCategory()));
 
-        if (client != null) {
-            List<PriceComponentDTO> effectiveComponents = product.getPriceComponents().stream()
-                    .filter(pc -> pc.getClient() == null ||
-                            (pc.getClient().equals(client)))
+        if (product.getPriceComponents() != null) {
+            dto.setPriceComponents(product.getPriceComponents().stream()
                     .map(priceComponentConverter::toDTO)
-                    .collect(Collectors.toList());
-
-            dto.setPriceComponents(effectiveComponents);
-        } else {
-            if (product.getPriceComponents() != null) {
-                dto.setPriceComponents(product.getPriceComponents().stream()
-                        .map(priceComponentConverter::toDTO)
-                        .collect(Collectors.toList()));
-            }
+                    .collect(Collectors.toList()));
         }
 
-        // Calculate total cost based on client
         dto.setTotalCost(product.calculateTotalCost());
-
         dto.setCreatedAt(product.getCreatedAt());
         dto.setUpdatedAt(product.getUpdatedAt());
         dto.setCreatedBy(product.getCreatedBy());
         dto.setUpdatedBy(product.getUpdatedBy());
 
         return dto;
-    }
-
-    // Default toDTO without client - uses default pricing
-    public ProductDTO toDTO(Product product) {
-        return toDTO(product, null);
     }
 
     public Product toEntity(ProductDTO dto) {

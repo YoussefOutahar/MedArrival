@@ -73,14 +73,18 @@ public class ProductController {
             @PathVariable Long clientId,
             Pageable pageable) {
         Client client = clientService.findById(clientId);
-        return productService.findAll(pageable)
-                .map(product -> productConverter.toDTO(product, client));
+        return productService.findAllWithClientPricing(pageable, client)
+                .map(productConverter::toDTO);
     }
 
-    @GetMapping("/default-pricing")
-    public Page<ProductDTO> getProductsWithDefaultPricing(Pageable pageable) {
-        return productService.findAll(pageable)
-                .map(product -> productConverter.toDTO(product, null));
+    @GetMapping("/client/{clientId}/product/{productId}")
+    public ProductDTO getProductForClient(
+            @PathVariable Long clientId,
+            @PathVariable Long productId) {
+        Client client = clientService.findById(clientId);
+        return productConverter.toDTO(
+                productService.getProductWithClientPricing(productId, client)
+        );
     }
 
     @PostMapping("/{productId}/client/{clientId}/pricing")

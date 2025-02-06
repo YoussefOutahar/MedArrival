@@ -29,6 +29,90 @@ public class ProductService {
     private final ClientService clientService;
     private final PriceComponentRepository priceComponentRepository;
 
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
+
+    public List<Product> findAll() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(this::getProductWithDefaultPricing)
+                .collect(Collectors.toList());
+    }
+
+    public Page<Product> findAll(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(this::getProductWithDefaultPricing);
+    }
+
+    private Product getProductWithDefaultPricing(Product product) {
+        Set<PriceComponent> defaultComponents = product.getPriceComponents().stream()
+                .filter(pc -> pc.getClient() == null && pc.getEffectiveTo() == null)
+                .collect(Collectors.toSet());
+
+        Product filteredProduct = new Product();
+        filteredProduct.setId(product.getId());
+        filteredProduct.setName(product.getName());
+        filteredProduct.setDescription(product.getDescription());
+        filteredProduct.setCategory(product.getCategory());
+        filteredProduct.setPriceComponents(defaultComponents);
+        filteredProduct.setCreatedAt(product.getCreatedAt());
+        filteredProduct.setUpdatedAt(product.getUpdatedAt());
+        filteredProduct.setCreatedBy(product.getCreatedBy());
+        filteredProduct.setUpdatedBy(product.getUpdatedBy());
+
+        return filteredProduct;
+    }
+
+    public Product getProductWithClientPricing(Long productId, Client client) {
+        Product product = findById(productId);
+        return applyClientPricing(product, client);
+    }
+
+    public Page<Product> findAllWithClientPricing(Pageable pageable, Client client) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(product -> applyClientPricing(product, client));
+    }
+
+    private Product applyClientPricing(Product product, Client client) {
+        Set<PriceComponent> relevantComponents;
+
+        if (client != null) {
+            // First try to get client-specific components
+            relevantComponents = product.getPriceComponents().stream()
+                    .filter(pc -> pc.getEffectiveTo() == null &&
+                            pc.getClient() != null &&
+                            pc.getClient().getId().equals(client.getId()))
+                    .collect(Collectors.toSet());
+
+            // If no client-specific components found, get default components
+            if (relevantComponents.isEmpty()) {
+                relevantComponents = product.getPriceComponents().stream()
+                        .filter(pc -> pc.getEffectiveTo() == null && pc.getClient() == null)
+                        .collect(Collectors.toSet());
+            }
+        } else {
+            // For null client, get only default components
+            relevantComponents = product.getPriceComponents().stream()
+                    .filter(pc -> pc.getEffectiveTo() == null && pc.getClient() == null)
+                    .collect(Collectors.toSet());
+        }
+
+        Product filteredProduct = new Product();
+        filteredProduct.setId(product.getId());
+        filteredProduct.setName(product.getName());
+        filteredProduct.setDescription(product.getDescription());
+        filteredProduct.setCategory(product.getCategory());
+        filteredProduct.setPriceComponents(relevantComponents);
+        filteredProduct.setCreatedAt(product.getCreatedAt());
+        filteredProduct.setUpdatedAt(product.getUpdatedAt());
+        filteredProduct.setCreatedBy(product.getCreatedBy());
+        filteredProduct.setUpdatedBy(product.getUpdatedBy());
+
+        return filteredProduct;
+    }
+
     @Transactional
     public Product save(Product product) {
         if (product.getId() != null) {
@@ -91,33 +175,6 @@ public class ProductService {
         }
     }
 
-
-    public Product findById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-    }
-
-    public List<Product> findAll() {
-        List<Product> products = productRepository.findAll();
-        products.forEach(this::filterPriceComponents);
-        return products;
-    }
-
-    private void filterPriceComponents(Product product) {
-        Map<PriceComponentType, PriceComponent> filteredComponents = product.getPriceComponents().stream()
-                .filter(pc -> pc.getClient() == null)
-                .collect(Collectors.toMap(
-                        PriceComponent::getComponentType,
-                        pc -> pc,
-                        (pc1, pc2) -> pc1.getEffectiveFrom().isAfter(pc2.getEffectiveFrom()) ? pc1 : pc2
-                ));
-        product.setPriceComponents(new HashSet<>(filteredComponents.values()));
-    }
-
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
     @Transactional
     public void deleteById(Long id) {
         productRepository.deleteById(id);
@@ -139,7 +196,15 @@ public class ProductService {
 
         Product product = findById(productId);
 
+        // For each new price component
         priceComponents.forEach((type, amount) -> {
+            product.getPriceComponents().removeIf(pc ->
+                    pc.getClient() != null &&
+                            pc.getClient().getId().equals(clientId) &&
+                            pc.getComponentType() == type
+            );
+
+            // Create and add the new price component
             PriceComponent priceComponent = new PriceComponent();
             priceComponent.setComponentType(type);
             priceComponent.setAmount(amount);

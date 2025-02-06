@@ -37,6 +37,7 @@ export class ProductService {
         return response.data;
     }
 
+    // Get products with default pricing
     async getProductsWithDefaultPricing(page = 0, size = 10): Promise<PageResponse<ProductDTO>> {
         const response = await axiosInstance.get<PageResponse<ProductDTO>>(
             `${this.baseUrl}/default-pricing?page=${page}&size=${size}`
@@ -48,6 +49,14 @@ export class ProductService {
     async getProductsForClient(clientId: number, page = 0, size = 10): Promise<PageResponse<ProductDTO>> {
         const response = await axiosInstance.get<PageResponse<ProductDTO>>(
             `${this.baseUrl}/client/${clientId}?page=${page}&size=${size}`
+        );
+        return response.data;
+    }
+
+    // Get a specific product for a client with their pricing
+    async getProductForClient(clientId: number, productId: number): Promise<ProductDTO> {
+        const response = await axiosInstance.get<ProductDTO>(
+            `${this.baseUrl}/client/${clientId}/product/${productId}`
         );
         return response.data;
     }

@@ -17,7 +17,7 @@ import { SupplierDTO } from '@/models/SupplierDTO';
 import { supplierService } from '@/services/supplier.service';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { TableWrapper } from '../TableWrapper';
+import { TableWrapper } from '../TableWrapper.tsx';
 import { FormDialog } from '../FormDialog';
 import { FormButton } from '../FormButton';
 import { DeleteConfirmationDialog } from '../DeleteConfirmationDialog.tsx';

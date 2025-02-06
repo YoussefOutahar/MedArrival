@@ -5,8 +5,8 @@ import { useNavigationRoutes } from './navigation';
 import useAuth from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import Popover from './Popover';
-import ThemeToggle from '@/components/ThemeToggle';
-import LanguageSelector from '@/components/LanguageSelector';
+import ThemeToggle from '@/components/layout/ThemeToggle';
+import LanguageSelector from '@/components/layout/LanguageSelector';
 import Logo from '/app-logo.svg';
 import { useTranslation } from 'react-i18next';
 

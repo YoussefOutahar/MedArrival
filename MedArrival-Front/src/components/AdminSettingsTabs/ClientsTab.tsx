@@ -20,7 +20,7 @@ import { ClientDTO, ClientType } from '@/models/ClientDTO';
 import { clientService } from '@/services/client.service';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { TableWrapper } from '../TableWrapper';
+import { TableWrapper } from '../TableWrapper.tsx';
 import { FormDialog } from '../FormDialog';
 import { FormButton } from '../FormButton';
 import { Label } from '@radix-ui/react-label';

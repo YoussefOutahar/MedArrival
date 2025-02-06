@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { authStorage } from './services/LocalStorage/AuthStorage';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from './components/layout/LoadingSpinner';
 
 interface AuthGuardProps {
     children: ReactNode;

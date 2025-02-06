@@ -24,7 +24,7 @@ import { PriceComponentDTO, PriceComponentType } from '@/models/PriceComponentDT
 import { productService } from '@/services/product.service';
 import { productCategoryService } from '@/services/product-category.service';
 import { toast } from 'react-hot-toast';
-import { TableWrapper } from '../TableWrapper';
+import { TableWrapper } from '../TableWrapper.tsx';
 import { FormDialog } from '../FormDialog';
 import { DeleteConfirmationDialog } from '../DeleteConfirmationDialog.tsx';
 import { Label } from '../ui/label.tsx';
@@ -100,24 +100,24 @@ function ProductsTab() {
         </span>
       ),
     },
-    {
-      accessorKey: 'currentPurchasePrice',
-      header: t('products.table.purchasePrice'),
-      cell: (info) => (
-        <div className="text-gray-900 dark:text-white">
-          MAD{(info.getValue() as number)?.toFixed(2)}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'currentSellingPrice',
-      header: t('products.table.sellingPrice'),
-      cell: (info) => (
-        <div className="font-semibold text-gray-900 dark:text-white">
-          MAD{(info.getValue() as number)?.toFixed(2)}
-        </div>
-      ),
-    },
+    // {
+    //   accessorKey: 'currentPurchasePrice',
+    //   header: t('products.table.purchasePrice'),
+    //   cell: (info) => (
+    //     <div className="text-gray-900 dark:text-white">
+    //       MAD{(info.getValue() as number)?.toFixed(2)}
+    //     </div>
+    //   ),
+    // },
+    // {
+    //   accessorKey: 'currentSellingPrice',
+    //   header: t('products.table.sellingPrice'),
+    //   cell: (info) => (
+    //     <div className="font-semibold text-gray-900 dark:text-white">
+    //       MAD{(info.getValue() as number)?.toFixed(2)}
+    //     </div>
+    //   ),
+    // },
     {
       accessorKey: 'totalCost',
       header: t('products.table.totalCost'),
@@ -131,7 +131,7 @@ function ProductsTab() {
       id: 'actions',
       header: t('common.actions.title'),
       cell: (info) => (
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-start gap-2">
           <button
             onClick={() => handleEdit(info.row.original)}
             className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 
