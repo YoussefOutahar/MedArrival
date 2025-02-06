@@ -1,0 +1,263 @@
+{
+    "navigation": {
+        "products": "المنتجات",
+        "categories": "الفئات",
+        "suppliers": "الموردين",
+        "clients": "العملاء"
+    },
+    "suppliers": {
+        "title": "الموردين",
+        "description": "إدارة علاقات ومعلومات الموردين",
+        "table": {
+            "companyName": "اسم الشركة",
+            "email": "البريد الإلكتروني",
+            "phone": "الهاتف",
+            "address": "العنوان",
+            "actions": "الإجراءات"
+        },
+        "form": {
+            "title": {
+                "add": "إضافة مورد جديد",
+                "edit": "تعديل {{name}}"
+            },
+            "fields": {
+                "companyName": {
+                    "label": "اسم الشركة*",
+                    "placeholder": "أدخل اسم الشركة"
+                },
+                "email": {
+                    "label": "البريد الإلكتروني*",
+                    "placeholder": "أدخل البريد الإلكتروني",
+                    "error": "يرجى إدخال بريد إلكتروني صالح"
+                },
+                "phone": {
+                    "label": "رقم الهاتف*",
+                    "placeholder": "أدخل رقم الهاتف"
+                },
+                "address": {
+                    "label": "العنوان*",
+                    "placeholder": "أدخل العنوان"
+                }
+            }
+        },
+        "import": {
+            "csv": "تحميل نموذج CSV",
+            "excel": "تحميل نموذج Excel"
+        },
+        "buttons": {
+            "add": "إضافة مورد",
+            "update": "تحديث المورد",
+            "delete": "حذف المورد"
+        }
+    },
+    "products": {
+        "title": "المنتجات",
+        "description": "إدارة المخزون والأسعار",
+        "table": {
+            "name": "اسم المنتج",
+            "description": "الوصف",
+            "category": "الفئة",
+            "purchasePrice": "سعر الشراء",
+            "sellingPrice": "سعر البيع",
+            "totalCost": "التكلفة الإجمالية",
+            "actions": "الإجراءات"
+        },
+        "form": {
+            "title": {
+                "add": "إضافة منتج جديد",
+                "edit": "تعديل {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "اسم المنتج*",
+                    "placeholder": "أدخل اسم المنتج"
+                },
+                "description": {
+                    "label": "الوصف",
+                    "placeholder": "أدخل وصف المنتج"
+                },
+                "category": {
+                    "label": "الفئة*",
+                    "placeholder": "اختر الفئة"
+                }
+            },
+            "pricing": {
+                "title": "معلومات السعر",
+                "totalCost": "التكلفة الإجمالية",
+                "components": {
+                    "PURCHASE_PRICE": "سعر الوحدة للشراء",
+                    "TRANSPORT": "النقل",
+                    "STORAGE": "التخزين",
+                    "TRANSIT": "العبور",
+                    "DUANE": "الجمارك",
+                    "AMSSNUR": "أمسنور"
+                }
+            }
+        },
+        "priceHistory": {
+            "title": "سجل الأسعار - {{type}}",
+            "table": {
+                "amount": "المبلغ",
+                "effectiveFrom": "ساري من",
+                "effectiveTo": "ساري حتى",
+                "current": "الحالي"
+            }
+        },
+        "buttons": {
+            "add": "إضافة منتج",
+            "update": "تحديث المنتج",
+            "delete": "حذف المنتج"
+        }
+    },
+    "categories": {
+        "title": "فئات المنتجات",
+        "description": "إدارة وتنظيم فئات المنتجات",
+        "table": {
+            "name": "اسم الفئة",
+            "description": "الوصف",
+            "products": "المنتجات",
+            "actions": "الإجراءات"
+        },
+        "form": {
+            "title": {
+                "add": "إضافة فئة جديدة",
+                "edit": "تعديل {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "اسم الفئة*",
+                    "placeholder": "أدخل اسم الفئة"
+                },
+                "description": {
+                    "label": "الوصف",
+                    "placeholder": "أدخل وصف الفئة"
+                }
+            }
+        },
+        "messages": {
+            "deleteError": "لا يمكن حذف الفئة المرتبطة بمنتجات"
+        },
+        "buttons": {
+            "add": "إضافة فئة",
+            "update": "تحديث الفئة",
+            "delete": "حذف الفئة"
+        }
+    },
+    "clients": {
+        "title": "العملاء",
+        "description": "إدارة علاقات ومعلومات العملاء",
+        "table": {
+            "name": "اسم العميل",
+            "productsSold": "المنتجات المباعة",
+            "type": "نوع العميل",
+            "address": "العنوان",
+            "products": "المنتجات",
+            "actions": "الإجراءات"
+        },
+        "form": {
+            "title": {
+                "add": "إضافة عميل جديد",
+                "edit": "تعديل {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "اسم العميل*",
+                    "placeholder": "أدخل اسم العميل"
+                },
+                "type": {
+                    "label": "نوع العميل*",
+                    "placeholder": "اختر نوع العميل"
+                },
+                "address": {
+                    "label": "العنوان*",
+                    "placeholder": "أدخل العنوان"
+                },
+                "quantity": {
+                    "label": "الكمية",
+                    "placeholder": "أدخل الكمية"
+                }
+            }
+        },
+        "types": {
+            "marcher": "مارشيه",
+            "rp": "RP"
+        },
+        "buttons": {
+            "add": "إضافة عميل",
+            "update": "تحديث العميل",
+            "delete": "حذف العميل",
+            "manageProducts": "إدارة المنتجات"
+        },
+        "products": {
+            "title": "منتجات {{client}}",
+            "noProducts": {
+                "title": "لا توجد منتجات متاحة",
+                "description": "لم يتم تعيين أي منتجات لهذا العميل بعد. يمكن تعيين المنتجات من خلال قسم إدارة المنتجات."
+            },
+            "table": {
+                "name": "اسم المنتج",
+                "category": "الفئة",
+                "currentPrice": "السعر الحالي",
+                "newPrice": "السعر الجديد",
+                "actions": "إجراءات"
+            },
+            "priceUpdated": "تم تحديث السعر بنجاح",
+            "updateFailed": "فشل تحديث السعر"
+        }
+    },
+    "common": {
+        "actions": {
+            "add": "إضافة",
+            "edit": "تعديل",
+            "delete": "حذف",
+            "cancel": "إلغاء",
+            "confirm": "تأكيد",
+            "update": "تحديث",
+            "save": "حفظ",
+            "close": "إغلاق",
+            "download": {
+                "csv": "تحميل نموذج CSV",
+                "excel": "تحميل نموذج Excel"
+            },
+            "import": "استيراد",
+            "importing": "جارٍ الاستيراد..."
+        },
+        "status": {
+            "loading": "جارٍ التحميل...",
+            "importing": "جارٍ الاستيراد...",
+            "updating": "جارٍ التحديث...",
+            "deleting": "جارٍ الحذف...",
+            "processing": "جارٍ المعالجة..."
+        },
+        "pagination": {
+            "previous": "السابق",
+            "next": "التالي",
+            "page": "صفحة",
+            "of": "من"
+        },
+        "messages": {
+            "errors": {
+                "required": "يرجى ملء جميع الحقول المطلوبة",
+                "fetchFailed": "فشل في جلب البيانات",
+                "createFailed": "فشل في الإنشاء",
+                "updateFailed": "فشل في التحديث",
+                "deleteFailed": "فشل في الحذف",
+                "importFailed": "فشل في الاستيراد",
+                "downloadFailed": "فشل في تحميل النموذج"
+            },
+            "success": {
+                "created": "تم الإنشاء بنجاح",
+                "updated": "تم التحديث بنجاح",
+                "deleted": "تم الحذف بنجاح",
+                "imported": "تم استيراد {{count}} عنصر بنجاح"
+            },
+            "confirmation": {
+                "delete": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
+            }
+        },
+        "emptyState": {
+            "title": "لم يتم العثور على عناصر",
+            "description": "ابدأ بإضافة عنصر جديد"
+        }
+    }
+}

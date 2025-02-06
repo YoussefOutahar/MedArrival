@@ -1,0 +1,167 @@
+package com.cnesten.medarrivalbackend.Service;
+
+import com.cnesten.medarrivalbackend.Exceptions.ResourceNotFoundException;
+import com.cnesten.medarrivalbackend.Models.Client.Client;
+import com.cnesten.medarrivalbackend.Models.Client.ClientType;
+import com.cnesten.medarrivalbackend.Models.Price.PriceComponent;
+import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
+import com.cnesten.medarrivalbackend.Models.Product;
+import com.cnesten.medarrivalbackend.Repository.PriceComponentRepository;
+import com.cnesten.medarrivalbackend.Repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class ProductService {
+    private final ProductRepository productRepository;
+    private final ClientService clientService;
+    private final PriceComponentRepository priceComponentRepository;
+
+    @Transactional
+    public Product save(Product product) {
+        if (product.getId() != null) {
+            return updateProduct(product);
+        }
+        return productRepository.save(product);
+    }
+
+    private Product updateProduct(Product updatedProduct) {
+        Product existingProduct = productRepository.findById(updatedProduct.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        // Split existing components into client-specific and default ones
+        Set<PriceComponent> clientSpecificComponents = existingProduct.getPriceComponents().stream()
+                .filter(pc -> pc.getClient() != null)
+                .collect(Collectors.toSet());
+
+        Set<PriceComponent> defaultComponents = existingProduct.getPriceComponents().stream()
+                .filter(pc -> pc.getClient() == null)
+                .collect(Collectors.toSet());
+
+        // Delete only default price components
+        if (!defaultComponents.isEmpty()) {
+            priceComponentRepository.deleteAll(defaultComponents);
+        }
+
+        // Set new basic properties
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setCategory(updatedProduct.getCategory());
+
+        // Keep only active default price components from the update
+        if (updatedProduct.getPriceComponents() != null) {
+            Set<PriceComponent> newActiveComponents = updatedProduct.getPriceComponents().stream()
+                    .filter(pc -> pc.getEffectiveTo() == null && pc.getClient() == null)
+                    .map(pc -> {
+                        PriceComponent newPc = new PriceComponent();
+                        newPc.setComponentType(pc.getComponentType());
+                        newPc.setAmount(pc.getAmount());
+                        newPc.setEffectiveFrom(pc.getEffectiveFrom());
+                        newPc.setEffectiveTo(null);
+                        newPc.setClient(null);
+                        newPc.setProduct(existingProduct);
+                        return newPc;
+                    })
+                    .collect(Collectors.toSet());
+
+            // Combine client-specific components with new default components
+            Set<PriceComponent> allComponents = new HashSet<>();
+            allComponents.addAll(clientSpecificComponents);
+            allComponents.addAll(newActiveComponents);
+
+            existingProduct.setPriceComponents(allComponents);
+        }
+
+        try {
+            return productRepository.save(existingProduct);
+        } catch (OptimisticLockingFailureException e) {
+            throw new OptimisticLockingFailureException("Product was modified by another transaction");
+        }
+    }
+
+
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
+
+    public List<Product> findAll() {
+        List<Product> products = productRepository.findAll();
+        products.forEach(this::filterPriceComponents);
+        return products;
+    }
+
+    private void filterPriceComponents(Product product) {
+        Map<PriceComponentType, PriceComponent> filteredComponents = product.getPriceComponents().stream()
+                .filter(pc -> pc.getClient() == null)
+                .collect(Collectors.toMap(
+                        PriceComponent::getComponentType,
+                        pc -> pc,
+                        (pc1, pc2) -> pc1.getEffectiveFrom().isAfter(pc2.getEffectiveFrom()) ? pc1 : pc2
+                ));
+        product.setPriceComponents(new HashSet<>(filteredComponents.values()));
+    }
+
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    public List<Product> findByCategory(Long categoryId) {
+        return productRepository.findByCategory_Id(categoryId);
+    }
+
+    public Product setCustomPricingForClient(
+            Long productId,
+            Long clientId,
+            Map<PriceComponentType, Float> priceComponents) {
+
+        Client client = clientService.findById(clientId);
+        if (client.getClientType() != ClientType.CLIENT_MARCHER) {
+            throw new IllegalStateException("Only CLIENT_MARCHER type clients can have custom pricing");
+        }
+
+        Product product = findById(productId);
+
+        priceComponents.forEach((type, amount) -> {
+            PriceComponent priceComponent = new PriceComponent();
+            priceComponent.setComponentType(type);
+            priceComponent.setAmount(amount);
+            priceComponent.setEffectiveFrom(LocalDateTime.now());
+            priceComponent.setClient(client);
+            priceComponent.setProduct(product);
+
+            product.addPriceComponent(priceComponent);
+        });
+
+        return productRepository.save(product);
+    }
+
+    public Product removeCustomPricingForClient(Long productId, Long clientId) {
+        Client client = clientService.findById(clientId);
+        if (client.getClientType() != ClientType.CLIENT_MARCHER) {
+            throw new IllegalStateException("Only CLIENT_MARCHER type clients can have custom pricing");
+        }
+
+        Product product = findById(productId);
+        product.removePriceComponentsForClient(client);
+
+        return productRepository.save(product);
+    }
+}

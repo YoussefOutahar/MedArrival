@@ -1,0 +1,263 @@
+{
+    "navigation": {
+        "products": "Products",
+        "categories": "Categories",
+        "suppliers": "Suppliers",
+        "clients": "Clients"
+    },
+    "suppliers": {
+        "title": "Suppliers",
+        "description": "Manage your supplier relationships and information",
+        "table": {
+            "companyName": "Company Name",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Add New Supplier",
+                "edit": "Edit {{name}}"
+            },
+            "fields": {
+                "companyName": {
+                    "label": "Company Name*",
+                    "placeholder": "Enter company name"
+                },
+                "email": {
+                    "label": "Email Address*",
+                    "placeholder": "Enter email address",
+                    "error": "Please enter a valid email address"
+                },
+                "phone": {
+                    "label": "Phone Number*",
+                    "placeholder": "Enter phone number"
+                },
+                "address": {
+                    "label": "Address*",
+                    "placeholder": "Enter address"
+                }
+            }
+        },
+        "import": {
+            "csv": "Download CSV Template",
+            "excel": "Download Excel Template"
+        },
+        "buttons": {
+            "add": "Add Supplier",
+            "update": "Update Supplier",
+            "delete": "Delete Supplier"
+        }
+    },
+    "products": {
+        "title": "Products",
+        "description": "Manage your product inventory and pricing",
+        "table": {
+            "name": "Product Name",
+            "description": "Description",
+            "category": "Category",
+            "purchasePrice": "Purchase Price",
+            "sellingPrice": "Selling Price",
+            "totalCost": "Total Cost",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Add New Product",
+                "edit": "Edit {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "Product Name*",
+                    "placeholder": "Enter product name"
+                },
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Enter product description"
+                },
+                "category": {
+                    "label": "Category*",
+                    "placeholder": "Select a category"
+                }
+            },
+            "pricing": {
+                "title": "Pricing Information",
+                "totalCost": "Total Cost",
+                "components": {
+                    "PURCHASE_PRICE": "Purchase Unit Price",
+                    "TRANSPORT": "Transport",
+                    "STORAGE": "Storage",
+                    "TRANSIT": "Transit",
+                    "DUANE": "Customs",
+                    "AMSSNUR": "AMSSNUR"
+                }
+            }
+        },
+        "priceHistory": {
+            "title": "Price History - {{type}}",
+            "table": {
+                "amount": "Amount",
+                "effectiveFrom": "Effective From",
+                "effectiveTo": "Effective To",
+                "current": "Current"
+            }
+        },
+        "buttons": {
+            "add": "Add Product",
+            "update": "Update Product",
+            "delete": "Delete Product"
+        }
+    },
+    "categories": {
+        "title": "Product Categories",
+        "description": "Manage and organize your product categories",
+        "table": {
+            "name": "Category Name",
+            "description": "Description",
+            "products": "Products",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Add New Category",
+                "edit": "Edit {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "Category Name*",
+                    "placeholder": "Enter category name"
+                },
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Enter category description"
+                }
+            }
+        },
+        "buttons": {
+            "add": "Add Category",
+            "update": "Update Category",
+            "delete": "Delete Category"
+        },
+        "messages": {
+            "deleteError": "Cannot delete category with associated products"
+        }
+    },
+    "clients": {
+        "title": "Clients",
+        "description": "Manage your client relationships and information",
+        "table": {
+            "name": "Client Name",
+            "productsSold": "Products Sold",
+            "type": "Client Type",
+            "address": "Address",
+            "products": "Products",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Add New Client",
+                "edit": "Edit {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "Client Name*",
+                    "placeholder": "Enter client name"
+                },
+                "type": {
+                    "label": "Client Type*",
+                    "placeholder": "Select client type"
+                },
+                "address": {
+                    "label": "Address*",
+                    "placeholder": "Enter address"
+                },
+                "quantity": {
+                    "label": "Quantity",
+                    "placeholder": "Enter quantity"
+                }
+            }
+        },
+        "buttons": {
+            "add": "Add Client",
+            "update": "Update Client",
+            "delete": "Delete Client",
+            "manageProducts": "Manage Products"
+        },
+        "types": {
+            "marcher": "Marcher",
+            "rp": "RP"
+        },
+        "products": {
+            "title": "Products for {{client}}",
+            "noProducts": {
+                "title": "No Products Available",
+                "description": "There are no products assigned to this client yet. Products can be assigned through the product management section."
+            },
+            "table": {
+                "name": "Product Name",
+                "category": "Category",
+                "currentPrice": "Current Price",
+                "newPrice": "New Price",
+                "actions": "Actions"
+            },
+            "priceUpdated": "Price updated successfully",
+            "updateFailed": "Failed to update price"
+        }
+    },
+    "common": {
+        "actions": {
+            "add": "Add",
+            "edit": "Edit",
+            "delete": "Delete",
+            "cancel": "Cancel",
+            "confirm": "Confirm",
+            "update": "Update",
+            "save": "Save",
+            "close": "Close",
+            "download": {
+                "csv": "Download CSV Template",
+                "excel": "Download Excel Template"
+            },
+            "import": "Import",
+            "importing": "Importing..."
+        },
+        "status": {
+            "loading": "Loading...",
+            "importing": "Importing...",
+            "updating": "Updating...",
+            "deleting": "Deleting...",
+            "processing": "Processing..."
+        },
+        "pagination": {
+            "previous": "Previous",
+            "next": "Next",
+            "page": "Page",
+            "of": "of"
+        },
+        "messages": {
+            "errors": {
+                "required": "Please fill in all required fields",
+                "fetchFailed": "Failed to fetch data",
+                "createFailed": "Failed to create",
+                "updateFailed": "Failed to update",
+                "deleteFailed": "Failed to delete",
+                "importFailed": "Failed to import",
+                "downloadFailed": "Failed to download template"
+            },
+            "success": {
+                "created": "Created successfully",
+                "updated": "Updated successfully",
+                "deleted": "Deleted successfully",
+                "imported": "Successfully imported {{count}} items"
+            },
+            "confirmation": {
+                "delete": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
+            }
+        },
+        "emptyState": {
+            "title": "No items found",
+            "description": "Get started by adding a new item"
+        }
+    }
+}

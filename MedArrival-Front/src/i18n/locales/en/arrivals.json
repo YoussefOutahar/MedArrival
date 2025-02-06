@@ -1,0 +1,52 @@
+{
+    "header": {
+        "title": "Arrivals",
+        "newButton": "New Arrival",
+        "exportButton": "Export All"
+    },
+    "filters": {
+        "searchPlaceholder": "Search by invoice number...",
+        "searchButton": "Search",
+        "filterDateButton": "Filter by Date"
+    },
+    "table": {
+        "columns": {
+            "invoiceNumber": "Invoice Number",
+            "supplier": "Supplier",
+            "totalSales": "Total Sales",
+            "arrivalDate": "Arrival Date",
+            "actions": "Actions"
+        },
+        "salesCount": "sales",
+        "downloadExcel": "Excel",
+        "expandedDetails": {
+            "title": "Sales Details",
+            "columns": {
+                "product": "Product",
+                "client": "Client",
+                "quantity": "Quantity",
+                "totalAmount": "Total Amount",
+                "saleDate": "Sale Date"
+            }
+        }
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "results": "results"
+    },
+    "emptyState": {
+        "title": "No arrivals",
+        "description": "Get started by creating a new arrival."
+    },
+    "loading": "Loading...",
+    "toast": {
+        "fetchError": "Failed to fetch arrivals",
+        "filterError": "Failed to filter arrivals",
+        "downloadSuccess": "Report downloaded successfully",
+        "downloadError": "Failed to download report"
+    }
+}

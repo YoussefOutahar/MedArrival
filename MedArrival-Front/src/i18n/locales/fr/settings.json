@@ -1,0 +1,263 @@
+{
+    "navigation": {
+        "products": "Produits",
+        "categories": "Catégories",
+        "suppliers": "Fournisseurs",
+        "clients": "Clients"
+    },
+    "suppliers": {
+        "title": "Fournisseurs",
+        "description": "Gérer vos relations et informations fournisseurs",
+        "table": {
+            "companyName": "Nom de l'entreprise",
+            "email": "Email",
+            "phone": "Téléphone",
+            "address": "Adresse",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Ajouter un nouveau fournisseur",
+                "edit": "Modifier {{name}}"
+            },
+            "fields": {
+                "companyName": {
+                    "label": "Nom de l'entreprise*",
+                    "placeholder": "Entrez le nom de l'entreprise"
+                },
+                "email": {
+                    "label": "Adresse email*",
+                    "placeholder": "Entrez l'adresse email",
+                    "error": "Veuillez entrer une adresse email valide"
+                },
+                "phone": {
+                    "label": "Numéro de téléphone*",
+                    "placeholder": "Entrez le numéro de téléphone"
+                },
+                "address": {
+                    "label": "Adresse*",
+                    "placeholder": "Entrez l'adresse"
+                }
+            }
+        },
+        "import": {
+            "csv": "Télécharger le modèle CSV",
+            "excel": "Télécharger le modèle Excel"
+        },
+        "buttons": {
+            "add": "Ajouter un fournisseur",
+            "update": "Mettre à jour le fournisseur",
+            "delete": "Supprimer le fournisseur"
+        }
+    },
+    "products": {
+        "title": "Produits",
+        "description": "Gérer votre inventaire et vos prix",
+        "table": {
+            "name": "Nom du produit",
+            "description": "Description",
+            "category": "Catégorie",
+            "purchasePrice": "Prix d'achat",
+            "sellingPrice": "Prix de vente",
+            "totalCost": "Coût total",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Ajouter un nouveau produit",
+                "edit": "Modifier {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "Nom du produit*",
+                    "placeholder": "Entrez le nom du produit"
+                },
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Entrez la description du produit"
+                },
+                "category": {
+                    "label": "Catégorie*",
+                    "placeholder": "Sélectionnez une catégorie"
+                }
+            },
+            "pricing": {
+                "title": "Informations de prix",
+                "totalCost": "Coût total",
+                "components": {
+                    "PURCHASE_PRICE": "Prix Unitaire d'Achat (PUA)",
+                    "TRANSPORT": "Transport",
+                    "STORAGE": "Magasinage",
+                    "TRANSIT": "Transit",
+                    "DUANE": "Douane",
+                    "AMSSNUR": "AMSSNUR"
+                }
+            }
+        },
+        "priceHistory": {
+            "title": "Historique des prix - {{type}}",
+            "table": {
+                "amount": "Montant",
+                "effectiveFrom": "Effectif depuis",
+                "effectiveTo": "Effectif jusqu'à",
+                "current": "Actuel"
+            }
+        },
+        "buttons": {
+            "add": "Ajouter un produit",
+            "update": "Mettre à jour le produit",
+            "delete": "Supprimer le produit"
+        }
+    },
+    "categories": {
+        "title": "Catégories de produits",
+        "description": "Gérer et organiser vos catégories de produits",
+        "table": {
+            "name": "Nom de la catégorie",
+            "description": "Description",
+            "products": "Produits",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Ajouter une nouvelle catégorie",
+                "edit": "Modifier {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "Nom de la catégorie*",
+                    "placeholder": "Entrez le nom de la catégorie"
+                },
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Entrez la description de la catégorie"
+                }
+            }
+        },
+        "buttons": {
+            "add": "Ajouter une catégorie",
+            "update": "Mettre à jour la catégorie",
+            "delete": "Supprimer la catégorie"
+        },
+        "messages": {
+            "deleteError": "Impossible de supprimer une catégorie avec des produits associés"
+        }
+    },
+    "clients": {
+        "title": "Clients",
+        "description": "Gérer vos relations et informations clients",
+        "table": {
+            "name": "Nom du client",
+            "productsSold": "Produits vendus",
+            "type": "Type de client",
+            "address": "Adresse",
+            "products": "Produits",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": {
+                "add": "Ajouter un nouveau client",
+                "edit": "Modifier {{name}}"
+            },
+            "fields": {
+                "name": {
+                    "label": "Nom du client*",
+                    "placeholder": "Entrez le nom du client"
+                },
+                "type": {
+                    "label": "Type de client*",
+                    "placeholder": "Sélectionnez le type de client"
+                },
+                "address": {
+                    "label": "Adresse*",
+                    "placeholder": "Entrez l'adresse"
+                },
+                "quantity": {
+                    "label": "Quantité",
+                    "placeholder": "Entrez la quantité"
+                }
+            }
+        },
+        "types": {
+            "marcher": "Marcher",
+            "rp": "RP"
+        },
+        "buttons": {
+            "add": "Ajouter un client",
+            "update": "Mettre à jour le client",
+            "delete": "Supprimer le client",
+            "manageProducts": "Gérer les produits"
+        },
+        "products": {
+            "title": "Produits pour {{client}}",
+            "noProducts": {
+                "title": "Aucun produit disponible",
+                "description": "Aucun produit n'est encore attribué à ce client. Les produits peuvent être attribués via la section gestion des produits."
+            },
+            "table": {
+                "name": "Nom du produit",
+                "category": "Catégorie",
+                "currentPrice": "Prix actuel",
+                "newPrice": "Nouveau prix",
+                "actions": "Actions"
+            },
+            "priceUpdated": "Prix mis à jour avec succès",
+            "updateFailed": "Échec de la mise à jour du prix"
+        }
+    },
+    "common": {
+        "actions": {
+            "add": "Ajouter",
+            "edit": "Modifier",
+            "delete": "Supprimer",
+            "cancel": "Annuler",
+            "confirm": "Confirmer",
+            "update": "Mettre à jour",
+            "save": "Enregistrer",
+            "close": "Fermer",
+            "download": {
+                "csv": "Télécharger le modèle CSV",
+                "excel": "Télécharger le modèle Excel"
+            },
+            "import": "Importer",
+            "importing": "Importation en cours"
+        },
+        "status": {
+            "loading": "Chargement...",
+            "importing": "Importation...",
+            "updating": "Mise à jour...",
+            "deleting": "Suppression...",
+            "processing": "Traitement..."
+        },
+        "pagination": {
+            "previous": "Précédent",
+            "next": "Suivant",
+            "page": "Page",
+            "of": "sur"
+        },
+        "messages": {
+            "errors": {
+                "required": "Veuillez remplir tous les champs obligatoires",
+                "fetchFailed": "Échec de la récupération des données",
+                "createFailed": "Échec de la création",
+                "updateFailed": "Échec de la mise à jour",
+                "deleteFailed": "Échec de la suppression",
+                "importFailed": "Échec de l'importation",
+                "downloadFailed": "Échec du téléchargement du modèle"
+            },
+            "success": {
+                "created": "Créé avec succès",
+                "updated": "Mis à jour avec succès",
+                "deleted": "Supprimé avec succès",
+                "imported": "{{count}} éléments importés avec succès"
+            },
+            "confirmation": {
+                "delete": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ? Cette action ne peut pas être annulée."
+            }
+        },
+        "emptyState": {
+            "title": "Aucun élément trouvé",
+            "description": "Commencez par ajouter un nouvel élément"
+        }
+    }
+}

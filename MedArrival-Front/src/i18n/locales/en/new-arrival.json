@@ -1,0 +1,76 @@
+{
+    "header": {
+        "title": "New Arrival",
+        "backToArrivals": "Back to Arrivals"
+    },
+    "basicInfo": {
+        "title": "Basic Information",
+        "invoiceNumber": {
+            "label": "Invoice Number",
+            "placeholder": "Enter invoice number"
+        },
+        "supplier": {
+            "label": "Supplier",
+            "placeholder": "Select supplier"
+        },
+        "arrivalDate": {
+            "label": "Arrival Date"
+        }
+    },
+    "sales": {
+        "title": "Sales",
+        "form": {
+            "product": {
+                "label": "Product",
+                "placeholder": "Select product"
+            },
+            "client": {
+                "label": "Client",
+                "placeholder": "Select client"
+            },
+            "quantity": {
+                "label": "Quantity"
+            },
+            "unitPrice": {
+                "label": "Unit Price",
+                "override": "Override price"
+            },
+            "expectedDelivery": {
+                "label": "Expected Delivery"
+            },
+            "addButton": "Add Sale"
+        },
+        "table": {
+            "product": "Product",
+            "client": "Client",
+            "quantity": "Quantity",
+            "unitPrice": "Unit Price",
+            "totalAmount": "Total Amount",
+            "expectedDelivery": "Expected Delivery",
+            "priceStatus": "Price Status",
+            "actions": "Actions",
+            "customPrice": "Custom Price",
+            "defaultPrice": "Default Price"
+        },
+        "noSales": {
+            "title": "No sales",
+            "description": "Add sales to this arrival using the form above."
+        }
+    },
+    "actions": {
+        "cancel": "Cancel",
+        "create": "Create Arrival",
+        "creating": "Creating..."
+    },
+    "errors": {
+        "fetchFailed": "Failed to fetch data",
+        "requiredFields": "Please fill in all required fields",
+        "createFailed": "Failed to create arrival",
+        "selectProductClient": "Please select a product and client",
+        "invalidQuantity": "Please enter a valid quantity",
+        "invalidPrice": "Please enter a valid unit price"
+    },
+    "success": {
+        "created": "Arrival created successfully"
+    }
+}

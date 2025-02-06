@@ -1,0 +1,52 @@
+{
+    "header": {
+        "title": "الوصولات",
+        "newButton": "وصول جديد",
+        "exportButton": "تصدير الكل"
+    },
+    "filters": {
+        "searchPlaceholder": "البحث برقم الفاتورة...",
+        "searchButton": "بحث",
+        "filterDateButton": "تصفية حسب التاريخ"
+    },
+    "table": {
+        "columns": {
+            "invoiceNumber": "رقم الفاتورة",
+            "supplier": "المورد",
+            "totalSales": "إجمالي المبيعات",
+            "arrivalDate": "تاريخ الوصول",
+            "actions": "الإجراءات"
+        },
+        "salesCount": "مبيعات",
+        "downloadExcel": "إكسل",
+        "expandedDetails": {
+            "title": "تفاصيل المبيعات",
+            "columns": {
+                "product": "المنتج",
+                "client": "العميل",
+                "quantity": "الكمية",
+                "totalAmount": "المبلغ الإجمالي",
+                "saleDate": "تاريخ البيع"
+            }
+        }
+    },
+    "pagination": {
+        "previous": "السابق",
+        "next": "التالي",
+        "showing": "عرض",
+        "to": "إلى",
+        "of": "من",
+        "results": "نتيجة"
+    },
+    "emptyState": {
+        "title": "لا توجد وصولات",
+        "description": "ابدأ بإنشاء وصول جديد."
+    },
+    "loading": "جارٍ التحميل...",
+    "toast": {
+        "fetchError": "فشل في جلب الوصولات",
+        "filterError": "فشل في تصفية الوصولات",
+        "downloadSuccess": "تم تحميل التقرير بنجاح",
+        "downloadError": "فشل في تحميل التقرير"
+    }
+}

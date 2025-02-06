@@ -1,0 +1,76 @@
+{
+    "header": {
+        "title": "وصول جديد",
+        "backToArrivals": "العودة إلى الوصولات"
+    },
+    "basicInfo": {
+        "title": "المعلومات الأساسية",
+        "invoiceNumber": {
+            "label": "رقم الفاتورة",
+            "placeholder": "أدخل رقم الفاتورة"
+        },
+        "supplier": {
+            "label": "المورد",
+            "placeholder": "اختر المورد"
+        },
+        "arrivalDate": {
+            "label": "تاريخ الوصول"
+        }
+    },
+    "sales": {
+        "title": "المبيعات",
+        "form": {
+            "product": {
+                "label": "المنتج",
+                "placeholder": "اختر المنتج"
+            },
+            "client": {
+                "label": "العميل",
+                "placeholder": "اختر العميل"
+            },
+            "quantity": {
+                "label": "الكمية"
+            },
+            "unitPrice": {
+                "label": "سعر الوحدة",
+                "override": "تجاوز السعر"
+            },
+            "expectedDelivery": {
+                "label": "موعد التسليم المتوقع"
+            },
+            "addButton": "إضافة بيع"
+        },
+        "table": {
+            "product": "المنتج",
+            "client": "العميل",
+            "quantity": "الكمية",
+            "unitPrice": "سعر الوحدة",
+            "totalAmount": "المبلغ الإجمالي",
+            "expectedDelivery": "موعد التسليم المتوقع",
+            "priceStatus": "حالة السعر",
+            "actions": "الإجراءات",
+            "customPrice": "سعر مخصص",
+            "defaultPrice": "السعر الافتراضي"
+        },
+        "noSales": {
+            "title": "لا توجد مبيعات",
+            "description": "أضف مبيعات لهذا الوصول باستخدام النموذج أعلاه."
+        }
+    },
+    "actions": {
+        "cancel": "إلغاء",
+        "create": "إنشاء وصول",
+        "creating": "جاري الإنشاء..."
+    },
+    "errors": {
+        "fetchFailed": "فشل في جلب البيانات",
+        "requiredFields": "يرجى ملء جميع الحقول المطلوبة",
+        "createFailed": "فشل في إنشاء الوصول",
+        "selectProductClient": "يرجى اختيار منتج وعميل",
+        "invalidQuantity": "يرجى إدخال كمية صحيحة",
+        "invalidPrice": "يرجى إدخال سعر صحيح"
+    },
+    "success": {
+        "created": "تم إنشاء الوصول بنجاح"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "title": "التنقل",
+    "menu": {
+        "dashboard": "لوحة التحكم",
+        "newArrival": "وصول جديد",
+        "arrivals": "الوصولات",
+        "reports": "التقارير",
+        "settings": {
+            "title": "الإعدادات",
+            "products": "المنتجات",
+            "categories": "الفئات",
+            "suppliers": "الموردين",
+            "clients": "العملاء"
+        }
+    },
+    "signOut": "تسجيل الخروج"
+}

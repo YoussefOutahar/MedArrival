@@ -1,0 +1,61 @@
+{
+    "header": {
+        "title": "التقارير"
+    },
+    "reportTypes": {
+        "purchaseInvoice": {
+            "name": "تقرير فواتير الشراء",
+            "description": "مشتريات المورد التفصيلية مع كميات المنتجات والأسعار"
+        },
+        "monthlyStatement": {
+            "name": "كشف المنتجات الشهري",
+            "description": "نظرة عامة شهرية على مبيعات المنتجات مع تحليل الإيرادات"
+        },
+        "productSummary": {
+            "name": "تقرير ملخص المنتجات",
+            "description": "نظرة عامة على المنتجات مع الكميات وتكاليف النقل"
+        },
+        "salesForecast": {
+            "name": "تقرير توقعات المبيعات",
+            "description": "توقعات وتحليل المبيعات حسب العميل"
+        }
+    },
+    "filters": {
+        "title": "تصفية التقارير",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية",
+        "supplier": {
+            "label": "المورد",
+            "placeholder": "جميع الموردين"
+        },
+        "productCategory": {
+            "label": "فئة المنتج",
+            "placeholder": "جميع الفئات"
+        },
+        "status": {
+            "label": "الحالة",
+            "placeholder": "جميع الحالات"
+        }
+    },
+    "preview": {
+        "title": "معاينة التقرير",
+        "heading": "معاينة التقرير",
+        "description": "قم بتكوين عوامل التصفية وإنشاء التقرير لرؤية المعاينة"
+    },
+    "actions": {
+        "emailReport": "إرسال بالبريد",
+        "printReport": "طباعة التقرير",
+        "downloadReport": "تحميل التقرير",
+        "generating": "جارٍ الإنشاء..."
+    },
+    "toast": {
+        "selectDates": "الرجاء تحديد تاريخ البداية والنهاية",
+        "selectSupplier": "الرجاء تحديد مورد",
+        "notImplemented": "نوع التقرير غير منفذ",
+        "success": "تم إنشاء التقرير بنجاح",
+        "error": "فشل في إنشاء التقرير",
+        "printSuccess": "تم فتح نافذة الطباعة",
+        "printError": "فشل في طباعة التقرير",
+        "emailError": "وظيفة البريد الإلكتروني غير منفذة بعد"
+    }
+}

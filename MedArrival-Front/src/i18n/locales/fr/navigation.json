@@ -1,0 +1,17 @@
+{
+    "title": "Navigation",
+    "menu": {
+        "dashboard": "Tableau de bord",
+        "newArrival": "Nouvelle arrivée",
+        "arrivals": "Arrivées",
+        "reports": "Rapports",
+        "settings": {
+            "title": "Paramètres",
+            "products": "Produits",
+            "categories": "Catégories",
+            "suppliers": "Fournisseurs",
+            "clients": "Clients"
+        }
+    },
+    "signOut": "Déconnexion"
+}

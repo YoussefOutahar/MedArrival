@@ -1,0 +1,61 @@
+{
+    "header": {
+        "title": "Rapports"
+    },
+    "reportTypes": {
+        "purchaseInvoice": {
+            "name": "Rapport des Factures d'Achat",
+            "description": "Achats détaillés des fournisseurs avec quantités et prix des produits"
+        },
+        "monthlyStatement": {
+            "name": "État Mensuel des Produits",
+            "description": "Aperçu mensuel des ventes de produits avec analyse des revenus"
+        },
+        "productSummary": {
+            "name": "Rapport Sommaire des Produits",
+            "description": "Aperçu des produits avec quantités et coûts de transport"
+        },
+        "salesForecast": {
+            "name": "Rapport de Prévision des Ventes",
+            "description": "Prévisions et analyse des ventes par client"
+        }
+    },
+    "filters": {
+        "title": "Filtres du Rapport",
+        "startDate": "Date de Début",
+        "endDate": "Date de Fin",
+        "supplier": {
+            "label": "Fournisseur",
+            "placeholder": "Tous les Fournisseurs"
+        },
+        "productCategory": {
+            "label": "Catégorie de Produit",
+            "placeholder": "Toutes les Catégories"
+        },
+        "status": {
+            "label": "Statut",
+            "placeholder": "Tous les Statuts"
+        }
+    },
+    "preview": {
+        "title": "Aperçu du Rapport",
+        "heading": "Aperçu du Rapport",
+        "description": "Configurez vos filtres et générez le rapport pour voir un aperçu"
+    },
+    "actions": {
+        "emailReport": "Envoyer par Email",
+        "printReport": "Imprimer le Rapport",
+        "downloadReport": "Télécharger le Rapport",
+        "generating": "Génération en cours..."
+    },
+    "toast": {
+        "selectDates": "Veuillez sélectionner une date de début et de fin",
+        "selectSupplier": "Veuillez sélectionner un fournisseur",
+        "notImplemented": "Type de rapport non implémenté",
+        "success": "Rapport généré avec succès",
+        "error": "Échec de la génération du rapport",
+        "printSuccess": "Boîte de dialogue d'impression ouverte",
+        "printError": "Échec de l'impression du rapport",
+        "emailError": "La fonctionnalité d'email n'est pas encore implémentée"
+    }
+}

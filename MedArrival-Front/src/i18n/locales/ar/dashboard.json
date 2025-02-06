@@ -1,0 +1,52 @@
+{
+    "header": {
+        "title": "لوحة التحليلات",
+        "subtitle": "مقاييس وتحليلات الأعمال في الوقت الفعلي",
+        "refreshButton": "تحديث البيانات"
+    },
+    "metrics": {
+        "dailyRevenue": {
+            "title": "الإيرادات اليومية",
+            "prefix": "$"
+        },
+        "dailySales": {
+            "title": "المبيعات اليومية"
+        },
+        "dailyArrivals": {
+            "title": "الوصول اليومي"
+        },
+        "categories": {
+            "title": "الفئات"
+        }
+    },
+    "tabs": {
+        "revenue": "الإيرادات",
+        "salesAnalysis": "تحليل المبيعات",
+        "categories": "الفئات"
+    },
+    "revenue": {
+        "title": "اتجاه الإيرادات",
+        "subtitle": "الإيرادات اليومية عبر الزمن"
+    },
+    "salesAnalysis": {
+        "topProducts": {
+            "title": "أفضل المنتجات",
+            "subtitle": "المنتجات الأكثر أداءً",
+            "timeFrame": "آخر 30 يوماً"
+        },
+        "topClients": {
+            "title": "كبار العملاء",
+            "subtitle": "العملاء الأكثر قيمة",
+            "timeFrame": "آخر 30 يوماً"
+        }
+    },
+    "categories": {
+        "title": "المبيعات حسب الفئة",
+        "subtitle": "توزيع المبيعات عبر الفئات"
+    },
+    "loading": "جارٍ التحميل...",
+    "error": {
+        "fetchFailed": "فشل في جلب بيانات لوحة المعلومات",
+        "noData": "لا تتوفر بيانات"
+    }
+}

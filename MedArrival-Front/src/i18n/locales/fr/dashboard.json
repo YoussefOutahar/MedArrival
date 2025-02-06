@@ -1,0 +1,52 @@
+{
+    "header": {
+        "title": "Tableau de Bord Analytique",
+        "subtitle": "Métriques et insights commerciaux en temps réel",
+        "refreshButton": "Actualiser les Données"
+    },
+    "metrics": {
+        "dailyRevenue": {
+            "title": "Revenu Quotidien",
+            "prefix": "€"
+        },
+        "dailySales": {
+            "title": "Ventes Quotidiennes"
+        },
+        "dailyArrivals": {
+            "title": "Arrivées Quotidiennes"
+        },
+        "categories": {
+            "title": "Catégories"
+        }
+    },
+    "tabs": {
+        "revenue": "Revenus",
+        "salesAnalysis": "Analyse des Ventes",
+        "categories": "Catégories"
+    },
+    "revenue": {
+        "title": "Tendance des Revenus",
+        "subtitle": "Revenu quotidien dans le temps"
+    },
+    "salesAnalysis": {
+        "topProducts": {
+            "title": "Meilleurs Produits",
+            "subtitle": "Produits les plus performants",
+            "timeFrame": "30 derniers jours"
+        },
+        "topClients": {
+            "title": "Meilleurs Clients",
+            "subtitle": "Clients les plus précieux",
+            "timeFrame": "30 derniers jours"
+        }
+    },
+    "categories": {
+        "title": "Ventes par Catégorie",
+        "subtitle": "Répartition des ventes par catégorie"
+    },
+    "loading": "Chargement...",
+    "error": {
+        "fetchFailed": "Échec du chargement des données",
+        "noData": "Aucune donnée disponible"
+    }
+}

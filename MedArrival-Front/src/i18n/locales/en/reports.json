@@ -1,0 +1,61 @@
+{
+    "header": {
+        "title": "Reports"
+    },
+    "reportTypes": {
+        "purchaseInvoice": {
+            "name": "Purchase Invoice Report",
+            "description": "Detailed supplier purchases with product quantities and pricing"
+        },
+        "monthlyStatement": {
+            "name": "Monthly Product Statement",
+            "description": "Monthly product sales overview with revenue analysis"
+        },
+        "productSummary": {
+            "name": "Product Summary Report",
+            "description": "Products overview with quantities and transport costs"
+        },
+        "salesForecast": {
+            "name": "Sales Forecast Report",
+            "description": "Client-wise sales predictions and analysis"
+        }
+    },
+    "filters": {
+        "title": "Report Filters",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "supplier": {
+            "label": "Supplier",
+            "placeholder": "All Suppliers"
+        },
+        "productCategory": {
+            "label": "Product Category",
+            "placeholder": "All Categories"
+        },
+        "status": {
+            "label": "Status",
+            "placeholder": "All Statuses"
+        }
+    },
+    "preview": {
+        "title": "Report Preview",
+        "heading": "Report Preview",
+        "description": "Configure your filters and generate the report to see a preview"
+    },
+    "actions": {
+        "emailReport": "Email Report",
+        "printReport": "Print Report",
+        "downloadReport": "Download Report",
+        "generating": "Generating..."
+    },
+    "toast": {
+        "selectDates": "Please select both start and end dates",
+        "selectSupplier": "Please select a supplier",
+        "notImplemented": "Report type not implemented",
+        "success": "Report generated successfully",
+        "error": "Failed to generate report",
+        "printSuccess": "Print dialog opened",
+        "printError": "Failed to print report",
+        "emailError": "Email functionality not implemented yet"
+    }
+}

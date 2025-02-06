@@ -1,0 +1,17 @@
+{
+    "title": "Navigation",
+    "menu": {
+        "dashboard": "Dashboard",
+        "newArrival": "New Arrival",
+        "arrivals": "Arrivals",
+        "reports": "Reports",
+        "settings": {
+            "title": "Settings",
+            "products": "Products",
+            "categories": "Categories",
+            "suppliers": "Suppliers",
+            "clients": "Clients"
+        }
+    },
+    "signOut": "Sign Out"
+}

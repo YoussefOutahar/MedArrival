@@ -1,0 +1,52 @@
+{
+    "header": {
+        "title": "Arrivées",
+        "newButton": "Nouvelle Arrivée",
+        "exportButton": "Tout Exporter"
+    },
+    "filters": {
+        "searchPlaceholder": "Rechercher par numéro de facture...",
+        "searchButton": "Rechercher",
+        "filterDateButton": "Filtrer par Date"
+    },
+    "table": {
+        "columns": {
+            "invoiceNumber": "Numéro de Facture",
+            "supplier": "Fournisseur",
+            "totalSales": "Ventes Totales",
+            "arrivalDate": "Date d'Arrivée",
+            "actions": "Actions"
+        },
+        "salesCount": "ventes",
+        "downloadExcel": "Excel",
+        "expandedDetails": {
+            "title": "Détails des Ventes",
+            "columns": {
+                "product": "Produit",
+                "client": "Client",
+                "quantity": "Quantité",
+                "totalAmount": "Montant Total",
+                "saleDate": "Date de Vente"
+            }
+        }
+    },
+    "pagination": {
+        "previous": "Précédent",
+        "next": "Suivant",
+        "showing": "Affichage de",
+        "to": "à",
+        "of": "sur",
+        "results": "résultats"
+    },
+    "emptyState": {
+        "title": "Aucune arrivée",
+        "description": "Commencez par créer une nouvelle arrivée."
+    },
+    "loading": "Chargement...",
+    "toast": {
+        "fetchError": "Échec de la récupération des arrivées",
+        "filterError": "Échec du filtrage des arrivées",
+        "downloadSuccess": "Rapport téléchargé avec succès",
+        "downloadError": "Échec du téléchargement du rapport"
+    }
+}

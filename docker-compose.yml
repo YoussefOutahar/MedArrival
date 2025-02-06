@@ -1,0 +1,50 @@
+services:
+    backend:
+        container_name: backend
+        build:
+            context: ./MedArrival-Backend
+            args:
+                - GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
+        ports:
+            - "8080:8080"
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom
+            - SERVER_TOMCAT_MAX_THREADS=200
+            - SERVER_TOMCAT_MIN_SPARE_THREADS=20
+            - SERVER_TOMCAT_MAX_CONNECTIONS=10000
+            - SERVER_TOMCAT_ACCEPT_COUNT=100
+            - TZ=UTC
+        networks:
+            - app-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+        security_opt:
+            - no-new-privileges:true
+
+    frontend:
+        container_name: frontend
+        build:
+            context: ./MedArrival-Front
+            dockerfile: Dockerfile
+        ports:
+            - "3000:80"
+        networks:
+            - app-network
+        security_opt:
+            - no-new-privileges:true
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:80"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+
+networks:
+    app-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.28.0.0/16

@@ -1,0 +1,52 @@
+{
+    "header": {
+        "title": "Analytics Dashboard",
+        "subtitle": "Real-time business metrics and insights",
+        "refreshButton": "Refresh Data"
+    },
+    "metrics": {
+        "dailyRevenue": {
+            "title": "Daily Revenue",
+            "prefix": "$"
+        },
+        "dailySales": {
+            "title": "Daily Sales"
+        },
+        "dailyArrivals": {
+            "title": "Daily Arrivals"
+        },
+        "categories": {
+            "title": "Categories"
+        }
+    },
+    "tabs": {
+        "revenue": "Revenue",
+        "salesAnalysis": "Sales Analysis",
+        "categories": "Categories"
+    },
+    "revenue": {
+        "title": "Revenue Trend",
+        "subtitle": "Daily revenue over time"
+    },
+    "salesAnalysis": {
+        "topProducts": {
+            "title": "Top Products",
+            "subtitle": "Best performing products",
+            "timeFrame": "Last 30 days"
+        },
+        "topClients": {
+            "title": "Top Clients",
+            "subtitle": "Most valuable customers",
+            "timeFrame": "Last 30 days"
+        }
+    },
+    "categories": {
+        "title": "Sales by Category",
+        "subtitle": "Distribution of sales across categories"
+    },
+    "loading": "Loading...",
+    "error": {
+        "fetchFailed": "Failed to fetch dashboard data",
+        "noData": "No data available"
+    }
+}
