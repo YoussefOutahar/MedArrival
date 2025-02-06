@@ -12,6 +12,7 @@ public class SaleDTO {
     private Float totalAmount;
     private LocalDateTime saleDate;
     private LocalDateTime expectedDeliveryDate;
+    private Boolean isConform;
     private ProductDTO product;
     private ClientDTO client;
     private LocalDateTime createdAt;

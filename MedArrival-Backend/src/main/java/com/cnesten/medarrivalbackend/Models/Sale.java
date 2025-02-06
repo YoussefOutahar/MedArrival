@@ -45,6 +45,9 @@ public class Sale {
     @Column(name = "expected_delivery_date")
     private LocalDateTime expectedDeliveryDate;
 
+    @Column(name = "is_conform")
+    private Boolean isConform;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;

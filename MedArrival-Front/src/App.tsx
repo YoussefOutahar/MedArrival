@@ -1,13 +1,13 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AuthGuard from "./AuthGuard";
 import { Suspense } from "react";
-import { PageLoader } from "./components/PageLoader";
 import { adminRoutes, publicRoutes } from "./routes/routes";
 import Layout from "./layout/Layout";
 import { Toaster } from "react-hot-toast";
 import { DarkModeProvider } from "./contexts/DarkModeContext";
 
 import "./i18n/config";
+import { PageLoader } from "./components/layout/PageLoader";
 
 function App() {
 

@@ -21,6 +21,7 @@ public class SaleConverter {
         dto.setTotalAmount(sale.getTotalAmount());
         dto.setSaleDate(sale.getSaleDate());
         dto.setExpectedDeliveryDate(sale.getExpectedDeliveryDate());
+        dto.setIsConform(sale.getIsConform());
         dto.setProduct(productConverter.toDTO(sale.getProduct()));
         dto.setClient(clientConverter.toDTO(sale.getClient()));
         dto.setCreatedAt(sale.getCreatedAt());
@@ -40,6 +41,7 @@ public class SaleConverter {
         sale.setTotalAmount(dto.getTotalAmount());
         sale.setSaleDate(dto.getSaleDate());
         sale.setExpectedDeliveryDate(dto.getExpectedDeliveryDate());
+        sale.setIsConform(dto.getIsConform());
         sale.setProduct(productConverter.toEntity(dto.getProduct()));
         sale.setClient(clientConverter.toEntity(dto.getClient()));
         sale.setCreatedAt(dto.getCreatedAt());

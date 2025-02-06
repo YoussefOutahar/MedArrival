@@ -260,16 +260,7 @@ public class ExcelExportService {
 
             // Control status
             Cell controle = row.createCell(7);
-            double clientPrice = sale.getProduct().getCurrentPriceByComponentForClient(
-                    PriceComponentType.PURCHASE_PRICE,
-                    sale.getClient()
-            );
-            double defaultPrice = sale.getProduct().getCurrentPriceByComponent(
-                    PriceComponentType.PURCHASE_PRICE
-            );
-            boolean isCustomPrice = sale.getClient().getClientType() == ClientType.CLIENT_MARCHER &&
-                    Math.abs(clientPrice - defaultPrice) > 0.001; // Using small epsilon for float comparison
-            controle.setCellValue(isCustomPrice ? "Non Conforme" : "Conforme");
+            controle.setCellValue(sale.getIsConform() ? "Conforme" : "Non Conforme");
             controle.setCellStyle(conformeStyle);
 
             // Final price (quantity * client-specific price)

@@ -48,6 +48,7 @@ public class ArrivalService {
             newSale.setQuantity(sale.getQuantity());
             newSale.setExpectedQuantity(sale.getExpectedQuantity());
             newSale.setSaleDate(sale.getSaleDate());
+            newSale.setIsConform(sale.getIsConform());
             newSale.setExpectedDeliveryDate(sale.getExpectedDeliveryDate());
 
             // Set relationships

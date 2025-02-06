@@ -8,6 +8,7 @@ export interface SaleDTO extends BaseDTO {
     totalAmount: number;
     saleDate: Date;
     expectedDeliveryDate: Date;
+    isConform: boolean;
     product: ProductDTO;
     client: ClientDTO;
 }
