@@ -1,5 +1,6 @@
 package com.cnesten.medarrivalbackend.Repository;
 
+import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
 import com.cnesten.medarrivalbackend.Models.Sale;
 import com.cnesten.medarrivalbackend.Projections.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,6 +31,24 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     List<ClientSaleForecastProjection> findClientSalesForecast(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
+
+
+    @Query("""
+    SELECT NEW com.cnesten.medarrivalbackend.Projections.ClientSalesForecastProjection(
+        c.name, p.name, s.expectedQuantity, 
+        p.getCurrentPriceByComponentForClient(:componentType, c.id))
+    FROM Sale s 
+    JOIN s.client c 
+    JOIN s.product p 
+    WHERE s.saleDate BETWEEN :startDate AND :endDate 
+    ORDER BY c.name, p.name
+    """)
+    List<ClientSaleForecastProjection> findClientSalesForecast(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            @Param("componentType") PriceComponentType componentType
+    );
+
 
     @Query("""
     SELECT 

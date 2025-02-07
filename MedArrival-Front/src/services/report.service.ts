@@ -45,6 +45,21 @@ export class ReportService {
     });
     return response.data;
   }
+
+  async exportAll(startDate: string, endDate: string): Promise<Blob> {
+    const formattedStartDate = `${startDate}T00:00:00`;
+    const formattedEndDate = `${endDate}T23:59:59`;
+    
+    const params = new URLSearchParams({
+        startDate: formattedStartDate,
+        endDate: formattedEndDate
+    });
+
+    const response = await axiosInstance.get(`${this.baseUrl}/export-all?${params.toString()}`, {
+        responseType: 'blob'
+    });
+    return response.data;
+}
 }
 
 export const reportService = new ReportService();
