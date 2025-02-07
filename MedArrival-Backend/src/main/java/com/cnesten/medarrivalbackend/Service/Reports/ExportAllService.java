@@ -1,7 +1,10 @@
 package com.cnesten.medarrivalbackend.Service.Reports;
 
+import com.cnesten.medarrivalbackend.Models.Arrival;
+import com.cnesten.medarrivalbackend.Service.ArrivalService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,10 +20,22 @@ public class ExportAllService {
     private final ProductPricingReportService productPricingReportService;
     private final MonthlyProductReportService monthlyProductReportService;
     private final ClientSalesForecastService clientSalesForecastService;
+    private final ExcelExportService excelExportService;
+    private final ArrivalService arrivalService;
 
     public byte[] generateExportAll(LocalDateTime startDate, LocalDateTime endDate) throws IOException {
         try (Workbook combinedWorkbook = new XSSFWorkbook()) {
-            // Get individual reports
+            // First, get all arrivals for the period and generate their invoice reports
+            List<Arrival> arrivals = arrivalService.findByDateRange(startDate, endDate);
+            for (Arrival arrival : arrivals) {
+                try (ByteArrayInputStream arrivalStream = new ByteArrayInputStream(excelExportService.generateInvoiceExcel(arrival));
+                     Workbook arrivalWorkbook = new XSSFWorkbook(arrivalStream)) {
+                    copySheets(arrivalWorkbook, combinedWorkbook,
+                            "Arrival " + arrival.getInvoiceNumber() + " - ");
+                }
+            }
+
+            // Then add the other reports
             byte[] pricingReport = productPricingReportService.generatePricingReport(startDate, endDate);
             byte[] monthlyReport = monthlyProductReportService.generateMonthlyProductReport(startDate, endDate);
             byte[] forecastReport = clientSalesForecastService.generateClientSalesForecastReport(startDate, endDate);
@@ -65,6 +81,11 @@ public class ExportAllService {
             // Copy column widths
             for (int j = 0; j < sourceSheet.getPhysicalNumberOfRows(); j++) {
                 targetSheet.setColumnWidth(j, sourceSheet.getColumnWidth(j));
+            }
+
+            // Copy merged regions
+            for (CellRangeAddress mergedRegion : sourceSheet.getMergedRegions()) {
+                targetSheet.addMergedRegion(mergedRegion);
             }
         }
     }

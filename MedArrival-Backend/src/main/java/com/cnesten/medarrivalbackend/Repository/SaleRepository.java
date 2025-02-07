@@ -1,6 +1,5 @@
 package com.cnesten.medarrivalbackend.Repository;
 
-import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
 import com.cnesten.medarrivalbackend.Models.Sale;
 import com.cnesten.medarrivalbackend.Projections.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,33 +20,35 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
         c.name as clientName,
         p.name as productName,
         s.expectedQuantity as expectedQuantity,
-        p.getCurrentPriceByComponentForClient(com.cnesten.medarrivalbackend.Models.Price.PriceComponentType.PURCHASE_PRICE, c) as unitPrice
+        COALESCE(
+            (SELECT pc.amount 
+             FROM PriceComponent pc 
+             WHERE pc.product = p 
+             AND pc.client = c 
+             AND pc.componentType = com.cnesten.medarrivalbackend.Models.Price.PriceComponentType.PURCHASE_PRICE
+             AND pc.effectiveFrom <= CURRENT_TIMESTAMP
+             AND (pc.effectiveTo IS NULL OR pc.effectiveTo > CURRENT_TIMESTAMP)
+             ORDER BY pc.effectiveFrom DESC
+             LIMIT 1),
+            (SELECT pc2.amount 
+             FROM PriceComponent pc2 
+             WHERE pc2.product = p 
+             AND pc2.client IS NULL 
+             AND pc2.componentType = com.cnesten.medarrivalbackend.Models.Price.PriceComponentType.PURCHASE_PRICE
+             AND pc2.effectiveFrom <= CURRENT_TIMESTAMP
+             AND (pc2.effectiveTo IS NULL OR pc2.effectiveTo > CURRENT_TIMESTAMP)
+             ORDER BY pc2.effectiveFrom DESC
+             LIMIT 1)
+        ) as unitPrice
     FROM Sale s
     JOIN s.client c
     JOIN s.product p
     WHERE s.saleDate BETWEEN :startDate AND :endDate
     ORDER BY c.name, p.name
-""")
-    List<ClientSaleForecastProjection> findClientSalesForecast(
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
-
-
-    @Query("""
-    SELECT NEW com.cnesten.medarrivalbackend.Projections.ClientSalesForecastProjection(
-        c.name, p.name, s.expectedQuantity, 
-        p.getCurrentPriceByComponentForClient(:componentType, c.id))
-    FROM Sale s 
-    JOIN s.client c 
-    JOIN s.product p 
-    WHERE s.saleDate BETWEEN :startDate AND :endDate 
-    ORDER BY c.name, p.name
     """)
     List<ClientSaleForecastProjection> findClientSalesForecast(
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate,
-            @Param("componentType") PriceComponentType componentType
-    );
+            @Param("endDate") LocalDateTime endDate);
 
 
     @Query("""
