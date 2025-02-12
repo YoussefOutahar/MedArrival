@@ -10,12 +10,16 @@ const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const Arrivals = lazy(() => import('@/pages/Arrivals'));
 const NewArrival = lazy(() => import('@/pages/NewArrival'));
 const Reports = lazy(() => import('@/pages/Reports'));
+const Receipt = lazy(() => import('@/pages/Receipts'));
+const AddReceipt = lazy(() => import('@/pages/AddReceipt'));
+
 
 // Admin Settings pages
 const Products = lazy(() => import('@/pages/settings/Products'));
 const Categories = lazy(() => import('@/pages/settings/Categories'));
 const Suppliers = lazy(() => import('@/pages/settings/Suppliers'));
 const Clients = lazy(() => import('@/pages/settings/Clients'));
+const ClientReceipts = lazy(() => import('@/pages/ClientReceipts'));
 
 export const publicRoutes = [
     { path: PATHS.AUTH.SIGN_IN, element: <Auth /> },
@@ -27,6 +31,9 @@ export const adminRoutes = [
     { path: PATHS.ADMIN.ARRIVALS, element: <Arrivals />, role: 'ROLE_ADMIN' },
     { path: PATHS.ADMIN.NEW_ARRIVAL, element: <NewArrival />, role: 'ROLE_ADMIN' },
     { path: PATHS.ADMIN.REPORTS, element: <Reports />, role: 'ROLE_ADMIN' },
+    { path: PATHS.ADMIN.RECEIPTS, element: <Receipt />, role: 'ROLE_ADMIN' },
+    { path: PATHS.ADMIN.CLIENT_RECEIPTS, element: <ClientReceipts />, role: 'ROLE_ADMIN' },
+    { path: PATHS.ADMIN.ADD_RECEIPT, element: <AddReceipt />, role: 'ROLE_ADMIN' },
 
     // Admin Settings Routes
     { path: PATHS.ADMIN.SETTINGS.PRODUCTS, element: <Products />, role: 'ROLE_ADMIN' },

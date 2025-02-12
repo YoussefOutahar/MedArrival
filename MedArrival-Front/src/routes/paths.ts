@@ -12,7 +12,10 @@ export const PATHS = {
         DASHBOARD: "/admin/dashboard",
         ARRIVALS: "/admin/arrivals",
         NEW_ARRIVAL: "/admin/new-arrival",
+        RECEIPTS: "/admin/receipts",
         REPORTS: "/admin/reports",
+        CLIENT_RECEIPTS: "/admin/receipts/:clientId",
+        ADD_RECEIPT: "/admin/receipts/:clientId/new",
         SETTINGS: {
             PRODUCTS: '/admin/settings/products',
             CATEGORIES: '/admin/settings/categories',

@@ -6,16 +6,24 @@ import com.cnesten.medarrivalbackend.Models.Client.ClientType;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponent;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
 import com.cnesten.medarrivalbackend.Models.Product;
+import com.cnesten.medarrivalbackend.Models.Receipts.Receipt;
+import com.cnesten.medarrivalbackend.Models.Receipts.ReceiptItem;
 import com.cnesten.medarrivalbackend.Repository.ClientRepository;
 import com.cnesten.medarrivalbackend.Repository.ProductRepository;
+import com.cnesten.medarrivalbackend.Repository.ReceiptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +31,7 @@ import java.util.List;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
+    private final ReceiptRepository receiptRepository;
 
     public Client save(Client client) {
         if (client.getId() != null) {
@@ -88,5 +97,95 @@ public class ClientService {
         client.setClientType(client.getClientType() == ClientType.CLIENT_MARCHER ?
                 ClientType.CLIENT_RP : ClientType.CLIENT_MARCHER);
         return clientRepository.save(client);
+    }
+
+
+    @Transactional
+    public Receipt addReceipt(Long clientId, Receipt receipt) {
+        Client client = findById(clientId);
+        receipt.setClient(client);
+
+        if (receipt.getReceiptNumber() == null) {
+            receipt.setReceiptNumber(generateReceiptNumber());
+        }
+
+        if (receipt.getReceiptDate() == null) {
+            receipt.setReceiptDate(LocalDateTime.now());
+        }
+
+        // Create new receipt items
+        Set<ReceiptItem> newItems = new HashSet<>();
+        receipt.getReceiptItems().forEach(item -> {
+            ReceiptItem newItem = new ReceiptItem();
+            newItem.setProduct(item.getProduct());
+            newItem.setQuantity(item.getQuantity());
+            newItem.setUnitPrice(item.getUnitPrice());
+            newItem.setLotNumber(item.getLotNumber());
+            newItem.setCalibrationDate(item.getCalibrationDate());
+            newItem.setExpirationDate(item.getExpirationDate());
+            newItem.setArticleCode(item.getArticleCode());
+            newItem.setDescription(item.getDescription());
+            newItem.setUnit(item.getUnit());
+            newItem.setReceipt(receipt);
+            newItems.add(newItem);
+        });
+
+        receipt.setReceiptItems(newItems);
+
+        try {
+            return receiptRepository.save(receipt);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new RuntimeException("Concurrent modification detected. Please try again.", e);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Receipt> getClientReceipts(Long clientId, LocalDateTime startDate, LocalDateTime endDate) {
+        Client client = findById(clientId);
+        if (startDate != null && endDate != null) {
+            return receiptRepository.findByClientAndReceiptDateBetween(client, startDate, endDate);
+        }
+        return receiptRepository.findByClient(client);
+    }
+
+    @Transactional(readOnly = true)
+    public Receipt getClientReceipt(Long clientId, Long receiptId) {
+        Client client = findById(clientId);
+        Receipt receipt = receiptRepository.findById(receiptId)
+                .orElseThrow(() -> new ResourceNotFoundException("Receipt not found"));
+
+        if (!receipt.getClient().getId().equals(clientId)) {
+            throw new IllegalStateException("Receipt does not belong to this client");
+        }
+
+        return receipt;
+    }
+
+    @Transactional
+    public Receipt updateClientReceipt(Long clientId, Long receiptId, Receipt updatedReceipt) {
+        Receipt existingReceipt = getClientReceipt(clientId, receiptId);
+
+        existingReceipt.setReceiptDate(updatedReceipt.getReceiptDate());
+        // Update receipt items
+        existingReceipt.getReceiptItems().clear();
+        updatedReceipt.getReceiptItems().forEach(item -> {
+            item.setReceipt(existingReceipt);
+            existingReceipt.addReceiptItem(item);
+        });
+
+        return receiptRepository.save(existingReceipt);
+    }
+
+    @Transactional
+    public void deleteClientReceipt(Long clientId, Long receiptId) {
+        Receipt receipt = getClientReceipt(clientId, receiptId);
+        receiptRepository.delete(receipt);
+    }
+
+    private String generateReceiptNumber() {
+        // Implement your receipt number generation logic
+        // Example: RCPT-yyyyMMdd-XXXXX
+        return "RCPT-" + LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE) +
+                "-" + String.format("%05d", new Random().nextInt(100000));
     }
 }
