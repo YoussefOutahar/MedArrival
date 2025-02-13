@@ -1,7 +1,5 @@
-import axios, { AxiosError, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { authStorage } from '@/services/LocalStorage/AuthStorage';
-import { refreshToken } from '@/services/auth';
-import { getFirstRoleFromJwt } from '@/utils/jwt-utils';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
