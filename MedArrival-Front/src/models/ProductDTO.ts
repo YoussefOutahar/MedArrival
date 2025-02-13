@@ -7,5 +7,6 @@ export interface ProductDTO extends BaseDTO {
   description: string;
   category: ProductCategoryDTO;
   priceComponents: PriceComponentDTO[];
+  availableQuantity: number;
   totalCost: number;
 }

@@ -15,6 +15,8 @@ import com.cnesten.medarrivalbackend.Models.Client.ClientType;
 import com.cnesten.medarrivalbackend.Models.Product;
 import com.cnesten.medarrivalbackend.Models.Receipts.Receipt;
 import com.cnesten.medarrivalbackend.Models.Receipts.ReceiptAttachment;
+import com.cnesten.medarrivalbackend.Models.Receipts.ReceiptItem;
+import com.cnesten.medarrivalbackend.Models.Sale;
 import com.cnesten.medarrivalbackend.Repository.ReceiptRepository;
 import com.cnesten.medarrivalbackend.Requests.PriceUpdateRequest;
 import com.cnesten.medarrivalbackend.Service.*;
@@ -32,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,6 +47,7 @@ public class ClientController {
     private final FileStorageService fileStorageService;
     private final ReceiptRepository receiptRepository;
     private final ClientConverter clientConverter;
+    private final ProductConverter productConverter;
     private final ReceiptConverter receiptConverter;
     private final ReceiptAttachmentConverter attachmentConverter;
     private final BulkImportService bulkImportService;
@@ -228,8 +232,16 @@ public class ClientController {
             @PathVariable Long clientId,
             @PathVariable Long receiptId,
             @PathVariable Long attachmentId) {
-        clientService.getClientReceipt(clientId, receiptId); // Verify access
+        clientService.getClientReceipt(clientId, receiptId);
         receiptAttachmentService.deleteAttachment(attachmentId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{clientId}/available-products")
+    public List<ProductDTO> getAvailableProducts(@PathVariable Long clientId) {
+        Client client = clientService.findById(clientId);
+        return clientService.getAvailableProducts(clientId).stream()
+                .map(product -> productConverter.toDTO(product, client))
+                .collect(Collectors.toList());
     }
 }

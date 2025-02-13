@@ -70,7 +70,14 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
                                                 value={product.id.toString()}
                                                 className="relative flex h-9 items-center px-8 rounded-sm text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer outline-none"
                                             >
-                                                <Select.ItemText>{product.name}</Select.ItemText>
+                                                <Select.ItemText>
+                                                    <div className="flex justify-between items-center w-full">
+                                                        <span>{product.name}</span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                            Available: {product.availableQuantity}
+                                                        </span>
+                                                    </div>
+                                                </Select.ItemText>
                                             </Select.Item>
                                         ))}
                                     </Select.Viewport>
@@ -78,19 +85,6 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
                                 </Select.Content>
                             </Select.Portal>
                         </Select.Root>
-                    </div>
-
-                    <div className="col-span-3">
-                        <Label.Root className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Quantity *
-                        </Label.Root>
-                        <Input
-                            type="number"
-                            value={item.quantity}
-                            onChange={(e) => onItemChange(index, 'quantity', Number(e.target.value))}
-                            min="0"
-                            className="text-right"
-                        />
                     </div>
 
                     <div className="col-span-3">
@@ -120,7 +114,7 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
                             Article Code
                         </Label.Root>
                         <Input
-                            value={item.articleCode}
+                            value={item.articleCode || ''}
                             onChange={(e) => onItemChange(index, 'articleCode', e.target.value)}
                         />
                     </div>
@@ -130,7 +124,7 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
                             Lot Number
                         </Label.Root>
                         <Input
-                            value={item.lotNumber}
+                            value={item.lotNumber || ''}
                             onChange={(e) => onItemChange(index, 'lotNumber', e.target.value)}
                         />
                     </div>
@@ -140,7 +134,7 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
                             Unit
                         </Label.Root>
                         <Input
-                            value={item.unit}
+                            value={item.unit || ''}
                             onChange={(e) => onItemChange(index, 'unit', e.target.value)}
                         />
                     </div>
@@ -183,7 +177,7 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
                         Description
                     </Label.Root>
                     <Textarea
-                        value={item.description}
+                        value={item.description || ''}
                         onChange={(e) => onItemChange(index, 'description', e.target.value)}
                         rows={2}
                         className="resize-none"

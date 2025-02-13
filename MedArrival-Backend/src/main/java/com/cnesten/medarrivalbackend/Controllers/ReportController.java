@@ -24,6 +24,7 @@ public class ReportController {
     private final ProductPricingReportService productPricingReportService;
     private final MonthlyProductReportService monthlyProductReportService;
     private final ClientSalesForecastService clientSalesForecastService;
+    private final ReceiptReportService receiptReportService;
     private final ExportAllService exportAllService;
 
     @GetMapping("/invoice/{invoiceNumber}/excel")
@@ -79,6 +80,40 @@ public class ReportController {
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=client-sales-forecast-" +
                                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")) + ".xlsx")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(report);
+    }
+
+    @GetMapping("/receipts/client/{clientId}")
+    public ResponseEntity<byte[]> generateClientReceiptReport(
+            @PathVariable Long clientId,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate) {
+
+        byte[] report = receiptReportService.generateReceiptReport(clientId, startDate, endDate);
+
+        String filename = String.format("receipt-report-client-%d-%s.xlsx",
+                clientId,
+                LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(report);
+    }
+
+    @GetMapping("/receipts/all")
+    public ResponseEntity<byte[]> generateAllReceiptsReport(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate) {
+
+        byte[] report = receiptReportService.generateReceiptReport(startDate, endDate);
+
+        String filename = String.format("receipt-report-all-%s.xlsx",
+                LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(report);
     }

@@ -28,4 +28,6 @@ public interface ArrivalRepository extends JpaRepository<Arrival, Long> {
         """, nativeQuery = true)
     List<DailyMetricProjection> findDailyArrivalsCount(@Param("startDate") LocalDateTime startDate,
                                                        @Param("endDate") LocalDateTime endDate);
+
+    List<Arrival> findByArrivalDateBetweenAndSales_Client_Id(LocalDateTime startDate, LocalDateTime endDate, Long clientId);
 }

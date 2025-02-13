@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -138,8 +139,8 @@ public class ProductPricingReportService {
         Row dateRow = sheet.createRow(0);
         Cell dateCell = dateRow.createCell(0);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String dateRange = String.format("Période: %s - %s",
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("fr"));
+        String dateRange = String.format("RAPPORT DE PRIX DU %s AU %s",
                 startDate.format(formatter),
                 endDate.format(formatter));
 
@@ -147,8 +148,9 @@ public class ProductPricingReportService {
         Font dateFont = workbook.createFont();
         dateFont.setBold(true);
         dateStyle.setFont(dateFont);
+        dateStyle.setAlignment(HorizontalAlignment.CENTER);
 
-        dateCell.setCellValue(dateRange);
+        dateCell.setCellValue(dateRange.toUpperCase());
         dateCell.setCellStyle(dateStyle);
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
     }

@@ -1,5 +1,6 @@
 package com.cnesten.medarrivalbackend.Models.Client;
 
+import com.cnesten.medarrivalbackend.Models.Receipts.Receipt;
 import com.cnesten.medarrivalbackend.Models.Sale;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,8 +16,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString(exclude = {"sales"})
-@EqualsAndHashCode(exclude = {"sales"})
+@ToString(exclude = {"sales", "receipts"})
+@EqualsAndHashCode(exclude = {"sales", "receipts"})
 @Entity
 @Table(name = "clients", indexes = {
         @Index(name = "idx_client_type", columnList = "client_type"),
@@ -39,6 +40,9 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private Set<Sale> sales = new HashSet<>();
+
+    @OneToMany(mappedBy = "client")
+    private Set<Receipt> receipts = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

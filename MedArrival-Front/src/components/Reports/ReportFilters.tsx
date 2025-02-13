@@ -7,6 +7,8 @@ import { arrivalService } from '@/services/arrival.service';
 import { SupplierDTO } from '@/models/SupplierDTO';
 import { ArrivalDTO } from '@/models/ArrivalDTO';
 import debounce from 'lodash/debounce';
+import { ClientDTO } from '@/models/ClientDTO';
+import { clientService } from '@/services/client.service';
 
 interface ReportFiltersProps {
   selectedReport: string;
@@ -22,9 +24,28 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
   const { t } = useTranslation('reports');
   const [suppliers, setSuppliers] = useState<SupplierDTO[]>([]);
   const [arrivals, setArrivals] = useState<ArrivalDTO[]>([]);
+  const [clients, setClients] = useState<ClientDTO[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showArrivalDropdown, setShowArrivalDropdown] = useState(false);
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      setIsLoading(true);
+      try {
+        const response = await clientService.getAll();
+        setClients(response.content);
+      } catch (error) {
+        console.error('Error fetching clients:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (selectedReport === 'client-receipt') {
+      fetchClients();
+    }
+  }, [selectedReport]);
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -47,7 +68,7 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
   useEffect(() => {
     const fetchArrivals = async () => {
       if (!filters.supplier) return;
-      
+
       setIsLoading(true);
       try {
         const response = await arrivalService.findBySupplier(Number(filters.supplier));
@@ -64,7 +85,7 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
     }
   }, [selectedReport, filters.supplier]);
 
-  const filteredArrivals = arrivals.filter(arrival => 
+  const filteredArrivals = arrivals.filter(arrival =>
     arrival.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -142,10 +163,10 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
         <select
           value={filters.supplier || ''}
           onChange={(e) => {
-            onFiltersChange({ 
-              ...filters, 
-              supplier: e.target.value, 
-              arrival: undefined 
+            onFiltersChange({
+              ...filters,
+              supplier: e.target.value,
+              arrival: undefined
             });
             setSearchTerm('');
           }}
@@ -221,6 +242,36 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
     </>
   );
 
+  const renderClientFilters = () => (
+    <>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          {t('filters.client.label')}
+        </label>
+        <select
+          value={filters.client || ''}
+          onChange={(e) => onFiltersChange({ 
+            ...filters, 
+            client: e.target.value ? Number(e.target.value) : undefined 
+          })}
+          disabled={isLoading}
+          className="w-full p-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 
+                   rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
+                   dark:focus:ring-primary-400 dark:focus:border-primary-400 
+                   text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <option value="">{t('filters.client.placeholder')}</option>
+          {clients.map((client) => (
+            <option key={client.id} value={client.id} className="dark:bg-gray-700">
+              {client.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      {renderDateFilters()}
+    </>
+  );
+
   return (
     <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg mb-6">
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -234,7 +285,9 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {selectedReport === 'purchase-invoice' 
-            ? renderPurchaseInvoiceFilters() 
+            ? renderPurchaseInvoiceFilters()
+            : selectedReport === 'client-receipt'
+            ? renderClientFilters()
             : renderDateFilters()
           }
         </div>

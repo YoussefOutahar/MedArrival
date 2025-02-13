@@ -45,8 +45,11 @@ public class MonthlyProductReportService {
             // Create title
             Row titleRow = sheet.createRow(0);
             Cell titleCell = titleRow.createCell(0);
-            String month = startDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH));
-            titleCell.setCellValue("BILAN PRODUIT DU MOIS DE " + month.toUpperCase());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("fr"));
+            String dateRange = String.format("BILAN PRODUIT DU %s AU %s",
+                    startDate.format(formatter),
+                    endDate.format(formatter));
+            titleCell.setCellValue(dateRange.toUpperCase());
             titleCell.setCellStyle(titleStyle);
             sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
 

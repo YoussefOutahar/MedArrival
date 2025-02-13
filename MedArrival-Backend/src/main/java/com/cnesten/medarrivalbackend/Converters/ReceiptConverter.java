@@ -2,6 +2,8 @@ package com.cnesten.medarrivalbackend.Converters;
 
 import com.cnesten.medarrivalbackend.DTO.ReceiptDTO;
 import com.cnesten.medarrivalbackend.Models.Receipts.Receipt;
+import com.cnesten.medarrivalbackend.Models.Receipts.ReceiptAttachment;
+import com.cnesten.medarrivalbackend.Models.Receipts.ReceiptItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -78,16 +80,22 @@ public class ReceiptConverter {
 
         if (dto.getReceiptItems() != null) {
             receipt.setReceiptItems(dto.getReceiptItems().stream()
-                    .map(receiptItemConverter::toEntity)
+                    .map(itemDto -> {
+                        ReceiptItem item = receiptItemConverter.toEntity(itemDto);
+                        item.setReceipt(receipt);
+                        return item;
+                    })
                     .collect(Collectors.toSet()));
-            receipt.getReceiptItems().forEach(item -> item.setReceipt(receipt));
         }
 
         if (dto.getAttachments() != null) {
             receipt.setAttachments(dto.getAttachments().stream()
-                    .map(attachmentConverter::toEntity)
+                    .map(attachmentDto -> {
+                        ReceiptAttachment attachment = attachmentConverter.toEntity(attachmentDto);
+                        attachment.setReceipt(receipt);
+                        return attachment;
+                    })
                     .collect(Collectors.toSet()));
-            receipt.getAttachments().forEach(attachment -> attachment.setReceipt(receipt));
         }
 
         receipt.setCreatedAt(dto.getCreatedAt());

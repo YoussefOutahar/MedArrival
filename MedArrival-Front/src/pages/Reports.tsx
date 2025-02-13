@@ -17,6 +17,7 @@ function Reports() {
     endDate: '',
     supplier: undefined,
     arrival: undefined,
+    client: undefined,
     searchTerm: '',
   });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -37,7 +38,7 @@ function Reports() {
         toast.error(t('toast.selectDates'));
         return false;
       }
-      
+
       const start = new Date(filters.startDate);
       const end = new Date(filters.endDate);
       if (end < start) {
@@ -91,6 +92,27 @@ function Reports() {
           filename = `client-sales-forecast-${filters.startDate.substring(0, 7)}.xlsx`;
           break;
 
+        case 'client-receipt':
+          if (!filters.client) {
+            toast.error(t('toast.selectClient'));
+            return;
+          }
+          blob = await reportService.downloadClientReceiptReport(
+            filters.client,
+            formattedStartDate,
+            formattedEndDate
+          );
+          filename = `client-receipt-${filters.client}-${filters.startDate}-${filters.endDate}.xlsx`;
+          break;
+
+        case 'all-receipts':
+          blob = await reportService.downloadAllReceiptsReport(
+            formattedStartDate,
+            formattedEndDate
+          );
+          filename = `all-receipts-${filters.startDate}-${filters.endDate}.xlsx`;
+          break;
+
         case 'download-all':
           blob = await reportService.exportAll(
             filters.startDate,
@@ -142,7 +164,7 @@ function Reports() {
     if (!validateFilters()) {
       return;
     }
-    
+
     setIsGenerating(true);
     try {
       window.print();
@@ -184,13 +206,13 @@ function Reports() {
           </h1>
         </div>
       </div>
-  
+
       <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <ReportTypes
           selectedReport={selectedReport}
           onSelectReport={handleReportTypeChange}
         />
-  
+
         {selectedReport && (
           <>
             <ReportFilters
@@ -198,7 +220,7 @@ function Reports() {
               filters={filters}
               onFiltersChange={handleFiltersChange}
             />
-  
+
             <ActionButtons
               isGenerating={isGenerating}
               selectedReport={selectedReport}

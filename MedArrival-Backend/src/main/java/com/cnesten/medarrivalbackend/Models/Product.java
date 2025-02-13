@@ -4,6 +4,7 @@ import com.cnesten.medarrivalbackend.Models.Client.Client;
 import com.cnesten.medarrivalbackend.Models.Client.ClientType;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponent;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
+import com.cnesten.medarrivalbackend.Models.Receipts.ReceiptItem;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,8 +19,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString(exclude = {"category", "sales", "priceComponents"})
-@EqualsAndHashCode(exclude = {"category", "sales", "priceComponents"})
+@ToString(exclude = {"category", "sales", "priceComponents", "receiptItems"})
+@EqualsAndHashCode(exclude = {"category", "sales", "priceComponents", "receiptItems"})
 @Entity
 @Table(name = "products", indexes = {
         @Index(name = "idx_product_name", columnList = "name"),
@@ -40,6 +41,25 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private ProductCategory category;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private Set<ReceiptItem> receiptItems = new HashSet<>();
+
+    @Transient
+    public Integer calculateAvailableQuantity(Client client) {
+        int totalSoldQuantity = this.sales.stream()
+                .filter(sale -> sale.getClient().equals(client))
+                .mapToInt(Sale::getQuantity)
+                .sum();
+
+        int totalReceivedQuantity = client.getReceipts().stream()
+                .flatMap(receipt -> receipt.getReceiptItems().stream())
+                .filter(item -> item.getProduct().equals(this))
+                .mapToInt(ReceiptItem::getQuantity)
+                .sum();
+
+        return totalSoldQuantity - totalReceivedQuantity;
+    }
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private Set<Sale> sales = new HashSet<>();

@@ -46,20 +46,60 @@ export class ReportService {
     return response.data;
   }
 
+  async downloadClientReceiptReport(clientId: number, startDate: string, endDate: string): Promise<Blob> {
+    const formatDate = (date: string) => {
+      const d = new Date(date);
+      return d.toISOString().split('.')[0]; // Returns format: "yyyy-MM-ddTHH:mm:ss"
+    };
+
+    const params = new URLSearchParams({
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate)
+    });
+
+    const response = await axiosInstance.get(
+      `${this.baseUrl}/receipts/client/${clientId}?${params.toString()}`,
+      {
+        responseType: 'blob'
+      }
+    );
+    return response.data;
+  }
+
+  async downloadAllReceiptsReport(startDate: string, endDate: string): Promise<Blob> {
+    const formatDate = (date: string) => {
+      const d = new Date(date);
+      return d.toISOString().split('.')[0]; // Returns format: "yyyy-MM-ddTHH:mm:ss"
+    };
+
+    const params = new URLSearchParams({
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate)
+    });
+
+    const response = await axiosInstance.get(
+      `${this.baseUrl}/receipts/all?${params.toString()}`,
+      {
+        responseType: 'blob'
+      }
+    );
+    return response.data;
+  }
+
   async exportAll(startDate: string, endDate: string): Promise<Blob> {
     const formattedStartDate = `${startDate}T00:00:00`;
     const formattedEndDate = `${endDate}T23:59:59`;
-    
+
     const params = new URLSearchParams({
-        startDate: formattedStartDate,
-        endDate: formattedEndDate
+      startDate: formattedStartDate,
+      endDate: formattedEndDate
     });
 
     const response = await axiosInstance.get(`${this.baseUrl}/export-all?${params.toString()}`, {
-        responseType: 'blob'
+      responseType: 'blob'
     });
     return response.data;
-}
+  }
 }
 
 export const reportService = new ReportService();

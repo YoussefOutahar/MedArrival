@@ -7,7 +7,6 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import { clientService } from '@/services/client.service';
-import { productService } from '@/services/product.service';
 import { ocrService } from '@/services/ocr.service';
 
 import { ClientDTO } from '@/models/ClientDTO';
@@ -32,7 +31,7 @@ export const AddReceiptPage: React.FC = () => {
     const [ocrResults, setOcrResults] = useState<string[]>([]);
     const [isOcrEnabled, setIsOcrEnabled] = useState(false);
     const [processingFiles, setProcessingFiles] = useState<Record<string, boolean>>({});
-    const [ocrLanguage, setOcrLanguage] = useState<string>('fra');
+    const [ocrLanguage, setOcrLanguage] = useState<string>('ar+fr');
 
     const { register, handleSubmit, watch, formState: { errors } } =
         useForm<ReceiptForm>({
@@ -41,7 +40,13 @@ export const AddReceiptPage: React.FC = () => {
                 tvaPercentage: 0,
                 paymentTerms: 'NET 30',
                 issuingDepartment: 'DG/DPR',
-                deliveryReceived: false
+                deliveryReceived: false,
+                iceNumber: null,
+                referenceNumber: null,
+                deliveryNoteNumbers: null,
+                bankAccount: null,
+                bankDetails: null,
+                deliveryRef: null
             }
         });
 
@@ -53,22 +58,22 @@ export const AddReceiptPage: React.FC = () => {
                 navigate('/clients');
                 return;
             }
-
+    
             try {
                 setIsLoading(true);
-                const [clientData, productsData] = await Promise.all([
+                const [clientData, availableProducts] = await Promise.all([
                     clientService.getById(Number(clientId)),
-                    productService.getAll(0, 1000)
+                    clientService.getAvailableReceiptProducts(Number(clientId))
                 ]);
-
+    
                 if (!clientData) {
                     toast.error('Client not found');
                     navigate('/clients');
                     return;
                 }
-
+    
                 setClient(clientData);
-                setProducts(productsData.content);
+                setProducts(availableProducts);
             } catch (error) {
                 console.error('Error loading initial data:', error);
                 toast.error('Failed to load required data');
@@ -77,7 +82,7 @@ export const AddReceiptPage: React.FC = () => {
                 setIsLoading(false);
             }
         };
-
+    
         fetchInitialData();
     }, [clientId, navigate]);
 
@@ -86,40 +91,53 @@ export const AddReceiptPage: React.FC = () => {
             product: null,
             quantity: 0,
             unitPrice: 0,
-            lotNumber: '',
-            articleCode: '',
-            description: '',
-            unit: '',
+            lotNumber: null,
+            calibrationDate: null,
+            expirationDate: null,
+            articleCode: null,
+            description: null,
+            unit: null,
             subtotal: 0
         }]);
     };
-
     const handleRemoveItem = (index: number) => {
         setItems(items.filter((_, i) => i !== index));
     };
 
     const handleItemChange = (index: number, field: keyof ReceiptItemForm, value: any) => {
         const newItems = [...items];
+        
+        if (field === 'quantity' && value) {
+            const product = newItems[index].product;
+            if (product) {
+                const availableProduct = products.find(p => p.id === product.id);
+                if (availableProduct && value > availableProduct.availableQuantity) {
+                    toast.error(`Maximum available quantity is ${availableProduct.availableQuantity}`);
+                    return;
+                }
+            }
+        }
+    
         newItems[index] = {
             ...newItems[index],
             [field]: value
         };
-
+    
         if (field === 'product' && value) {
             const product = value as ProductDTO;
             newItems[index] = {
                 ...newItems[index],
                 unitPrice: product.totalCost || 0,
-                description: product.description || '',
+                description: product.description || null,
                 unit: 'unit',
                 subtotal: newItems[index].quantity * (product.totalCost || 0)
             };
         }
-
+    
         if (field === 'quantity' || field === 'unitPrice') {
             newItems[index].subtotal = newItems[index].quantity * newItems[index].unitPrice;
         }
-
+    
         setItems(newItems);
     };
 
@@ -156,7 +174,8 @@ export const AddReceiptPage: React.FC = () => {
 
     const calculateTotals = (items: ReceiptItemForm[]): { totalHT: number; totalTTC: number } => {
         const totalHT = items.reduce((sum, item) => sum + item.subtotal, 0);
-        const totalTTC = totalHT * (1 + (watchTVA / 100));
+        const tvaPercentage = watchTVA || 0;
+        const totalTTC = totalHT * (1 + (tvaPercentage / 100));
         return { totalHT, totalTTC };
     };
 
@@ -175,12 +194,12 @@ export const AddReceiptPage: React.FC = () => {
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,
                 subtotal: item.quantity * item.unitPrice,
-                lotNumber: item.lotNumber,
-                calibrationDate: item.calibrationDate ? new Date(item.calibrationDate) : undefined,
-                expirationDate: item.expirationDate ? new Date(item.expirationDate) : undefined,
-                articleCode: item.articleCode,
-                description: item.description,
-                unit: item.unit,
+                lotNumber: item.lotNumber || null,
+                calibrationDate: item.calibrationDate ? new Date(item.calibrationDate) : null,
+                expirationDate: item.expirationDate ? new Date(item.expirationDate) : null,
+                articleCode: item.articleCode || null,
+                description: item.description || null,
+                unit: item.unit || null,
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 createdBy: '',
@@ -192,21 +211,22 @@ export const AddReceiptPage: React.FC = () => {
             const receipt: Partial<ReceiptDTO> = {
                 receiptNumber: data.receiptNumber,
                 receiptDate: new Date(data.receiptDate),
-                iceNumber: data.iceNumber,
-                referenceNumber: data.referenceNumber,
-                deliveryNoteNumbers: data.deliveryNoteNumbers,
-                tvaPercentage: data.tvaPercentage,
+                iceNumber: data.iceNumber || null,
+                referenceNumber: data.referenceNumber || null,
+                deliveryNoteNumbers: data.deliveryNoteNumbers || null,
+                tvaPercentage: data.tvaPercentage || null,
                 totalHT,
                 totalTTC,
                 totalAmount: totalTTC,
-                paymentTerms: data.paymentTerms,
-                bankAccount: data.bankAccount,
-                bankDetails: data.bankDetails,
-                issuingDepartment: data.issuingDepartment,
-                deliveryRef: data.deliveryRef,
-                deliveryReceived: data.deliveryReceived,
+                paymentTerms: data.paymentTerms || null,
+                bankAccount: data.bankAccount || null,
+                bankDetails: data.bankDetails || null,
+                issuingDepartment: data.issuingDepartment || null,
+                deliveryRef: data.deliveryRef || null,
+                deliveryReceived: data.deliveryReceived || null,
                 client,
-                receiptItems
+                receiptItems,
+                attachments: []
             };
 
             const newReceipt = await clientService.createReceipt(Number(clientId), receipt);

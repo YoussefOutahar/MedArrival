@@ -2,6 +2,7 @@ import axiosInstance from "@/config/AxiosConfig";
 import { ClientDTO, ClientType } from "@/models/ClientDTO";
 import { ReceiptAttachmentDTO, ReceiptDTO } from "@/models/ReceiptDTO";
 import { PageResponse } from "@/models/PageResponse";
+import { ProductDTO } from "@/models/ProductDTO";
 
 interface ClientFilters {
   search?: string;
@@ -195,6 +196,11 @@ export class ClientService {
       `${this.baseUrl}/${clientId}/receipts/${receiptId}/attachments/${attachmentId}`
     );
   }
+
+  async getAvailableReceiptProducts(clientId: number): Promise<ProductDTO[]> {
+    const response = await axiosInstance.get(`${this.baseUrl}/${clientId}/available-products`);
+    return response.data;
+}
 }
 
 export const clientService = new ClientService();

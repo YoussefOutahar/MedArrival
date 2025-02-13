@@ -10,6 +10,7 @@ public class ProductDTO {
     private Long id;
     private String name;
     private String description;
+    private Integer availableQuantity;
     private ProductCategoryDTO category;
     private List<PriceComponentDTO> priceComponents;
     private Float totalCost;

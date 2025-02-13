@@ -12,6 +12,7 @@ public class ReceiptAttachmentConverter {
 
         ReceiptAttachmentDTO dto = new ReceiptAttachmentDTO();
         dto.setId(attachment.getId());
+        dto.setFileName(attachment.getFileName());
         dto.setOriginalName(attachment.getOriginalName());
         dto.setFileType(attachment.getFileType());
         dto.setFileSize(attachment.getFileSize());
@@ -28,6 +29,7 @@ public class ReceiptAttachmentConverter {
 
         ReceiptAttachment attachment = new ReceiptAttachment();
         attachment.setId(dto.getId());
+        attachment.setFileName(dto.getFileName());
         attachment.setOriginalName(dto.getOriginalName());
         attachment.setFileType(dto.getFileType());
         attachment.setFileSize(dto.getFileSize());

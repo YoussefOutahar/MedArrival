@@ -8,9 +8,11 @@ import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
 import com.cnesten.medarrivalbackend.Models.Product;
 import com.cnesten.medarrivalbackend.Models.Receipts.Receipt;
 import com.cnesten.medarrivalbackend.Models.Receipts.ReceiptItem;
+import com.cnesten.medarrivalbackend.Models.Sale;
 import com.cnesten.medarrivalbackend.Repository.ClientRepository;
 import com.cnesten.medarrivalbackend.Repository.ProductRepository;
 import com.cnesten.medarrivalbackend.Repository.ReceiptRepository;
+import com.cnesten.medarrivalbackend.Repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +31,7 @@ import java.util.Set;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
+    private final SaleRepository saleRepository;
     private final ReceiptRepository receiptRepository;
 
     public Client save(Client client) {
@@ -182,10 +183,46 @@ public class ClientService {
         receiptRepository.delete(receipt);
     }
 
+    public List<Product> getAvailableProducts(Long clientId) {
+        Client client = findById(clientId);
+
+        // Get all sales for this client
+        List<Sale> clientSales = saleRepository.findByClient_Id(clientId);
+
+        // Get all receipts for this client
+        List<Receipt> clientReceipts = receiptRepository.findByClient(client);
+
+        // Create a map of product quantities from sales
+        Map<Product, Integer> saleQuantities = clientSales.stream()
+                .collect(Collectors.groupingBy(
+                        Sale::getProduct,
+                        Collectors.summingInt(Sale::getQuantity)
+                ));
+
+        // Create a map of product quantities from receipts
+        Map<Product, Integer> receiptQuantities = clientReceipts.stream()
+                .flatMap(receipt -> receipt.getReceiptItems().stream())
+                .collect(Collectors.groupingBy(
+                        ReceiptItem::getProduct,
+                        Collectors.summingInt(ReceiptItem::getQuantity)
+                ));
+
+        // Filter products that have remaining quantity
+        return saleQuantities.entrySet().stream()
+                .filter(entry -> {
+                    Product product = entry.getKey();
+                    int saleQty = entry.getValue();
+                    int receiptQty = receiptQuantities.getOrDefault(product, 0);
+                    return saleQty > receiptQty;
+                })
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
     private String generateReceiptNumber() {
         // Implement your receipt number generation logic
         // Example: RCPT-yyyyMMdd-XXXXX
-        return "RCPT-" + LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE) +
+        return "FACTURE-" + LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE) +
                 "-" + String.format("%05d", new Random().nextInt(100000));
     }
 }

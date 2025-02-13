@@ -44,8 +44,11 @@ public class ClientSalesForecastService {
             // Create title
             Row titleRow = sheet.createRow(0);
             Cell titleCell = titleRow.createCell(0);
-            String month = startDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH));
-            titleCell.setCellValue("TABLEAU RECAPITULATIF DES VENTES PREVISIONNEL DES RP DU MOIS " + month.toUpperCase());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("fr"));
+            String dateRange = String.format("TABLEAU RECAPITULATIF DES VENTES PREVISIONNEL DES RP DU %s AU %s",
+                    startDate.format(formatter),
+                    endDate.format(formatter));
+            titleCell.setCellValue(dateRange.toUpperCase());
             titleCell.setCellStyle(titleStyle);
             sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
 

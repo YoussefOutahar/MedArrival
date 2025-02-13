@@ -3,29 +3,27 @@ import { ProductDTO } from "@/models/ProductDTO";
 export interface ReceiptForm {
     receiptNumber: string;
     receiptDate: string;
-    iceNumber: string;
-    referenceNumber: string;
-    deliveryNoteNumbers: string;
+    iceNumber: string | null;
+    referenceNumber: string | null;
+    deliveryNoteNumbers: string | null;
     tvaPercentage: number;
-    totalHT: number;
-    totalTTC: number;
-    paymentTerms: string;
-    bankAccount: string;
-    bankDetails: string;
-    issuingDepartment: string;
-    deliveryRef: string;
-    deliveryReceived: boolean;
+    paymentTerms: string | null;
+    bankAccount: string | null;
+    bankDetails: string | null;
+    issuingDepartment: string | null;
+    deliveryRef: string | null;
+    deliveryReceived: boolean | null;
 }
 
 export interface ReceiptItemForm {
     product: ProductDTO | null;
     quantity: number;
     unitPrice: number;
-    lotNumber: string;
-    calibrationDate?: string;
-    expirationDate?: string;
-    articleCode: string;
-    description: string;
-    unit: string;
+    lotNumber: string | null;
+    calibrationDate: string | null;
+    expirationDate: string | null;
+    articleCode: string | null;
+    description: string | null;
+    unit: string | null;
     subtotal: number;
 }

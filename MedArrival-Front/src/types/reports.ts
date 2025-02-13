@@ -3,8 +3,9 @@ export interface ReportFilter {
     endDate: string;
     supplier?: string;
     arrival?: string;
-    searchTerm?: string;
-}
+    client?: number;
+    searchTerm: string;
+  }
 
 export interface ReportType {
     id: string;

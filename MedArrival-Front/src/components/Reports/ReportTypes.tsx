@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Calendar, Package, TrendingUp, Download } from 'lucide-react';
+import { FileText, Calendar, Package, TrendingUp, Download, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ReportType } from '@/types/reports';
 
@@ -35,6 +35,18 @@ const ReportTypes: React.FC<ReportTypesProps> = ({ selectedReport, onSelectRepor
             name: t('reportTypes.salesForecast.name'),
             description: t('reportTypes.salesForecast.description'),
             icon: <TrendingUp className="h-8 w-8 text-orange-600" />,
+        },
+        {
+            id: 'client-receipt',
+            name: t('reportTypes.clientReceipt.name'),
+            description: t('reportTypes.clientReceipt.description'),
+            icon: <Receipt className="h-8 w-8 text-red-600" />,
+        },
+        {
+            id: 'all-receipts',
+            name: t('reportTypes.allReceipts.name'),
+            description: t('reportTypes.allReceipts.description'),
+            icon: <Receipt className="h-8 w-8 text-yellow-600" />,
         },
         {
             id: 'download-all',

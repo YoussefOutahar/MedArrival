@@ -1,6 +1,5 @@
 package com.cnesten.medarrivalbackend.Converters;
 
-import com.cnesten.medarrivalbackend.DTO.PriceComponentDTO;
 import com.cnesten.medarrivalbackend.DTO.ProductDTO;
 import com.cnesten.medarrivalbackend.Models.Client.Client;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponent;
@@ -8,7 +7,6 @@ import com.cnesten.medarrivalbackend.Models.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +32,36 @@ public class ProductConverter {
         }
 
         dto.setTotalCost(product.calculateTotalCost());
+        dto.setCreatedAt(product.getCreatedAt());
+        dto.setUpdatedAt(product.getUpdatedAt());
+        dto.setCreatedBy(product.getCreatedBy());
+        dto.setUpdatedBy(product.getUpdatedBy());
+
+        return dto;
+    }
+
+    public ProductDTO toDTO(Product product, Client client) {
+        if (product == null) return null;
+
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setCategory(categoryConverter.toDTO(product.getCategory()));
+
+        if (product.getPriceComponents() != null) {
+            dto.setPriceComponents(product.getPriceComponents().stream()
+                    .map(priceComponentConverter::toDTO)
+                    .collect(Collectors.toList()));
+        }
+
+        dto.setTotalCost(product.calculateTotalCost());
+
+        // Set available quantity if client is provided
+        if (client != null) {
+            dto.setAvailableQuantity(product.calculateAvailableQuantity(client));
+        }
+
         dto.setCreatedAt(product.getCreatedAt());
         dto.setUpdatedAt(product.getUpdatedAt());
         dto.setCreatedBy(product.getCreatedBy());

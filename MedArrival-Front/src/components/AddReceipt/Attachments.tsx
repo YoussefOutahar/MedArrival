@@ -72,13 +72,13 @@ export const Attachments: React.FC<AttachmentsProps> = ({
                             <Select.Portal>
                                 <Select.Content className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-md animate-in fade-in-80 dark:border-gray-800 dark:bg-gray-900">
                                     <Select.Viewport className="p-1">
-                                        <Select.Item value="fra" className="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-800">
+                                        <Select.Item value="fr" className="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-800">
                                             <Select.ItemText>French</Select.ItemText>
                                         </Select.Item>
-                                        <Select.Item value="ara" className="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-800">
+                                        <Select.Item value="ar" className="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-800">
                                             <Select.ItemText>Arabic</Select.ItemText>
                                         </Select.Item>
-                                        <Select.Item value="ara+fra" className="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-800">
+                                        <Select.Item value="ar+fr" className="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-800">
                                             <Select.ItemText>Arabic + French</Select.ItemText>
                                         </Select.Item>
                                     </Select.Viewport>
