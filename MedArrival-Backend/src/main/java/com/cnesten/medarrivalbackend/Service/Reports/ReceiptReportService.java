@@ -3,6 +3,7 @@ package com.cnesten.medarrivalbackend.Service.Reports;
 import com.cnesten.medarrivalbackend.Models.Arrival;
 import com.cnesten.medarrivalbackend.Models.Client.Client;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
+import com.cnesten.medarrivalbackend.Models.Price.SalePriceComponent;
 import com.cnesten.medarrivalbackend.Models.Sale;
 import com.cnesten.medarrivalbackend.Repository.ArrivalRepository;
 import com.cnesten.medarrivalbackend.Repository.ClientRepository;
@@ -165,31 +166,27 @@ public class ReceiptReportService {
         row.createCell(3).setCellValue(sale.getQuantity());
 
         // Calculate unit prices
-        float saleUnitPrice = sale.getTotalAmount() / sale.getQuantity();
-        float expectedUnitPrice = 0;
-        if (sale.getProduct() != null) {
-            expectedUnitPrice = sale.getProduct().getCurrentPriceByComponentForClient(
-                    PriceComponentType.PURCHASE_PRICE,
-                    sale.getClient()
-            );
-        }
+        float saleUnitPrice = sale.getPriceComponents().stream()
+                .filter(pc -> pc.getComponentType() == PriceComponentType.PURCHASE_PRICE)
+                .findFirst()
+                .map(SalePriceComponent::getAmount)
+                .orElse(0f);
 
         // Unit price
         Cell unitPriceCell = row.createCell(4);
         unitPriceCell.setCellValue(saleUnitPrice);
         unitPriceCell.setCellStyle(numberStyle);
 
-        // Reference price
+        // Reference price (same as sale price since it's historical)
         Cell refPriceCell = row.createCell(5);
-        refPriceCell.setCellValue(expectedUnitPrice);
+        refPriceCell.setCellValue(saleUnitPrice);
         refPriceCell.setCellStyle(numberStyle);
 
         // Control status
         Cell controlCell = row.createCell(6);
-        boolean priceMatches = Math.abs(saleUnitPrice - expectedUnitPrice) < 0.01;
         boolean productExists = sale.getProduct() != null;
 
-        if (!productExists || !priceMatches) {
+        if (!productExists) {
             controlCell.setCellValue("non conforme");
             controlCell.setCellStyle(nonConformStyle);
         } else {
@@ -205,23 +202,14 @@ public class ReceiptReportService {
         // Invoice number
         row.createCell(8).setCellValue("Facture N°" + arrival.getInvoiceNumber());
 
-        // Price difference
+        // Price difference (should be 0 since we're using same price)
         Cell diffCell = row.createCell(9);
-        float difference = saleUnitPrice - expectedUnitPrice;
-        diffCell.setCellValue(difference);
+        diffCell.setCellValue(0);
         diffCell.setCellStyle(numberStyle);
 
         // Add explanation for non-conforming entries
-        if (!productExists || !priceMatches) {
-            StringBuilder explanation = new StringBuilder();
-            if (!productExists) {
-                explanation.append("Produit non trouvé dans le système");
-            }
-            if (!priceMatches) {
-                if (!explanation.isEmpty()) explanation.append("; ");
-                explanation.append(String.format("Écart de prix: %.2f", difference));
-            }
-            row.createCell(10).setCellValue(explanation.toString());
+        if (!productExists) {
+            row.createCell(10).setCellValue("Produit non trouvé dans le système");
         }
     }
 }

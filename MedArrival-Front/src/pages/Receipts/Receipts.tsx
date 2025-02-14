@@ -43,19 +43,15 @@ const Receipts: React.FC = () => {
         case ACTIONS.VIEW_RECEIPTS:
           navigate(`/admin/receipts/${clientId}`);
           break;
-        case ACTIONS.PRINT:
-        case ACTIONS.DOWNLOAD:
-        case ACTIONS.EMAIL:
-          // Using client service for receipts
-          const receipts = await clientService.getClientReceipts(clientId);
-          if (receipts.length > 0) {
-            // Handle the latest receipt
-            const latestReceipt = receipts[0];
-            toast.success(`Receipt ${type.toLowerCase()}ed`);
-          } else {
-            toast.error('No receipts found for this client');
-          }
-          break;
+          case ACTIONS.VIEW_ATTACHMENTS:
+            const receipts = await clientService.getClientReceipts(clientId);
+            if (receipts.length > 0) {
+              const latestReceipt = receipts[0];
+              navigate(`/admin/receipts/${clientId}/${latestReceipt.id}/attachments`);
+            } else {
+              toast.error('No receipts found for this client');
+            }
+            break;
         default:
           console.warn('Unknown action:', type);
       }
@@ -63,7 +59,7 @@ const Receipts: React.FC = () => {
       toast.error(`Failed to ${type.toLowerCase()}`);
       console.error(`Error performing ${type}:`, error);
     }
-  };
+};
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

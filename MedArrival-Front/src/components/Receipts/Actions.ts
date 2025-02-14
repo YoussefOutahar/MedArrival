@@ -1,7 +1,5 @@
 export const ACTIONS = {
-    PRINT: 'Print',
-    DOWNLOAD: 'Download',
-    EMAIL: 'Email',
+    VIEW_ATTACHMENTS: 'View Attachments',
     NEW_RECEIPT: 'New Receipt',
     VIEW_RECEIPTS: 'View Receipts'
 } as const;

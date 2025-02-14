@@ -1,7 +1,7 @@
 package com.cnesten.medarrivalbackend.Models;
 
 import com.cnesten.medarrivalbackend.Models.Client.Client;
-import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
+import com.cnesten.medarrivalbackend.Models.Price.SalePriceComponent;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -52,6 +52,9 @@ public class Sale {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SalePriceComponent> priceComponents = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
@@ -83,6 +86,7 @@ public class Sale {
         if (version == null) {
             version = 0L;
         }
+        initializePriceComponents();
         calculateTotalAmount();
     }
 
@@ -91,16 +95,40 @@ public class Sale {
         if (version == null) {
             version = 0L;
         }
+        initializePriceComponents();
         calculateTotalAmount();
     }
 
+    public void addPriceComponent(SalePriceComponent component) {
+        priceComponents.add(component);
+        component.setSale(this);
+    }
+
+    public void removePriceComponent(SalePriceComponent component) {
+        priceComponents.remove(component);
+        component.setSale(null);
+    }
+
+    private void initializePriceComponents() {
+        if (priceComponents.isEmpty() && product != null) {
+            product.getPriceComponents().stream()
+                    .filter(pc -> pc.getClient() == null || pc.getClient().equals(client))
+                    .forEach(productPrice -> {
+                        SalePriceComponent salePrice = new SalePriceComponent();
+                        salePrice.setComponentType(productPrice.getComponentType());
+                        salePrice.setAmount(productPrice.getAmount());
+                        salePrice.setUsesDefaultPrice(true);
+                        addPriceComponent(salePrice);
+                    });
+        }
+    }
+
     private void calculateTotalAmount() {
-        if (product != null && client != null && quantity != null) {
-            Float unitPrice = product.getCurrentPriceByComponentForClient(
-                    PriceComponentType.PURCHASE_PRICE,
-                    client
-            );
-            totalAmount = unitPrice * quantity;
+        if (quantity != null && priceComponents != null) {
+            float componentSum = priceComponents.stream()
+                    .map(SalePriceComponent::getAmount)
+                    .reduce(0f, Float::sum);
+            this.totalAmount = componentSum * quantity;
         }
     }
 }

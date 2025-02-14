@@ -14,10 +14,9 @@ import { ProductDTO } from '@/models/ProductDTO';
 import { SupplierDTO } from '@/models/SupplierDTO';
 import { ClientDTO } from '@/models/ClientDTO';
 import { SaleDTO } from '@/models/SaleDTO';
-import { ArrivalFormData, NewSaleForm } from '@/types/arrival.types';
+import { ArrivalFormData, NewSaleForm, calculateTotalAmount } from '@/types/arrival.types';
 
 // Components
-
 import ActionButtons from '@/components/NewArrival/ActionButtons';
 import SalesSection from '@/components/NewArrival/SalesSection';
 import BasicInformationSection from '@/components/NewArrival/BasicInformationSection';
@@ -35,8 +34,7 @@ const initialNewSaleForm: NewSaleForm = {
   product: null,
   client: null,
   quantity: 0,
-  unitPrice: 0,
-  sellingPriceOverride: false,
+  priceComponents: [],
   isConform: true,
   expectedDeliveryDate: new Date().toISOString().slice(0, 16),
 };
@@ -84,7 +82,8 @@ const NewArrival: React.FC = () => {
       return false;
     }
 
-    if (newSale.unitPrice <= 0) {
+    const totalPrice = newSale.priceComponents.reduce((sum, pc) => sum + pc.amount, 0);
+    if (totalPrice <= 0) {
       toast.error(t('errors.invalidPrice'));
       return false;
     }
@@ -95,7 +94,7 @@ const NewArrival: React.FC = () => {
   const handleAddSale = () => {
     if (!validateNewSale()) return;
 
-    const totalAmount = newSale.quantity * newSale.unitPrice;
+    const totalAmount = calculateTotalAmount(newSale.quantity, newSale.priceComponents);
 
     setFormData(prev => ({
       ...prev,
@@ -103,8 +102,7 @@ const NewArrival: React.FC = () => {
         product: newSale.product!,
         client: newSale.client!,
         quantity: newSale.quantity,
-        unitPrice: newSale.unitPrice,
-        sellingPriceOverride: newSale.sellingPriceOverride,
+        priceComponents: newSale.priceComponents,
         expectedDeliveryDate: newSale.expectedDeliveryDate,
         isConform: newSale.isConform,
         totalAmount
@@ -135,6 +133,16 @@ const NewArrival: React.FC = () => {
         isConform: sale.isConform,
         product: sale.product,
         client: sale.client,
+        priceComponents: sale.priceComponents.map(pc => ({
+          id: 0,
+          componentType: pc.componentType,
+          amount: pc.amount,
+          usesDefaultPrice: pc.usesDefaultPrice,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          createdBy: '',
+          updatedBy: ''
+        })),
         createdAt: new Date(),
         updatedAt: new Date(),
         createdBy: '',
@@ -145,7 +153,6 @@ const NewArrival: React.FC = () => {
         id: 0,
         invoiceNumber: formData.invoiceNumber,
         arrivalDate: new Date(formData.arrivalDate),
-        // quantity: formData.quantity,
         supplier: formData.supplier,
         sales: salesDTOs,
         createdAt: new Date(),

@@ -3,6 +3,7 @@ package com.cnesten.medarrivalbackend.Service.Reports;
 import com.cnesten.medarrivalbackend.Models.Arrival;
 import com.cnesten.medarrivalbackend.Models.Client.ClientType;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
+import com.cnesten.medarrivalbackend.Models.Price.SalePriceComponent;
 import com.cnesten.medarrivalbackend.Models.Sale;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -243,19 +244,19 @@ public class ExcelExportService {
             orderQuantityCell.setCellValue(sale.getQuantity());
             orderQuantityCell.setCellStyle(quantityStyle);
 
-            // Purchase price (client-specific)
+            // Purchase price from sale components
             Cell purchasePrice = row.createCell(5);
-            purchasePrice.setCellValue(sale.getProduct().getCurrentPriceByComponentForClient(
-                    PriceComponentType.PURCHASE_PRICE,
-                    sale.getClient()
-            ));
+            float purchasePriceAmount = sale.getPriceComponents().stream()
+                    .filter(pc -> pc.getComponentType() == PriceComponentType.PURCHASE_PRICE)
+                    .findFirst()
+                    .map(SalePriceComponent::getAmount)
+                    .orElse(0f);
+            purchasePrice.setCellValue(purchasePriceAmount);
             purchasePrice.setCellStyle(numberStyle);
 
-            // Reference price (default price)
+            // Reference price (same as purchase price since it's historical)
             Cell referencePrice = row.createCell(6);
-            referencePrice.setCellValue(sale.getProduct().getCurrentPriceByComponent(
-                    PriceComponentType.PURCHASE_PRICE
-            ));
+            referencePrice.setCellValue(purchasePriceAmount);
             referencePrice.setCellStyle(numberStyle);
 
             // Control status
@@ -263,7 +264,7 @@ public class ExcelExportService {
             controle.setCellValue(sale.getIsConform() ? "Conforme" : "Non Conforme");
             controle.setCellStyle(conformeStyle);
 
-            // Final price (quantity * client-specific price)
+            // Final price
             Cell finalPrice = row.createCell(8);
             finalPrice.setCellValue(sale.getTotalAmount());
             finalPrice.setCellStyle(numberStyle);
@@ -293,8 +294,12 @@ public class ExcelExportService {
     private double calculateComponentTotal(Arrival arrival, PriceComponentType componentType) {
         return arrival.getSales().stream()
                 .mapToDouble(s -> {
-                    float price = s.getProduct().getCurrentPriceByComponentForClient(componentType, s.getClient());
-                    return price * s.getQuantity();
+                    double componentAmount = s.getPriceComponents().stream()
+                            .filter(pc -> pc.getComponentType() == componentType)
+                            .findFirst()
+                            .map(SalePriceComponent::getAmount)
+                            .orElse(0f);
+                    return componentAmount * s.getQuantity();
                 })
                 .sum();
     }

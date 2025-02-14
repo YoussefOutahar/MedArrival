@@ -116,7 +116,10 @@ public class ProductPricingReportService {
 
                 // Transport
                 Cell transportCell = row.createCell(4);
-                double transport = calculateTransport(product, summary.getTotalQuantity());
+                double transport = sales.stream()
+                        .filter(s -> s.getProduct().equals(product))
+                        .mapToDouble(this::calculateTransport)
+                        .sum();
                 transportCell.setCellValue(transport);
                 transportCell.setCellStyle(numberStyle);
 
@@ -165,8 +168,17 @@ public class ProductPricingReportService {
 
     private SalesSummary createSalesSummary(List<Sale> sales) {
         int totalQuantity = sales.stream().mapToInt(Sale::getQuantity).sum();
-        double totalAmount = sales.stream().mapToDouble(Sale::getTotalAmount).sum();
-        double averageUnitPrice = totalAmount / totalQuantity;
+
+        double totalAmount = sales.stream()
+                .mapToDouble(sale ->
+                        sale.getPriceComponents().stream()
+                                .filter(pc -> pc.getComponentType() == PriceComponentType.PURCHASE_PRICE)
+                                .findFirst()
+                                .map(pc -> pc.getAmount() * sale.getQuantity())
+                                .orElse(0.0f)
+                ).sum();
+
+        double averageUnitPrice = totalQuantity > 0 ? totalAmount / totalQuantity : 0;
 
         return new SalesSummary(totalQuantity, totalAmount, averageUnitPrice);
     }
@@ -198,14 +210,17 @@ public class ProductPricingReportService {
         return style;
     }
 
-    private double calculateTransport(Product product, int quantity) {
-        float transportPrice = product.getCurrentPriceByComponent(PriceComponentType.TRANSPORT);
-        return transportPrice * quantity;
+    private double calculateTransport(Sale sale) {
+        return sale.getPriceComponents().stream()
+                .filter(pc -> pc.getComponentType() == PriceComponentType.TRANSPORT)
+                .findFirst()
+                .map(pc -> pc.getAmount() * sale.getQuantity())
+                .orElse(0.0f);
     }
 
     private double calculateTotalTransport(List<Sale> sales) {
         return sales.stream()
-                .mapToDouble(sale -> calculateTransport(sale.getProduct(), sale.getQuantity()))
+                .mapToDouble(this::calculateTransport)
                 .sum();
     }
 }

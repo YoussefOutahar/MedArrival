@@ -1,14 +1,18 @@
 package com.cnesten.medarrivalbackend.Converters;
 
 import com.cnesten.medarrivalbackend.DTO.SaleDTO;
+import com.cnesten.medarrivalbackend.Models.Price.SalePriceComponent;
 import com.cnesten.medarrivalbackend.Models.Sale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class SaleConverter {
     private final ProductConverter productConverter;
+    private final SalePriceComponentConverter priceComponentConverter;
     private final ClientConverter clientConverter;
 
     public SaleDTO toDTO(Sale sale) {
@@ -23,6 +27,11 @@ public class SaleConverter {
         dto.setExpectedDeliveryDate(sale.getExpectedDeliveryDate());
         dto.setIsConform(sale.getIsConform());
         dto.setProduct(productConverter.toDTO(sale.getProduct()));
+
+        dto.setPriceComponents(sale.getPriceComponents().stream()
+                .map(priceComponentConverter::toDTO)
+                .collect(Collectors.toSet()));
+
         dto.setClient(clientConverter.toDTO(sale.getClient()));
         dto.setCreatedAt(sale.getCreatedAt());
         dto.setUpdatedAt(sale.getUpdatedAt());
@@ -43,6 +52,15 @@ public class SaleConverter {
         sale.setExpectedDeliveryDate(dto.getExpectedDeliveryDate());
         sale.setIsConform(dto.getIsConform());
         sale.setProduct(productConverter.toEntity(dto.getProduct()));
+
+        if (dto.getPriceComponents() != null) {
+            dto.getPriceComponents().forEach(componentDTO -> {
+                SalePriceComponent component = priceComponentConverter.toEntity(componentDTO);
+                component.setSale(sale);
+                sale.addPriceComponent(component);
+            });
+        }
+
         sale.setClient(clientConverter.toEntity(dto.getClient()));
         sale.setCreatedAt(dto.getCreatedAt());
         sale.setUpdatedAt(dto.getUpdatedAt());

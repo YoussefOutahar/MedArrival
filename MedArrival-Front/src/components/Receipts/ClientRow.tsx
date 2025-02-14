@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, FileText, Printer, Download, Mail } from 'lucide-react';
+import { Plus, FileText, Paperclip } from 'lucide-react';
 import { ClientDTO } from '@/models/ClientDTO';
 import { ACTIONS } from './Actions';
 
@@ -30,25 +30,11 @@ const ClientRow: React.FC<ClientRowProps> = ({ client, onAction }) => {
 
             <div className="flex items-center gap-2">
                 <button
-                    onClick={() => onAction(ACTIONS.PRINT, client.id)}
+                    onClick={() => onAction(ACTIONS.VIEW_ATTACHMENTS, client.id)}
                     className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-                    title={ACTIONS.PRINT}
+                    title={ACTIONS.VIEW_ATTACHMENTS}
                 >
-                    <Printer className="h-5 w-5" />
-                </button>
-                <button
-                    onClick={() => onAction(ACTIONS.DOWNLOAD, client.id)}
-                    className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-                    title={ACTIONS.DOWNLOAD}
-                >
-                    <Download className="h-5 w-5" />
-                </button>
-                <button
-                    onClick={() => onAction(ACTIONS.EMAIL, client.id)}
-                    className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-                    title={ACTIONS.EMAIL}
-                >
-                    <Mail className="h-5 w-5" />
+                    <Paperclip className="h-5 w-5" />
                 </button>
                 <button
                     onClick={() => onAction(ACTIONS.NEW_RECEIPT, client.id)}

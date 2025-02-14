@@ -7,7 +7,7 @@
     "metrics": {
         "dailyRevenue": {
             "title": "Revenu Quotidien",
-            "prefix": "€"
+            "prefix": "MAD"
         },
         "dailySales": {
             "title": "Ventes Quotidiennes"

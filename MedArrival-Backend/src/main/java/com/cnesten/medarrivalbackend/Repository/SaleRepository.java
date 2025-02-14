@@ -16,55 +16,44 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     List<Sale> findByProduct_Id(Long productId);
 
     @Query("""
-    SELECT 
+    SELECT
         c.name as clientName,
         p.name as productName,
         s.expectedQuantity as expectedQuantity,
-        COALESCE(
-            (SELECT pc.amount 
-             FROM PriceComponent pc 
-             WHERE pc.product = p 
-             AND pc.client = c 
-             AND pc.componentType = com.cnesten.medarrivalbackend.Models.Price.PriceComponentType.PURCHASE_PRICE
-             AND pc.effectiveFrom <= CURRENT_TIMESTAMP
-             AND (pc.effectiveTo IS NULL OR pc.effectiveTo > CURRENT_TIMESTAMP)
-             ORDER BY pc.effectiveFrom DESC
-             LIMIT 1),
-            (SELECT pc2.amount 
-             FROM PriceComponent pc2 
-             WHERE pc2.product = p 
-             AND pc2.client IS NULL 
-             AND pc2.componentType = com.cnesten.medarrivalbackend.Models.Price.PriceComponentType.PURCHASE_PRICE
-             AND pc2.effectiveFrom <= CURRENT_TIMESTAMP
-             AND (pc2.effectiveTo IS NULL OR pc2.effectiveTo > CURRENT_TIMESTAMP)
-             ORDER BY pc2.effectiveFrom DESC
-             LIMIT 1)
-        ) as unitPrice
+        sp.amount as unitPrice,
+        s.totalAmount as totalAmount
     FROM Sale s
     JOIN s.client c
     JOIN s.product p
+    JOIN s.priceComponents sp
     WHERE s.saleDate BETWEEN :startDate AND :endDate
+    AND sp.componentType = 'PURCHASE_PRICE'
     ORDER BY c.name, p.name
-    """)
+""")
     List<ClientSaleForecastProjection> findClientSalesForecast(
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+            @Param("endDate") LocalDateTime endDate
+    );
 
 
     @Query("""
-    SELECT 
-        s.product as product,
+    SELECT
+        p as product,
         SUM(s.quantity) as quantity,
-        s.totalAmount / s.quantity as unitPrice,
+        sp.amount as unitPrice,
         SUM(s.totalAmount) as totalAmount
     FROM Sale s
+    JOIN s.product p
+    JOIN s.priceComponents sp
     WHERE s.saleDate BETWEEN :startDate AND :endDate
-    GROUP BY s.product, s.totalAmount, s.quantity
-    ORDER BY s.product.name
+    AND sp.componentType = 'PURCHASE_PRICE'
+    GROUP BY p, sp.amount
+    ORDER BY p.name
 """)
     List<MonthlySaleProjection> findMonthlySalesSummary(
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+            @Param("endDate") LocalDateTime endDate
+    );
 
     @Query("SELECT s FROM Sale s WHERE s.saleDate BETWEEN :startDate AND :endDate")
     List<Sale> findByDateRange(

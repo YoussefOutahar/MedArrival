@@ -16,6 +16,7 @@ export const PATHS = {
         REPORTS: "/admin/reports",
         CLIENT_RECEIPTS: "/admin/receipts/:clientId",
         ADD_RECEIPT: "/admin/receipts/:clientId/new",
+        ATTACHMENTS: "/admin/receipts/:clientId/:receiptId/attachments",
         SETTINGS: {
             PRODUCTS: '/admin/settings/products',
             CATEGORIES: '/admin/settings/categories',

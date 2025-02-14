@@ -7,7 +7,7 @@
     "metrics": {
         "dailyRevenue": {
             "title": "Daily Revenue",
-            "prefix": "$"
+            "prefix": "MAD"
         },
         "dailySales": {
             "title": "Daily Sales"

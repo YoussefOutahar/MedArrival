@@ -1,4 +1,4 @@
-import { LogOut, ChevronLeft, ChevronRight, HelpCircle, Settings, User, ChevronDown } from 'lucide-react';
+import { LogOut, HelpCircle, Settings, User, ChevronDown, Menu } from 'lucide-react';
 import { Suspense, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useNavigationRoutes } from './navigation';
@@ -195,9 +195,9 @@ export default function Layout({ children }: LayoutProps) {
               className="w-10 h-10 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
               {isSidebarCollapsed ? (
-                <ChevronRight className="h-5 w-5" />
+                <Menu className="h-5 w-5" />
               ) : (
-                <ChevronLeft className="h-5 w-5" />
+                <Menu className="h-5 w-5" />
               )}
             </button>
 
