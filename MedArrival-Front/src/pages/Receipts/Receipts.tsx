@@ -82,15 +82,14 @@ const Receipts: React.FC = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <SearchFilters
+        {/* <SearchFilters
           searchTerm={searchTerm}
           onSearchChange={(value) => {
             setSearchTerm(value);
             // Debounce this in production
             fetchClients();
           }}
-          onFilterClick={() => {}}
-        />
+        /> */}
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-200 dark:divide-gray-700">
           {loading ? (

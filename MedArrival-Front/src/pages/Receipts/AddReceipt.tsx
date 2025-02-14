@@ -58,20 +58,20 @@ export const AddReceiptPage: React.FC = () => {
                 navigate('/clients');
                 return;
             }
-    
+
             try {
                 setIsLoading(true);
                 const [clientData, availableProducts] = await Promise.all([
                     clientService.getById(Number(clientId)),
                     clientService.getAvailableReceiptProducts(Number(clientId))
                 ]);
-    
+
                 if (!clientData) {
                     toast.error('Client not found');
                     navigate('/clients');
                     return;
                 }
-    
+
                 setClient(clientData);
                 setProducts(availableProducts);
             } catch (error) {
@@ -82,7 +82,7 @@ export const AddReceiptPage: React.FC = () => {
                 setIsLoading(false);
             }
         };
-    
+
         fetchInitialData();
     }, [clientId, navigate]);
 
@@ -106,7 +106,7 @@ export const AddReceiptPage: React.FC = () => {
 
     const handleItemChange = (index: number, field: keyof ReceiptItemForm, value: any) => {
         const newItems = [...items];
-        
+
         if (field === 'quantity' && value) {
             const product = newItems[index].product;
             if (product) {
@@ -117,12 +117,12 @@ export const AddReceiptPage: React.FC = () => {
                 }
             }
         }
-    
+
         newItems[index] = {
             ...newItems[index],
             [field]: value
         };
-    
+
         if (field === 'product' && value) {
             const product = value as ProductDTO;
             newItems[index] = {
@@ -133,11 +133,11 @@ export const AddReceiptPage: React.FC = () => {
                 subtotal: newItems[index].quantity * (product.totalCost || 0)
             };
         }
-    
+
         if (field === 'quantity' || field === 'unitPrice') {
             newItems[index].subtotal = newItems[index].quantity * newItems[index].unitPrice;
         }
-    
+
         setItems(newItems);
     };
 
@@ -323,6 +323,14 @@ export const AddReceiptPage: React.FC = () => {
                             <Button
                                 type="submit"
                                 disabled={isSubmitting}
+                                className="inline-flex items-center px-4 py-2 rounded-md
+  bg-primary-600 hover:bg-primary-700
+  text-white font-medium text-sm
+  transition-colors duration-150 ease-in-out
+  cursor-pointer shadow-sm
+  focus-visible:outline focus-visible:outline-2 
+  focus-visible:outline-offset-2 focus-visible:outline-primary-600
+  disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? 'Creating...' : 'Create Receipt'}
                             </Button>

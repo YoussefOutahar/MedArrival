@@ -1,17 +1,15 @@
 import React from 'react';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface SearchFiltersProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
-  onFilterClick: () => void;
 }
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
   searchTerm,
   onSearchChange,
-  onFilterClick
 }) => {
   const { t } = useTranslation('receipts');
 
@@ -28,13 +26,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                    border border-gray-300 dark:border-gray-600 rounded-lg"
         />
       </div>
-      <button
-        onClick={onFilterClick}
-        className="p-2 rounded-lg border border-gray-300 dark:border-gray-600
-                 hover:bg-gray-50 dark:hover:bg-gray-700"
-      >
-        <Filter className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-      </button>
     </div>
   );
 };
