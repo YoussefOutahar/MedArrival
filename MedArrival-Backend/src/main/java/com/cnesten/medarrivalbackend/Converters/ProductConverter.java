@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class ProductConverter {
-    private final ProductCategoryConverter categoryConverter;
     private final PriceComponentConverter priceComponentConverter;
 
     public ProductDTO toDTO(Product product) {
@@ -23,7 +22,6 @@ public class ProductConverter {
         dto.setId(product.getId());
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
-        dto.setCategory(categoryConverter.toDTO(product.getCategory()));
 
         if (product.getPriceComponents() != null) {
             dto.setPriceComponents(product.getPriceComponents().stream()
@@ -47,7 +45,6 @@ public class ProductConverter {
         dto.setId(product.getId());
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
-        dto.setCategory(categoryConverter.toDTO(product.getCategory()));
 
         if (product.getPriceComponents() != null) {
             dto.setPriceComponents(product.getPriceComponents().stream()
@@ -77,7 +74,6 @@ public class ProductConverter {
         product.setId(dto.getId());
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
-        product.setCategory(categoryConverter.toEntity(dto.getCategory()));
 
         // Convert and set price components
         if (dto.getPriceComponents() != null) {

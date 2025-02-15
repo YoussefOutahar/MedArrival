@@ -76,8 +76,7 @@ export function ClientProductsDialog({ isOpen, onClose, client }: ClientProducts
 
   const filteredProducts = searchTerm
     ? pageResponse.content.filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category?.name.toLowerCase().includes(searchTerm.toLowerCase())
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     : pageResponse.content;
 

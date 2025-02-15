@@ -55,7 +55,6 @@ public class ProductService {
         filteredProduct.setId(product.getId());
         filteredProduct.setName(product.getName());
         filteredProduct.setDescription(product.getDescription());
-        filteredProduct.setCategory(product.getCategory());
         filteredProduct.setPriceComponents(defaultComponents);
         filteredProduct.setCreatedAt(product.getCreatedAt());
         filteredProduct.setUpdatedAt(product.getUpdatedAt());
@@ -106,7 +105,6 @@ public class ProductService {
         filteredProduct.setId(product.getId());
         filteredProduct.setName(product.getName());
         filteredProduct.setDescription(product.getDescription());
-        filteredProduct.setCategory(product.getCategory());
         filteredProduct.setPriceComponents(relevantComponents);
         filteredProduct.setCreatedAt(product.getCreatedAt());
         filteredProduct.setUpdatedAt(product.getUpdatedAt());
@@ -145,7 +143,6 @@ public class ProductService {
         // Set new basic properties
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setDescription(updatedProduct.getDescription());
-        existingProduct.setCategory(updatedProduct.getCategory());
 
         // Keep only active default price components from the update
         if (updatedProduct.getPriceComponents() != null) {
@@ -181,10 +178,6 @@ public class ProductService {
     @Transactional
     public void deleteById(Long id) {
         productRepository.deleteById(id);
-    }
-
-    public List<Product> findByCategory(Long categoryId) {
-        return productRepository.findByCategory_Id(categoryId);
     }
 
     public Product setCustomPricingForClient(

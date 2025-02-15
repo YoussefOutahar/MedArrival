@@ -20,12 +20,11 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@ToString(exclude = {"category", "sales", "priceComponents", "receiptItems"})
-@EqualsAndHashCode(exclude = {"category", "sales", "priceComponents", "receiptItems"})
+@ToString(exclude = {"sales", "priceComponents", "receiptItems"})
+@EqualsAndHashCode(exclude = {"sales", "priceComponents", "receiptItems"})
 @Entity
 @Table(name = "products", indexes = {
         @Index(name = "idx_product_name", columnList = "name"),
-        @Index(name = "idx_category", columnList = "category_id")
 })
 @EntityListeners(AuditingEntityListener.class)
 public class Product {
@@ -38,10 +37,6 @@ public class Product {
 
     @Column(name = "description")
     private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private ProductCategory category;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private Set<ReceiptItem> receiptItems = new HashSet<>();

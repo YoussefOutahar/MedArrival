@@ -51,9 +51,6 @@ export const ProductPriceCard = ({
                 <div className="flex-1">
                     <div className="flex items-center gap-3">
                         <h3 className="font-medium text-gray-900 dark:text-white">{product.name}</h3>
-                        <span className="px-2 py-1 text-sm rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                            {product.category?.name}
-                        </span>
                     </div>
                     <div className="mt-2 flex items-center gap-4">
                         <span className="text-sm text-gray-500">

@@ -17,7 +17,6 @@ const Attachments = lazy(() => import('@/pages/Receipts/Attachments'));
 
 // Admin Settings pages
 const Products = lazy(() => import('@/pages/settings/Products'));
-const Categories = lazy(() => import('@/pages/settings/Categories'));
 const Suppliers = lazy(() => import('@/pages/settings/Suppliers'));
 const Clients = lazy(() => import('@/pages/settings/Clients'));
 const ClientReceipts = lazy(() => import('@/pages/Receipts/ClientReceipts'));
@@ -39,7 +38,6 @@ export const adminRoutes = [
 
     // Admin Settings Routes
     { path: PATHS.ADMIN.SETTINGS.PRODUCTS, element: <Products />, role: 'ROLE_ADMIN' },
-    { path: PATHS.ADMIN.SETTINGS.CATEGORIES, element: <Categories />, role: 'ROLE_ADMIN' },
     { path: PATHS.ADMIN.SETTINGS.SUPPLIERS, element: <Suppliers />, role: 'ROLE_ADMIN' },
     { path: PATHS.ADMIN.SETTINGS.CLIENTS, element: <Clients />, role: 'ROLE_ADMIN' },
 ];

@@ -32,11 +32,6 @@ export class ProductService {
         await axiosInstance.delete(`${this.baseUrl}/${id}`);
     }
 
-    async findByCategory(categoryId: number): Promise<ProductDTO[]> {
-        const response = await axiosInstance.get<ProductDTO[]>(`${this.baseUrl}/category/${categoryId}`);
-        return response.data;
-    }
-
     // Get products for specific client (with their custom pricing if applicable)
     async getProductsForClient(clientId: number, page = 0, size = 10): Promise<PageResponse<ProductDTO>> {
         const response = await axiosInstance.get<PageResponse<ProductDTO>>(

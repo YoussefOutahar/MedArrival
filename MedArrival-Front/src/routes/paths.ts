@@ -19,7 +19,6 @@ export const PATHS = {
         ATTACHMENTS: "/admin/receipts/:clientId/:receiptId/attachments",
         SETTINGS: {
             PRODUCTS: '/admin/settings/products',
-            CATEGORIES: '/admin/settings/categories',
             SUPPLIERS: '/admin/settings/suppliers',
             CLIENTS: '/admin/settings/clients',
         },

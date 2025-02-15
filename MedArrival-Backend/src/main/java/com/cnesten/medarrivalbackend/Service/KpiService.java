@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class KpiService {
     private final SaleRepository saleRepository;
     private final ArrivalRepository arrivalRepository;
-    private final ProductCategoryRepository categoryRepository;
 
     public KpiDTO getDashboardKpis() {
         LocalDateTime now = LocalDateTime.now();
@@ -29,7 +28,6 @@ public class KpiService {
 
         setTrendData(kpiDTO, startOfMonth, now);
         setProductMetrics(kpiDTO, startOfMonth, now);
-        setCategoryAnalysis(kpiDTO, startOfMonth, now);
         setClientMetrics(kpiDTO, startOfMonth, now);
 
         return kpiDTO;
@@ -43,16 +41,6 @@ public class KpiService {
     private void setProductMetrics(KpiDTO kpiDTO, LocalDateTime start, LocalDateTime end) {
         List<TopProductProjection> topProducts = saleRepository.findTopSellingProducts(start, end, 10);
         kpiDTO.setTopSellingProducts(convertToProductMetrics(topProducts));
-    }
-
-    private void setCategoryAnalysis(KpiDTO kpiDTO, LocalDateTime start, LocalDateTime end) {
-        List<CategorySalesProjection> salesByCategory = categoryRepository.findSalesByCategory(start, end);
-        Map<String, Double> categoryMap = salesByCategory.stream()
-                .collect(Collectors.toMap(
-                        CategorySalesProjection::getCategory,
-                        CategorySalesProjection::getTotalSales
-                ));
-        kpiDTO.setSalesByCategory(categoryMap);
     }
 
     private void setClientMetrics(KpiDTO kpiDTO, LocalDateTime start, LocalDateTime end) {

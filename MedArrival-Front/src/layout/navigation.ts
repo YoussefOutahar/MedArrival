@@ -41,11 +41,6 @@ export const useNavigationRoutes = () => {
           icon: Package,
         },
         {
-          path: PATHS.ADMIN.SETTINGS.CATEGORIES,
-          label: t('menu.settings.categories'),
-          icon: ListTree,
-        },
-        {
           path: PATHS.ADMIN.SETTINGS.SUPPLIERS,
           label: t('menu.settings.suppliers'),
           icon: Building2,

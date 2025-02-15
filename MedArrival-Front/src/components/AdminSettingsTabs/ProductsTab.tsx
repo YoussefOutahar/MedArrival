@@ -7,7 +7,6 @@ import {
   ChevronRightIcon,
   InformationCircleIcon,
 } from '@heroicons/react/24/outline';
-import Select from 'react-select';
 import { NumericFormat } from 'react-number-format';
 import {
   useReactTable,
@@ -16,22 +15,21 @@ import {
   getSortedRowModel,
   flexRender,
   ColumnDef,
+  RowSelectionState,
 } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { ProductDTO } from '@/models/ProductDTO';
-import { ProductCategoryDTO } from '@/models/ProductCategoryDTO';
 import { PriceComponentDTO, PriceComponentType } from '@/models/PriceComponentDTO';
 import { productService } from '@/services/product.service';
-import { productCategoryService } from '@/services/product-category.service';
 import { toast } from 'react-hot-toast';
 import { TableWrapper } from '../TableWrapper.tsx';
 import { FormDialog } from '../FormDialog';
 import { DeleteConfirmationDialog } from '../DeleteConfirmationDialog.tsx';
 import { Label } from '../ui/label.tsx';
-import { cn } from '@/lib/utils.ts';
 import { Textarea } from '../ui/textarea.tsx';
 import { Input } from '../ui/input.tsx';
 import { FileUploadButton } from '../FileUploadButton.tsx';
+import { Checkbox } from '../ui/checkbox';
 
 interface PriceInputProps {
   componentType: PriceComponentType;
@@ -45,15 +43,14 @@ function ProductsTab() {
   const { t } = useTranslation('settings');
 
   const [products, setProducts] = useState<ProductDTO[]>([]);
-  const [categories, setCategories] = useState<ProductCategoryDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [currentProduct, setCurrentProduct] = useState<Partial<ProductDTO>>({
     name: '',
     description: '',
-    category: undefined,
     priceComponents: [],
     totalCost: 0,
   });
@@ -68,10 +65,47 @@ function ProductsTab() {
     productName: '',
   });
 
+  const [bulkDeleteDialog, setBulkDeleteDialog] = useState<{
+    isOpen: boolean;
+    count: number;
+  }>({
+    isOpen: false,
+    count: 0,
+  });
+
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
 
+  // Get selected product IDs helper
+  const getSelectedProductIds = (): number[] => {
+    return Object.keys(rowSelection)
+      .filter(key => rowSelection[key])
+      .map(key => products[parseInt(key)].id);
+  };
+
   const columns = useMemo<ColumnDef<ProductDTO>[]>(() => [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label={t('common.actions.selectAll')}
+          className="translate-y-[2px]"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="translate-y-[2px]"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     {
       accessorKey: 'name',
       header: t('products.table.name'),
@@ -91,34 +125,6 @@ function ProductsTab() {
       ),
     },
     {
-      accessorKey: 'category.name',
-      header: t('products.table.category'),
-      cell: (info) => (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                       bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-400">
-          {info.getValue() as string}
-        </span>
-      ),
-    },
-    // {
-    //   accessorKey: 'currentPurchasePrice',
-    //   header: t('products.table.purchasePrice'),
-    //   cell: (info) => (
-    //     <div className="text-gray-900 dark:text-white">
-    //       MAD{(info.getValue() as number)?.toFixed(2)}
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   accessorKey: 'currentSellingPrice',
-    //   header: t('products.table.sellingPrice'),
-    //   cell: (info) => (
-    //     <div className="font-semibold text-gray-900 dark:text-white">
-    //       MAD{(info.getValue() as number)?.toFixed(2)}
-    //     </div>
-    //   ),
-    // },
-    {
       accessorKey: 'totalCost',
       header: t('products.table.totalCost'),
       cell: (info) => (
@@ -135,14 +141,14 @@ function ProductsTab() {
           <button
             onClick={() => handleEdit(info.row.original)}
             className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 
-                       transition-colors p-1 rounded-full hover:bg-primary-50 dark:hover:bg-primary-900/30"
+                      transition-colors p-1 rounded-full hover:bg-primary-50 dark:hover:bg-primary-900/30"
           >
             <PencilIcon className="h-5 w-5" />
           </button>
           <button
             onClick={() => handleDeleteClick(info.row.original)}
             className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 
-                       transition-colors p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30"
+                      transition-colors p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30"
           >
             <TrashIcon className="h-5 w-5" />
           </button>
@@ -157,6 +163,11 @@ function ProductsTab() {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    enableRowSelection: true,
+    state: {
+      rowSelection,
+    },
+    onRowSelectionChange: setRowSelection,
     initialState: {
       pagination: {
         pageSize: 10,
@@ -167,13 +178,9 @@ function ProductsTab() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [productsRes, categoriesRes] = await Promise.all([
-        productService.getAll(0, 100),
-        productCategoryService.getAll(0, 100),
-      ]);
+      const productsRes = await productService.getAll(0, 100);
       setProducts(productsRes.content);
-      console.log('Products:', productsRes.content);
-      setCategories(categoriesRes.content);
+      setRowSelection({}); // Reset selection after fetch
     } catch (error) {
       toast.error(t('common.messages.errors.fetchFailed'));
       console.error(error);
@@ -186,21 +193,38 @@ function ProductsTab() {
     fetchData();
   }, []);
 
+  const handleBulkDelete = async () => {
+    const selectedIds = getSelectedProductIds();
+    if (selectedIds.length === 0) return;
+
+    try {
+      setIsBulkDeleting(true);
+      await Promise.all(selectedIds.map(id => productService.delete(id)));
+      toast.success(t('common.messages.success.bulkDeleted', { count: selectedIds.length }));
+      setRowSelection({});
+      await fetchData();
+    } catch (error) {
+      toast.error(t('common.messages.errors.bulkDeleteFailed'));
+      console.error(error);
+    } finally {
+      setIsBulkDeleting(false);
+      setBulkDeleteDialog({ isOpen: false, count: 0 });
+    }
+  };
+
   const handlePriceComponentChange = (
     componentType: PriceComponentType,
     amount: number
   ) => {
     const now = new Date();
     const updatedComponents = [...(currentProduct.priceComponents || [])];
-  
-    // Remove any existing active price components of the same type
-    const filteredComponents = updatedComponents.map(component => 
+
+    const filteredComponents = updatedComponents.map(component =>
       component.componentType === componentType && !component.effectiveTo
         ? { ...component, effectiveTo: now }
         : component
     );
-  
-    // Add the new price component
+
     filteredComponents.push({
       componentType,
       amount,
@@ -209,15 +233,14 @@ function ProductsTab() {
       createdAt: now,
       updatedAt: now,
     } as PriceComponentDTO);
-  
+
     const newProduct = {
       ...currentProduct,
       priceComponents: filteredComponents
     };
-  
-    // Update calculated fields
+
     newProduct.totalCost = calculateTotalCost(filteredComponents);
-  
+
     setCurrentProduct(newProduct);
   };
 
@@ -261,7 +284,7 @@ function ProductsTab() {
         {tooltip && (
           <InformationCircleIcon
             className="h-4 w-4 text-gray-400 dark:text-gray-500 
-                     hover:text-gray-500 dark:hover:text-gray-400"
+                    hover:text-gray-500 dark:hover:text-gray-400"
             title={tooltip}
           />
         )}
@@ -293,7 +316,7 @@ function ProductsTab() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!currentProduct.name || !currentProduct.category) {
+    if (!currentProduct.name) {
       toast.error(t('common.messages.errors.required'));
       return;
     }
@@ -302,8 +325,6 @@ function ProductsTab() {
       setIsSubmitting(true);
       if (isEditing) {
         await productService.update(currentProduct.id!, currentProduct);
-
-        // console.log('Product updated:', currentProduct);
         toast.success(t('common.messages.success.updated'));
       } else {
         await productService.create(currentProduct);
@@ -355,7 +376,6 @@ function ProductsTab() {
     setCurrentProduct({
       name: '',
       description: '',
-      category: undefined,
       priceComponents: [],
       totalCost: 0,
     });
@@ -406,7 +426,6 @@ function ProductsTab() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-      {/* Header */}
       <div className="sm:flex sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -417,23 +436,39 @@ function ProductsTab() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {Object.keys(rowSelection).length > 0 && (
+            <button
+              onClick={() => setBulkDeleteDialog({
+                isOpen: true,
+                count: Object.keys(rowSelection).length
+              })}
+              className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 
+                      border border-red-300 rounded-md shadow-sm text-sm 
+                      font-medium text-red-700 dark:text-red-300 
+                      bg-white dark:bg-gray-800 hover:bg-red-50 
+                      dark:hover:bg-red-900/30"
+            >
+              <TrashIcon className="h-4 w-4 mr-2" />
+              {t('common.actions.bulkDelete', { count: Object.keys(rowSelection).length })}
+            </button>
+          )}
           <button
             onClick={() => handleDownloadTemplate('csv')}
             className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 border border-gray-300 
-                     rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 
-                     bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 
-                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500
-                     dark:focus:ring-offset-gray-900 transition-colors"
+                    rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 
+                    bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500
+                    dark:focus:ring-offset-gray-900 transition-colors"
           >
             {t('common.actions.download.csv')}
           </button>
           <button
             onClick={() => handleDownloadTemplate('excel')}
             className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 border border-gray-300 
-                     rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 
-                     bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 
-                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500
-                     dark:focus:ring-offset-gray-900 transition-colors"
+                    rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 
+                    bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500
+                    dark:focus:ring-offset-gray-900 transition-colors"
           >
             {t('common.actions.download.excel')}
           </button>
@@ -448,10 +483,10 @@ function ProductsTab() {
               setIsModalOpen(true);
             }}
             className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 border border-transparent 
-                     rounded-md shadow-sm text-sm font-medium text-white 
-                     bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 
-                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500
-                     dark:focus:ring-offset-gray-900 transition-colors"
+                    rounded-md shadow-sm text-sm font-medium text-white 
+                    bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500
+                    dark:focus:ring-offset-gray-900 transition-colors"
           >
             <PlusIcon className="h-4 w-4 mr-2" />
             {t('products.buttons.add')}
@@ -459,7 +494,6 @@ function ProductsTab() {
         </div>
       </div>
 
-      {/* Table Section */}
       <div className="mt-8 flex flex-col">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">
@@ -473,7 +507,7 @@ function ProductsTab() {
                           <th
                             key={header.id}
                             className="py-3.5 px-4 text-left text-sm font-semibold 
-                                     text-gray-900 dark:text-white"
+                                    text-gray-900 dark:text-white"
                           >
                             {flexRender(
                               header.column.columnDef.header,
@@ -485,14 +519,14 @@ function ProductsTab() {
                     ))}
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700 
-                                  bg-white dark:bg-gray-800">
+                                 bg-white dark:bg-gray-800">
                     {table.getRowModel().rows.map((row) => (
                       <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
                             className="whitespace-nowrap py-4 px-4 text-sm 
-                                     text-gray-500 dark:text-gray-400"
+                                    text-gray-500 dark:text-gray-400"
                           >
                             {flexRender(
                               cell.column.columnDef.cell,
@@ -510,19 +544,18 @@ function ProductsTab() {
         </div>
       </div>
 
-      {/* Pagination */}
       <div className="mt-4 flex items-center justify-between">
         <div className="flex gap-2">
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
             className="inline-flex items-center px-3 py-2 border border-gray-300 
-                     dark:border-gray-600 shadow-sm text-sm font-medium rounded-md 
-                     text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 
-                     hover:bg-gray-50 dark:hover:bg-gray-700/50 
-                     focus:outline-none focus:ring-2 focus:ring-offset-2 
-                     focus:ring-primary-500 dark:focus:ring-offset-gray-900
-                     disabled:opacity-50 disabled:cursor-not-allowed"
+                    dark:border-gray-600 shadow-sm text-sm font-medium rounded-md 
+                    text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 
+                    hover:bg-gray-50 dark:hover:bg-gray-700/50 
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 
+                    focus:ring-primary-500 dark:focus:ring-offset-gray-900
+                    disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeftIcon className="h-4 w-4 mr-1" />
             {t('common.pagination.previous')}
@@ -531,12 +564,12 @@ function ProductsTab() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
             className="inline-flex items-center px-3 py-2 border border-gray-300 
-                     dark:border-gray-600 shadow-sm text-sm font-medium rounded-md 
-                     text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 
-                     hover:bg-gray-50 dark:hover:bg-gray-700/50 
-                     focus:outline-none focus:ring-2 focus:ring-offset-2 
-                     focus:ring-primary-500 dark:focus:ring-offset-gray-900
-                     disabled:opacity-50 disabled:cursor-not-allowed"
+                    dark:border-gray-600 shadow-sm text-sm font-medium rounded-md 
+                    text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 
+                    hover:bg-gray-50 dark:hover:bg-gray-700/50 
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 
+                    focus:ring-primary-500 dark:focus:ring-offset-gray-900
+                    disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {t('common.pagination.next')}
             <ChevronRightIcon className="h-4 w-4 ml-1" />
@@ -547,7 +580,6 @@ function ProductsTab() {
         </span>
       </div>
 
-      {/* Form Dialog */}
       <FormDialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -569,9 +601,9 @@ function ProductsTab() {
                 name: e.target.value,
               })}
               className="h-12 w-full rounded-md 
-                       border border-gray-300 dark:border-gray-700 
-                       bg-white dark:bg-gray-800 
-                       text-gray-900 dark:text-gray-100"
+                      border border-gray-300 dark:border-gray-700 
+                      bg-white dark:bg-gray-800 
+                      text-gray-900 dark:text-gray-100"
               placeholder={t('products.form.fields.name.placeholder')}
               required
             />
@@ -589,45 +621,10 @@ function ProductsTab() {
                 description: e.target.value,
               })}
               className="min-h-[120px] w-full rounded-md 
-                       border border-gray-300 dark:border-gray-700 
-                       bg-white dark:bg-gray-800 
-                       text-gray-900 dark:text-gray-100"
+                      border border-gray-300 dark:border-gray-700 
+                      bg-white dark:bg-gray-800 
+                      text-gray-900 dark:text-gray-100"
               placeholder={t('products.form.fields.description.placeholder')}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-              {t('products.form.fields.category.label')}
-            </Label>
-            <Select<ProductCategoryDTO>
-              value={categories.find((c) => c.id === currentProduct.category?.id)}
-              onChange={(selected) => setCurrentProduct({
-                ...currentProduct,
-                category: selected || undefined,
-              })}
-              options={categories}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id.toString()}
-              classNames={{
-                control: (state) => cn(
-                  "h-12 w-full rounded-md",
-                  "bg-white dark:bg-gray-800",
-                  "border border-gray-300 dark:border-gray-700",
-                  state.isFocused && "border-primary-500 dark:border-primary-400"
-                ),
-                menu: () => "bg-white dark:bg-gray-800 border dark:border-gray-700",
-                option: (state) => cn(
-                  "text-gray-900 dark:text-gray-100",
-                  state.isFocused && "bg-gray-100 dark:bg-gray-700",
-                  state.isSelected && "bg-primary-500 text-white"
-                ),
-                singleValue: () => "text-gray-900 dark:text-gray-100",
-                input: () => "text-gray-900 dark:text-gray-100",
-              }}
-              placeholder={t('products.form.fields.category.placeholder')}
-              isClearable
-              required
             />
           </div>
 
@@ -654,9 +651,7 @@ function ProductsTab() {
                       }
                     />
                   );
-                }
-
-                )}
+                })}
             </div>
 
             <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -676,10 +671,10 @@ function ProductsTab() {
               type="button"
               onClick={() => setIsModalOpen(false)}
               className="flex-1 py-2 px-4 border border-gray-300 dark:border-gray-600 
-                       rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 
-                       hover:bg-gray-50 dark:hover:bg-gray-700/50 
-                       focus:outline-none focus:ring-2 focus:ring-offset-2 
-                       focus:ring-primary-500 dark:focus:ring-offset-gray-900"
+                      rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 
+                      hover:bg-gray-50 dark:hover:bg-gray-700/50 
+                      focus:outline-none focus:ring-2 focus:ring-offset-2 
+                      focus:ring-primary-500 dark:focus:ring-offset-gray-900"
             >
               {t('common.actions.cancel')}
             </button>
@@ -687,12 +682,12 @@ function ProductsTab() {
               type="submit"
               disabled={isSubmitting}
               className="flex-1 flex justify-center py-2 px-4 border border-transparent 
-                       rounded-md shadow-sm text-sm font-medium text-white 
-                       bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 
-                       dark:hover:bg-primary-600 focus:outline-none focus:ring-2 
-                       focus:ring-offset-2 focus:ring-primary-500
-                       dark:focus:ring-offset-gray-900 disabled:opacity-50 
-                       disabled:cursor-not-allowed"
+                      rounded-md shadow-sm text-sm font-medium text-white 
+                      bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 
+                      dark:hover:bg-primary-600 focus:outline-none focus:ring-2 
+                      focus:ring-offset-2 focus:ring-primary-500
+                      dark:focus:ring-offset-gray-900 disabled:opacity-50 
+                      disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="flex items-center">
@@ -707,8 +702,6 @@ function ProductsTab() {
         </form>
       </FormDialog>
 
-
-      {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
         isOpen={deleteDialog.isOpen}
         onClose={() => setDeleteDialog({ isOpen: false, productId: null, productName: '' })}
@@ -718,12 +711,22 @@ function ProductsTab() {
         isDeleting={isDeleting}
       />
 
-      {/* Empty State */}
+      <DeleteConfirmationDialog
+        isOpen={bulkDeleteDialog.isOpen}
+        onClose={() => setBulkDeleteDialog({ isOpen: false, count: 0 })}
+        onConfirm={handleBulkDelete}
+        title={t('common.actions.bulkDelete')}
+        message={t('common.messages.confirmation.bulkDelete', {
+          count: bulkDeleteDialog.count
+        })}
+        isDeleting={isBulkDeleting}
+      />
+
       {products.length === 0 && !loading && (
         <div className="text-center py-12">
           <div className="flex flex-col items-center">
             <div className="h-12 w-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 
-                         flex items-center justify-center mb-4">
+                        flex items-center justify-center mb-4">
               <PlusIcon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -738,11 +741,11 @@ function ProductsTab() {
                 setIsModalOpen(true);
               }}
               className="mt-4 inline-flex items-center px-4 py-2 border border-transparent 
-                       rounded-md shadow-sm text-sm font-medium text-white 
-                       bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 
-                       dark:hover:bg-primary-600 focus:outline-none focus:ring-2 
-                       focus:ring-offset-2 focus:ring-primary-500
-                       dark:focus:ring-offset-gray-900 transition-colors"
+                      rounded-md shadow-sm text-sm font-medium text-white 
+                      bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 
+                      dark:hover:bg-primary-600 focus:outline-none focus:ring-2 
+                      focus:ring-offset-2 focus:ring-primary-500
+                      dark:focus:ring-offset-gray-900 transition-colors"
             >
               <PlusIcon className="h-4 w-4 mr-2" />
               {t('products.buttons.add')}

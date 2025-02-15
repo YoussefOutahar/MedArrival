@@ -11,7 +11,6 @@ public class ProductDTO {
     private String name;
     private String description;
     private Integer availableQuantity;
-    private ProductCategoryDTO category;
     private List<PriceComponentDTO> priceComponents;
     private Float totalCost;
     private LocalDateTime createdAt;

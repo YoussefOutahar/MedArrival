@@ -61,13 +61,6 @@ public class ProductController {
         productService.deleteById(id);
     }
 
-    @GetMapping("/category/{categoryId}")
-    public List<ProductDTO> getByCategory(@PathVariable Long categoryId) {
-        return productService.findByCategory(categoryId).stream()
-                .map(productConverter::toDTO)
-                .collect(Collectors.toList());
-    }
-
     @GetMapping("/client/{clientId}")
     public Page<ProductDTO> getProductsForClient(
             @PathVariable Long clientId,

@@ -15,11 +15,6 @@ export default function SettingsNavigation() {
             label: t('navigation.products')
         },
         {
-            path: PATHS.ADMIN.SETTINGS.CATEGORIES,
-            icon: ListTree,
-            label: t('navigation.categories')
-        },
-        {
             path: PATHS.ADMIN.SETTINGS.SUPPLIERS,
             icon: Building2,
             label: t('navigation.suppliers')

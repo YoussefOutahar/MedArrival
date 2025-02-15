@@ -3,7 +3,6 @@ package com.cnesten.medarrivalbackend.Service;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponent;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
 import com.cnesten.medarrivalbackend.Models.Product;
-import com.cnesten.medarrivalbackend.Models.ProductCategory;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductBulkImportService {
     private final ProductService productService;
-    private final ProductCategoryService categoryService;
 
     public List<Product> importProductsFromFile(MultipartFile file) throws IOException {
         List<Product> products;
@@ -63,19 +61,13 @@ public class ProductBulkImportService {
             product.setName(getCellValueAsString(row.getCell(0)));
             product.setDescription(getCellValueAsString(row.getCell(1)));
 
-            // Category
-            String categoryName = getCellValueAsString(row.getCell(2));
-            ProductCategory category = categoryService.findByName(categoryName)
-                    .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryName));
-            product.setCategory(category);
-
-            // Price Components
-            addPriceComponent(product, PriceComponentType.PURCHASE_PRICE, getCellValueAsFloat(row.getCell(3)));
-            addPriceComponent(product, PriceComponentType.TRANSPORT, getCellValueAsFloat(row.getCell(4)));
-            addPriceComponent(product, PriceComponentType.STORAGE, getCellValueAsFloat(row.getCell(5)));
-            addPriceComponent(product, PriceComponentType.TRANSIT, getCellValueAsFloat(row.getCell(6)));
-            addPriceComponent(product, PriceComponentType.DUANE, getCellValueAsFloat(row.getCell(7)));
-            addPriceComponent(product, PriceComponentType.AMSSNUR, getCellValueAsFloat(row.getCell(8)));
+            // Price Components - Note: indexes shifted left by 1 since category was removed
+            addPriceComponent(product, PriceComponentType.PURCHASE_PRICE, getCellValueAsFloat(row.getCell(2)));
+            addPriceComponent(product, PriceComponentType.TRANSPORT, getCellValueAsFloat(row.getCell(3)));
+            addPriceComponent(product, PriceComponentType.STORAGE, getCellValueAsFloat(row.getCell(4)));
+            addPriceComponent(product, PriceComponentType.TRANSIT, getCellValueAsFloat(row.getCell(5)));
+            addPriceComponent(product, PriceComponentType.DUANE, getCellValueAsFloat(row.getCell(6)));
+            addPriceComponent(product, PriceComponentType.AMSSNUR, getCellValueAsFloat(row.getCell(7)));
 
             products.add(product);
         }
@@ -100,19 +92,13 @@ public class ProductBulkImportService {
             product.setName(values[0].trim());
             product.setDescription(values[1].trim());
 
-            // Category
-            String categoryName = values[2].trim();
-            ProductCategory category = categoryService.findByName(categoryName)
-                    .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryName));
-            product.setCategory(category);
-
-            // Price Components
-            addPriceComponent(product, PriceComponentType.PURCHASE_PRICE, Float.parseFloat(values[3].trim()));
+            // Price Components - Note: indexes shifted left by 1 since category was removed
+            addPriceComponent(product, PriceComponentType.PURCHASE_PRICE, Float.parseFloat(values[2].trim()));
+            addPriceComponent(product, PriceComponentType.TRANSPORT, Float.parseFloat(values[3].trim()));
             addPriceComponent(product, PriceComponentType.STORAGE, Float.parseFloat(values[4].trim()));
             addPriceComponent(product, PriceComponentType.TRANSIT, Float.parseFloat(values[5].trim()));
-            addPriceComponent(product, PriceComponentType.TRANSPORT, Float.parseFloat(values[6].trim()));
-            addPriceComponent(product, PriceComponentType.DUANE, Float.parseFloat(values[7].trim()));
-            addPriceComponent(product, PriceComponentType.AMSSNUR, Float.parseFloat(values[8].trim()));
+            addPriceComponent(product, PriceComponentType.DUANE, Float.parseFloat(values[6].trim()));
+            addPriceComponent(product, PriceComponentType.AMSSNUR, Float.parseFloat(values[7].trim()));
 
             products.add(product);
         }
@@ -131,12 +117,11 @@ public class ProductBulkImportService {
         }
     }
 
-    // Add template generation methods
     public byte[] generateProductCsvTemplate() {
         StringBuilder csv = new StringBuilder();
-        csv.append("Name,Description,Category,Price,Transport & Handling,Magazinage,Transit,Duane,Amssnur\n");
-        csv.append("Product A,Description A,Category A,100.00,10.00,5.00,15.00,20.00,5.00\n");
-        csv.append("Product B,Description B,Category B,150.00,15.00,7.50,20.00,25.00,7.50");
+        csv.append("Name,Description,Purchase Price,Transport,Storage,Transit,Customs,Insurance\n");
+        csv.append("Product A,Description A,100.00,10.00,5.00,15.00,20.00,5.00\n");
+        csv.append("Product B,Description B,150.00,15.00,7.50,20.00,25.00,7.50");
         return csv.toString().getBytes(StandardCharsets.UTF_8);
     }
 
@@ -149,9 +134,9 @@ public class ProductBulkImportService {
             CellStyle headerStyle = createHeaderStyle(workbook);
 
             String[] headers = {
-                    "Name", "Description", "Category",
-                    "Purchase Price", "Transport & Handling", "Storage",
-                    "Transit", "Customs", "Insurance", "Selling Price"
+                    "Name", "Description",
+                    "Purchase Price", "Transport", "Storage",
+                    "Transit", "Customs", "Insurance"
             };
 
             for (int i = 0; i < headers.length; i++) {
@@ -161,10 +146,10 @@ public class ProductBulkImportService {
             }
 
             // Add example data
-            addExampleProductRow(sheet, 1, "Product A", "Description A", "Category A",
-                    100.00f, 10.00f, 5.00f, 15.00f, 20.00f, 5.00f, 200.00f);
-            addExampleProductRow(sheet, 2, "Product B", "Description B", "Category B",
-                    150.00f, 15.00f, 7.50f, 20.00f, 25.00f, 7.50f, 300.00f);
+            addExampleProductRow(sheet, 1, "Product A", "Description A",
+                    100.00f, 10.00f, 5.00f, 15.00f, 20.00f, 5.00f);
+            addExampleProductRow(sheet, 2, "Product B", "Description B",
+                    150.00f, 15.00f, 7.50f, 20.00f, 25.00f, 7.50f);
 
             // Autosize columns
             for (int i = 0; i < headers.length; i++) {
@@ -177,15 +162,13 @@ public class ProductBulkImportService {
         }
     }
 
-    private void addExampleProductRow(Sheet sheet, int rowNum, String name, String description,
-                                      String category, Float... prices) {
+    private void addExampleProductRow(Sheet sheet, int rowNum, String name, String description, Float... prices) {
         Row row = sheet.createRow(rowNum);
         row.createCell(0).setCellValue(name);
         row.createCell(1).setCellValue(description);
-        row.createCell(2).setCellValue(category);
 
         for (int i = 0; i < prices.length; i++) {
-            Cell cell = row.createCell(i + 3);
+            Cell cell = row.createCell(i + 2); // Changed from i + 3 to i + 2 since category was removed
             cell.setCellValue(prices[i]);
         }
     }
@@ -211,18 +194,12 @@ public class ProductBulkImportService {
         if (cell == null) {
             return null;
         }
-        switch (cell.getCellType()) {
-            case STRING:
-                return cell.getStringCellValue();
-            case NUMERIC:
-                return String.valueOf((int) cell.getNumericCellValue());
-            case BOOLEAN:
-                return String.valueOf(cell.getBooleanCellValue());
-            case BLANK:
-                return null;
-            default:
-                return null;
-        }
+        return switch (cell.getCellType()) {
+            case STRING -> cell.getStringCellValue();
+            case NUMERIC -> String.valueOf((int) cell.getNumericCellValue());
+            case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
+            default -> null;
+        };
     }
 
     private Float getCellValueAsFloat(Cell cell) {
@@ -238,8 +215,6 @@ public class ProductBulkImportService {
                 } catch (NumberFormatException e) {
                     return null;
                 }
-            case BLANK:
-                return null;
             default:
                 return null;
         }
