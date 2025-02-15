@@ -76,22 +76,25 @@ public class ProductService {
     }
 
     private Product applyClientPricing(Product product, Client client) {
-        Set<PriceComponent> relevantComponents;
+        Set<PriceComponent> relevantComponents = new HashSet<>();
 
         if (client != null) {
-            // First try to get client-specific components
-            relevantComponents = product.getPriceComponents().stream()
+            // Get client-specific components
+            Set<PriceComponent> clientComponents = product.getPriceComponents().stream()
                     .filter(pc -> pc.getEffectiveTo() == null &&
                             pc.getClient() != null &&
                             pc.getClient().getId().equals(client.getId()))
                     .collect(Collectors.toSet());
 
-            // If no client-specific components found, get default components
-            if (relevantComponents.isEmpty()) {
-                relevantComponents = product.getPriceComponents().stream()
-                        .filter(pc -> pc.getEffectiveTo() == null && pc.getClient() == null)
-                        .collect(Collectors.toSet());
-            }
+            // Get default components for types that don't have client-specific pricing
+            Set<PriceComponent> defaultComponents = product.getPriceComponents().stream()
+                    .filter(pc -> pc.getEffectiveTo() == null && pc.getClient() == null)
+                    .filter(defaultPc -> clientComponents.stream()
+                            .noneMatch(clientPc -> clientPc.getComponentType() == defaultPc.getComponentType()))
+                    .collect(Collectors.toSet());
+
+            relevantComponents.addAll(clientComponents);
+            relevantComponents.addAll(defaultComponents);
         } else {
             // For null client, get only default components
             relevantComponents = product.getPriceComponents().stream()
@@ -196,15 +199,16 @@ public class ProductService {
 
         Product product = findById(productId);
 
-        // For each new price component
+        // For each price component type being updated
         priceComponents.forEach((type, amount) -> {
+            // First, remove ALL existing price components of this type for this client
             product.getPriceComponents().removeIf(pc ->
                     pc.getClient() != null &&
                             pc.getClient().getId().equals(clientId) &&
                             pc.getComponentType() == type
             );
 
-            // Create and add the new price component
+            // Then create and add the new price component
             PriceComponent priceComponent = new PriceComponent();
             priceComponent.setComponentType(type);
             priceComponent.setAmount(amount);
@@ -218,6 +222,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional
     public Product removeCustomPricingForClient(Long productId, Long clientId) {
         Client client = clientService.findById(clientId);
         if (client.getClientType() != ClientType.CLIENT_MARCHER) {
@@ -225,8 +230,22 @@ public class ProductService {
         }
 
         Product product = findById(productId);
-        product.removePriceComponentsForClient(client);
 
-        return productRepository.save(product);
+        // Get all price components for this client
+        Set<PriceComponent> clientComponents = product.getPriceComponents().stream()
+                .filter(component ->
+                        component.getClient() != null &&
+                                component.getClient().getId().equals(clientId))
+                .collect(Collectors.toSet());
+
+        // Remove them from the product
+        product.getPriceComponents().removeAll(clientComponents);
+
+        // Delete them from the database
+        priceComponentRepository.deleteAll(clientComponents);
+
+        // Save and refresh the product
+        Product savedProduct = productRepository.save(product);
+        return findById(savedProduct.getId());
     }
 }

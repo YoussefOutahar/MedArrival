@@ -21,6 +21,7 @@ public class PriceComponentConverter {
         dto.setEffectiveTo(priceComponent.getEffectiveTo());
 
         dto.setClient(clientConverter.toDTO(priceComponent.getClient()));
+        dto.setUsesDefaultPrice(priceComponent.getClient() == null);
 
         dto.setCreatedAt(priceComponent.getCreatedAt());
         dto.setUpdatedAt(priceComponent.getUpdatedAt());

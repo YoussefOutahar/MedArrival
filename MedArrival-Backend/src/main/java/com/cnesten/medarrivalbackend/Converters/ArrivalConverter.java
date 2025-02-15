@@ -2,9 +2,12 @@ package com.cnesten.medarrivalbackend.Converters;
 
 import com.cnesten.medarrivalbackend.DTO.ArrivalDTO;
 import com.cnesten.medarrivalbackend.Models.Arrival;
+import com.cnesten.medarrivalbackend.Models.Sale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,17 +38,28 @@ public class ArrivalConverter {
         if (dto == null) return null;
 
         Arrival arrival = new Arrival();
-        arrival.setId(dto.getId());
+        if (dto.getId() != null && dto.getId() != 0) {
+            arrival.setId(dto.getId());
+        }
         arrival.setArrivalDate(dto.getArrivalDate());
         arrival.setInvoiceNumber(dto.getInvoiceNumber());
-        arrival.setSales(dto.getSales().stream()
-                .map(saleConverter::toEntity)
-                .collect(Collectors.toSet()));
         arrival.setSupplier(supplierConverter.toEntity(dto.getSupplier()));
         arrival.setCreatedAt(dto.getCreatedAt());
         arrival.setUpdatedAt(dto.getUpdatedAt());
         arrival.setCreatedBy(dto.getCreatedBy());
         arrival.setUpdatedBy(dto.getUpdatedBy());
+
+        // Handle sales separately to manage bidirectional relationship
+        Set<Sale> sales = dto.getSales().stream()
+                .map(saleConverter::toEntity)
+                .collect(Collectors.toSet());
+
+        arrival.setSales(new HashSet<>()); // Initialize empty set
+        sales.forEach(sale -> {
+            arrival.getSales().add(sale);
+            sale.getArrivals().add(arrival);
+        });
+
         return arrival;
     }
 }

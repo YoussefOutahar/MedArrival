@@ -1,6 +1,7 @@
 import { Plus, Download, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { PATHS } from '@/routes/paths';
 
 interface ArrivalHeaderProps {
   onExport: () => void;
@@ -20,7 +21,7 @@ const ArrivalHeader: React.FC<ArrivalHeaderProps> = ({ onExport }) => {
       </div>
       <div className="flex items-center gap-3">
         <button
-          onClick={() => navigate('/arrivals/new')}
+          onClick={() => navigate(PATHS.ADMIN.NEW_ARRIVAL)}
           className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 
                     dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-lg 
                     transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-primary-500

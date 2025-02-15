@@ -14,13 +14,18 @@ import { ProductDTO } from '@/models/ProductDTO';
 import { SupplierDTO } from '@/models/SupplierDTO';
 import { ClientDTO } from '@/models/ClientDTO';
 import { SaleDTO } from '@/models/SaleDTO';
-import { ArrivalFormData, NewSaleForm, calculateTotalAmount } from '@/types/arrival.types';
+import { ArrivalFormData, NewSaleForm, PriceComponentOverride } from '@/types/arrival.types';
 
 // Components
 import ActionButtons from '@/components/NewArrival/ActionButtons';
 import SalesSection from '@/components/NewArrival/SalesSection';
 import BasicInformationSection from '@/components/NewArrival/BasicInformationSection';
 import Header from '@/components/NewArrival/Header';
+
+export const calculateTotalAmount = (quantity: number, priceComponents: PriceComponentOverride[]): number => {
+  const componentSum = priceComponents.reduce((sum, comp) => sum + comp.amount, 0);
+  return componentSum * quantity;
+};
 
 const initialArrivalFormData: ArrivalFormData = {
   invoiceNumber: '',
@@ -42,7 +47,7 @@ const initialNewSaleForm: NewSaleForm = {
 const NewArrival: React.FC = () => {
   const { t } = useTranslation('newArrival');
   const navigate = useNavigate();
-  
+
   const [suppliers, setSuppliers] = useState<SupplierDTO[]>([]);
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [clients, setClients] = useState<ClientDTO[]>([]);
@@ -61,7 +66,7 @@ const NewArrival: React.FC = () => {
         productService.getAll(),
         clientService.getAll()
       ]);
-      
+
       setSuppliers(suppliersResponse.content);
       setProducts(productsResponse.content);
       setClients(clientsResponse.content);
@@ -92,22 +97,33 @@ const NewArrival: React.FC = () => {
   };
 
   const handleAddSale = () => {
-    if (!validateNewSale()) return;
+    if (!validateNewSale()) {
+      console.warn('Sale Validation Failed');
+      console.groupEnd();
+      return;
+    }
 
     const totalAmount = calculateTotalAmount(newSale.quantity, newSale.priceComponents);
 
-    setFormData(prev => ({
-      ...prev,
-      sales: [...prev.sales, {
+    setFormData(prev => {
+      const updatedSales = [...prev.sales, {
         product: newSale.product!,
         client: newSale.client!,
         quantity: newSale.quantity,
-        priceComponents: newSale.priceComponents,
+        priceComponents: newSale.priceComponents.map(pc => ({
+          ...pc,
+          usesDefaultPrice: false
+        })),
         expectedDeliveryDate: newSale.expectedDeliveryDate,
         isConform: newSale.isConform,
         totalAmount
-      }]
-    }));
+      }];
+
+      return {
+        ...prev,
+        sales: updatedSales
+      };
+    });
 
     setNewSale(initialNewSaleForm);
   };
@@ -116,6 +132,11 @@ const NewArrival: React.FC = () => {
     e.preventDefault();
 
     if (!formData.supplier || formData.sales.length === 0 || !formData.invoiceNumber) {
+      console.warn('Validation Failed:', {
+        hasSupplier: !!formData.supplier,
+        salesLength: formData.sales.length,
+        invoiceNumber: formData.invoiceNumber
+      });
       toast.error(t('errors.requiredFields'));
       return;
     }
@@ -123,33 +144,37 @@ const NewArrival: React.FC = () => {
     try {
       setLoading(true);
 
-      const salesDTOs: SaleDTO[] = formData.sales.map(sale => ({
-        id: 0,
-        quantity: sale.quantity,
-        expectedQuantity: sale.quantity,
-        totalAmount: sale.totalAmount,
-        saleDate: new Date(),
-        expectedDeliveryDate: new Date(sale.expectedDeliveryDate),
-        isConform: sale.isConform,
-        product: sale.product,
-        client: sale.client,
-        priceComponents: sale.priceComponents.map(pc => ({
+      const salesDTOs: SaleDTO[] = formData.sales.map(sale => {
+        const saleDTO = {
           id: 0,
-          componentType: pc.componentType,
-          amount: pc.amount,
-          usesDefaultPrice: pc.usesDefaultPrice,
+          quantity: sale.quantity,
+          expectedQuantity: sale.quantity,
+          totalAmount: sale.totalAmount,
+          saleDate: new Date(),
+          expectedDeliveryDate: new Date(sale.expectedDeliveryDate),
+          isConform: sale.isConform,
+          product: sale.product,
+          client: sale.client,
+          priceComponents: sale.priceComponents.map(pc => ({
+            id: 0,
+            componentType: pc.componentType,
+            amount: pc.amount,
+            usesDefaultPrice: pc.usesDefaultPrice,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            createdBy: '',
+            updatedBy: ''
+          })),
           createdAt: new Date(),
           updatedAt: new Date(),
           createdBy: '',
           updatedBy: ''
-        })),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        createdBy: '',
-        updatedBy: ''
-      }));
+        };
 
-      await arrivalService.create({
+        return saleDTO;
+      });
+
+      const arrivalDTO = {
         id: 0,
         invoiceNumber: formData.invoiceNumber,
         arrivalDate: new Date(formData.arrivalDate),
@@ -159,22 +184,25 @@ const NewArrival: React.FC = () => {
         updatedAt: new Date(),
         createdBy: '',
         updatedBy: ''
-      });
+      };
+
+      await arrivalService.create(arrivalDTO);
 
       toast.success(t('success.created'));
       navigate('/arrivals');
     } catch (error) {
+      console.error('Submission Error:', error);
       toast.error(t('errors.createFailed'));
-      console.error(error);
     } finally {
       setLoading(false);
+      console.groupEnd();
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header title={t('header.title')} onBack={() => navigate('/arrivals')} />
-      
+
       <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           <BasicInformationSection
@@ -182,7 +210,7 @@ const NewArrival: React.FC = () => {
             setFormData={setFormData}
             suppliers={suppliers}
           />
-          
+
           <SalesSection
             newSale={newSale}
             setNewSale={setNewSale}
@@ -192,7 +220,7 @@ const NewArrival: React.FC = () => {
             clients={clients}
             onAddSale={handleAddSale}
           />
-          
+
           <ActionButtons
             loading={loading}
             onCancel={() => navigate('/arrivals')}

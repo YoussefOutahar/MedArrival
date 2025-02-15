@@ -4,9 +4,44 @@ import { useTranslation } from 'react-i18next';
 import * as Switch from '@radix-ui/react-switch';
 import { ProductDTO } from '@/models/ProductDTO';
 import { ClientDTO } from '@/models/ClientDTO';
-import { ArrivalFormData, NewSaleForm, getDefaultPriceComponents, calculateTotalAmount } from '@/types/arrival.types';
+import { ArrivalFormData, NewSaleForm, PriceComponentOverride } from '@/types/arrival.types';
 import { productService } from '@/services/product.service';
 import PriceComponentsSection from './PriceComponentsSection';
+
+export const getDefaultPriceComponents = (
+    product: ProductDTO,
+    client: ClientDTO | null
+): PriceComponentOverride[] => {
+    if (!product.priceComponents || !client) return [];
+
+    const priceComponents: PriceComponentOverride[] = [];
+
+    // Get all price component types
+    const componentTypes = new Set(product.priceComponents.map(pc => pc.componentType));
+
+    componentTypes.forEach(type => {
+        // Try to find client-specific price first
+        const clientSpecific = product.priceComponents.find(
+            pc => pc.componentType === type && pc.client?.id === client.id
+        );
+
+        // If no client-specific price, use default
+        const defaultPrice = product.priceComponents.find(
+            pc => pc.componentType === type && pc.client === null
+        );
+
+        const priceToUse = clientSpecific || defaultPrice;
+        if (priceToUse) {
+            priceComponents.push({
+                componentType: priceToUse.componentType,
+                amount: priceToUse.amount,
+                usesDefaultPrice: !clientSpecific // Required boolean
+            });
+        }
+    });
+
+    return priceComponents;
+};
 
 interface SalesSectionProps {
     newSale: NewSaleForm;
@@ -63,10 +98,11 @@ const SalesSection: React.FC<SalesSectionProps> = ({
         fetchProductsForClient(newSale.client);
     }, [newSale.client]);
 
-    const handleProductChange = (productId: string) => {
+    const handleProductChange = async (productId: string) => {
         const selectedProduct = availableProducts.find(p => p.id === Number(productId));
-        if (selectedProduct) {
+        if (selectedProduct && newSale.client) {
             const defaultPriceComponents = getDefaultPriceComponents(selectedProduct, newSale.client);
+
             setNewSale(prev => ({
                 ...prev,
                 product: selectedProduct,
@@ -81,11 +117,6 @@ const SalesSection: React.FC<SalesSectionProps> = ({
             sales: prev.sales.filter((_, i) => i !== index),
             quantity: prev.quantity - prev.sales[index].quantity
         }));
-    };
-
-    const getTotalAmount = (sale: NewSaleForm) => {
-        if (!sale.product || !sale.quantity || !sale.priceComponents.length) return 0;
-        return calculateTotalAmount(sale.quantity, sale.priceComponents);
     };
 
     return (
@@ -224,16 +255,14 @@ const SalesSection: React.FC<SalesSectionProps> = ({
                                     onCheckedChange={(checked) =>
                                         setNewSale(prev => ({ ...prev, isConform: checked }))
                                     }
-                                    className={`w-11 h-6 rounded-full outline-none ${
-                                        newSale.isConform
-                                            ? 'bg-primary-600 dark:bg-primary-500'
-                                            : 'bg-gray-200 dark:bg-gray-700'
-                                    }`}
+                                    className={`w-11 h-6 rounded-full outline-none ${newSale.isConform
+                                        ? 'bg-primary-600 dark:bg-primary-500'
+                                        : 'bg-gray-200 dark:bg-gray-700'
+                                        }`}
                                 >
                                     <Switch.Thumb
-                                        className={`block w-5 h-5 bg-white rounded-full transition-transform ${
-                                            newSale.isConform ? 'translate-x-[22px]' : 'translate-x-0.5'
-                                        }`}
+                                        className={`block w-5 h-5 bg-white rounded-full transition-transform ${newSale.isConform ? 'translate-x-[22px]' : 'translate-x-0.5'
+                                            }`}
                                     />
                                 </Switch.Root>
                                 <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -251,7 +280,7 @@ const SalesSection: React.FC<SalesSectionProps> = ({
                     <div className="mt-6">
                         <PriceComponentsSection
                             priceComponents={newSale.priceComponents}
-                            onPriceComponentChange={(components) => 
+                            onPriceComponentChange={(components) =>
                                 setNewSale(prev => ({ ...prev, priceComponents: components }))
                             }
                         />

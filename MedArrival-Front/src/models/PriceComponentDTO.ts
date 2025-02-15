@@ -16,4 +16,5 @@ export interface PriceComponentDTO extends BaseDTO {
     effectiveFrom: Date;
     effectiveTo: Date | null;
     client: ClientDTO | null;
+    usesDefaultPrice?: boolean;
 }

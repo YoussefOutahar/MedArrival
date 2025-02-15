@@ -51,4 +51,21 @@ public class ReceiptAttachment {
     @LastModifiedBy
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @Version
+    private Long version = 0L;
+
+    @PrePersist
+    protected void onCreate() {
+        if (version == null) {
+            version = 0L;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        if (version == null) {
+            version = 0L;
+        }
+    }
 }

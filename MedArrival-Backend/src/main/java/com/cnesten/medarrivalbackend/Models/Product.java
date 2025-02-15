@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -109,9 +110,13 @@ public class Product {
     }
 
     public void removePriceComponentsForClient(Client client) {
-        priceComponents.removeIf(component ->
-                component.getClient() != null &&
-                        component.getClient().equals(client));
+        Set<PriceComponent> toRemove = priceComponents.stream()
+                .filter(component ->
+                        component.getClient() != null &&
+                                component.getClient().equals(client))
+                .collect(Collectors.toSet());
+
+        priceComponents.removeAll(toRemove);
     }
 
     public Float getCurrentPriceByComponent(PriceComponentType componentType) {

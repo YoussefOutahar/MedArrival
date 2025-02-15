@@ -12,6 +12,7 @@ public class PriceComponentDTO {
     private Float amount;
     private LocalDateTime effectiveFrom;
     private LocalDateTime effectiveTo;
+    private Boolean usesDefaultPrice;
     private ClientDTO client;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

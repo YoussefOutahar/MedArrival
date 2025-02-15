@@ -6,6 +6,7 @@ import com.cnesten.medarrivalbackend.Models.Sale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,7 +45,12 @@ public class SaleConverter {
         if (dto == null) return null;
 
         Sale sale = new Sale();
-        sale.setId(dto.getId());
+
+        // Only set ID if not 0
+        if (dto.getId() != null && dto.getId() != 0) {
+            sale.setId(dto.getId());
+        }
+
         sale.setQuantity(dto.getQuantity());
         sale.setExpectedQuantity(dto.getExpectedQuantity());
         sale.setTotalAmount(dto.getTotalAmount());
@@ -52,20 +58,28 @@ public class SaleConverter {
         sale.setExpectedDeliveryDate(dto.getExpectedDeliveryDate());
         sale.setIsConform(dto.getIsConform());
         sale.setProduct(productConverter.toEntity(dto.getProduct()));
-
-        if (dto.getPriceComponents() != null) {
-            dto.getPriceComponents().forEach(componentDTO -> {
-                SalePriceComponent component = priceComponentConverter.toEntity(componentDTO);
-                component.setSale(sale);
-                sale.addPriceComponent(component);
-            });
-        }
-
         sale.setClient(clientConverter.toEntity(dto.getClient()));
         sale.setCreatedAt(dto.getCreatedAt());
         sale.setUpdatedAt(dto.getUpdatedAt());
         sale.setCreatedBy(dto.getCreatedBy());
         sale.setUpdatedBy(dto.getUpdatedBy());
+
+        // Initialize price components collection
+        sale.setPriceComponents(new HashSet<>());
+
+        // Handle price components
+        if (dto.getPriceComponents() != null) {
+            dto.getPriceComponents().forEach(componentDTO -> {
+                SalePriceComponent component = priceComponentConverter.toEntity(componentDTO);
+                // Only set ID if not 0
+                if (component.getId() != null && component.getId() == 0) {
+                    component.setId(null);
+                }
+                component.setSale(sale);
+                sale.getPriceComponents().add(component);
+            });
+        }
+
         return sale;
     }
 }

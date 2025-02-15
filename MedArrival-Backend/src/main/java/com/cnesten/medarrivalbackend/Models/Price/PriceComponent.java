@@ -52,6 +52,9 @@ public class PriceComponent {
     @JoinColumn(name = "client_id")
     private Client client;  // null means this is a default price component
 
+    @Column(name = "uses_default_price")
+    private Boolean usesDefaultPrice;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -76,12 +79,20 @@ public class PriceComponent {
         if (version == null) {
             version = 0L;
         }
+
+        if (usesDefaultPrice == null) {
+            usesDefaultPrice = (client == null);
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         if (version == null) {
             version = 0L;
+        }
+
+        if (usesDefaultPrice == null) {
+            usesDefaultPrice = (client == null);
         }
     }
 

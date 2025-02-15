@@ -34,11 +34,12 @@ public class Arrival {
     @Column(name = "invoice_number")
     private String invoiceNumber;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "arrival_sales",
             joinColumns = @JoinColumn(name = "arrival_id"),
-            inverseJoinColumns = @JoinColumn(name = "sale_id")
+            inverseJoinColumns = @JoinColumn(name = "sale_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"arrival_id", "sale_id"})
     )
     private Set<Sale> sales = new HashSet<>();
 

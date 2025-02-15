@@ -18,13 +18,13 @@ export interface SalePriceComponentDTO extends BaseDTO {
 }
 
 export interface SaleDTO extends BaseDTO {
-    quantity: number;
-    expectedQuantity: number;
-    totalAmount: number;
-    saleDate: Date;
-    expectedDeliveryDate: Date;
-    isConform: boolean;
     product: ProductDTO;
     client: ClientDTO;
+    quantity: number;
     priceComponents: SalePriceComponentDTO[];
+    expectedDeliveryDate: Date;
+    isConform: boolean;
+    totalAmount: number;
+    expectedQuantity: number;
+    saleDate: Date;
 }
