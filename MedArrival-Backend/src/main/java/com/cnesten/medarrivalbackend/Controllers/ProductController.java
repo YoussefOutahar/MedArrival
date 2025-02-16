@@ -6,6 +6,7 @@ import com.cnesten.medarrivalbackend.Models.Client.Client;
 import com.cnesten.medarrivalbackend.Models.Price.PriceComponentType;
 import com.cnesten.medarrivalbackend.Models.Product;
 import com.cnesten.medarrivalbackend.Service.ClientService;
+import com.cnesten.medarrivalbackend.Service.ExcelPriceComponentService;
 import com.cnesten.medarrivalbackend.Service.ProductBulkImportService;
 import com.cnesten.medarrivalbackend.Service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class ProductController {
     private final ClientService clientService;
     private final ProductConverter productConverter;
     private final ProductBulkImportService productBulkImportService;
+    private final ExcelPriceComponentService excelPriceComponentService;
 
     @GetMapping
     public Page<ProductDTO> getAll(Pageable pageable) {
@@ -129,6 +131,35 @@ public class ProductController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=product-template.xlsx")
                     .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                     .body(template);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/client/{clientId}/price-components/excel")
+    public ResponseEntity<byte[]> downloadPriceComponentsExcel(@PathVariable Long clientId) {
+        try {
+            Client client = clientService.findById(clientId);
+            byte[] excelFile = excelPriceComponentService.generatePriceComponentsExcel(client);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=price-components-" + clientId + ".xlsx")
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .body(excelFile);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/client/{clientId}/price-components/excel")
+    public ResponseEntity<?> uploadPriceComponentsExcel(
+            @PathVariable Long clientId,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            Client client = clientService.findById(clientId);
+            excelPriceComponentService.importPriceComponents(file, client);
+            return ResponseEntity.ok().build();
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

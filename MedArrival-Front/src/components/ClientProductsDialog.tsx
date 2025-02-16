@@ -4,6 +4,8 @@ import {
   XMarkIcon,
   InboxIcon,
   MagnifyingGlassIcon,
+  ArrowDownTrayIcon,
+  ArrowUpTrayIcon
 } from '@heroicons/react/24/outline';
 import { ProductDTO } from '@/models/ProductDTO';
 import { ClientDTO } from '@/models/ClientDTO';
@@ -74,6 +76,39 @@ export function ClientProductsDialog({ isOpen, onClose, client }: ClientProducts
     }
   };
 
+  const handleDownloadExcel = async () => {
+    try {
+      const blob = await productService.downloadPriceComponentsExcel(client.id!);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `price-components-${client.name}-${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      toast.error(t('common.messages.errors.downloadFailed'));
+      console.error(error);
+    }
+  };
+
+  const handleUploadExcel = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      await productService.uploadPriceComponentsExcel(client.id!, file);
+      toast.success(t('common.messages.success.uploaded'));
+      await fetchClientProducts(); // Refresh the list after upload
+    } catch (error) {
+      toast.error(t('common.messages.errors.uploadFailed'));
+      console.error(error);
+    } finally {
+      event.target.value = '';
+    }
+  };
+
   const filteredProducts = searchTerm
     ? pageResponse.content.filter(product =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -98,7 +133,6 @@ export function ClientProductsDialog({ isOpen, onClose, client }: ClientProducts
         priceComponents
       );
 
-      // Update the local state with the new prices
       const newPrices = { ...editingPrices };
       updatedProduct.priceComponents?.forEach(component => {
         if (component.componentType) {
@@ -109,7 +143,7 @@ export function ClientProductsDialog({ isOpen, onClose, client }: ClientProducts
       setEditingPrices(newPrices);
 
       toast.success(t('common.messages.success.updated'));
-      await fetchClientProducts(); // Refresh the entire list
+      await fetchClientProducts();
     } catch (error) {
       toast.error(t('common.messages.errors.updateFailed'));
       console.error(error);
@@ -120,35 +154,32 @@ export function ClientProductsDialog({ isOpen, onClose, client }: ClientProducts
 
   const handleRevertToDefault = async (productId: number) => {
     try {
-        setUpdatingPrice(prev => ({ ...prev, [`${productId}-all`]: true }));
-        
-        // Get the product before revert for comparison
-        const beforeProduct = pageResponse.content.find(p => p.id === productId);
-        
-        await productService.removeCustomPricingForClient(productId, client.id!);
-        
-        // Fetch the updated product
-        const updatedProduct = await productService.getProductForClient(client.id!, productId);
-        
-        // Update the editing prices with the default values
-        const newPrices = { ...editingPrices };
-        updatedProduct.priceComponents?.forEach(component => {
-            if (component.componentType) {
-                const key = `${productId}-${component.componentType}`;
-                newPrices[key] = component.amount;
-            }
-        });
-        setEditingPrices(newPrices);
-        
-        await fetchClientProducts();
-        toast.success(t('common.messages.success.reverted'));
+      setUpdatingPrice(prev => ({ ...prev, [`${productId}-all`]: true }));
+
+      const beforeProduct = pageResponse.content.find(p => p.id === productId);
+
+      await productService.removeCustomPricingForClient(productId, client.id!);
+
+      const updatedProduct = await productService.getProductForClient(client.id!, productId);
+
+      const newPrices = { ...editingPrices };
+      updatedProduct.priceComponents?.forEach(component => {
+        if (component.componentType) {
+          const key = `${productId}-${component.componentType}`;
+          newPrices[key] = component.amount;
+        }
+      });
+      setEditingPrices(newPrices);
+
+      await fetchClientProducts();
+      toast.success(t('common.messages.success.reverted'));
     } catch (error) {
-        toast.error(t('common.messages.errors.revertFailed'));
-        console.error(error);
+      toast.error(t('common.messages.errors.revertFailed'));
+      console.error(error);
     } finally {
-        setUpdatingPrice(prev => ({ ...prev, [`${productId}-all`]: false }));
+      setUpdatingPrice(prev => ({ ...prev, [`${productId}-all`]: false }));
     }
-};
+  };
 
   const priceTypes = Object.values(PriceComponentType) as PriceComponentType[];
 
@@ -196,15 +227,49 @@ export function ClientProductsDialog({ isOpen, onClose, client }: ClientProducts
                     <Dialog.Title className="text-xl font-semibold text-gray-900 dark:text-white">
                       {t('clients.products.title', { client: client.name })}
                     </Dialog.Title>
-                    <ButtonUI
-                      onClick={onClose}
-                      variant="outline"
-                      size="sm"
-                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 
-                             dark:hover:text-gray-200"
-                    >
-                      <XMarkIcon className="h-5 w-5" />
-                    </ButtonUI>
+                    <div className="flex items-center gap-2">
+                      {/* Download Excel button */}
+                      <ButtonUI
+                        onClick={handleDownloadExcel}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <ArrowDownTrayIcon className="h-5 w-5" />
+                        {t('common.actions.download')}
+                      </ButtonUI>
+
+                      {/* Upload Excel button */}
+                      <ButtonUI
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                        onClick={() => document.getElementById('excel-upload')?.click()}
+                      >
+                        <ArrowUpTrayIcon className="h-5 w-5" />
+                        {t('common.actions.upload')}
+                      </ButtonUI>
+
+                      {/* Hidden file input */}
+                      <input
+                        id="excel-upload"
+                        type="file"
+                        className="hidden"
+                        accept=".xlsx"
+                        onChange={handleUploadExcel}
+                      />
+
+                      {/* Close button */}
+                      <ButtonUI
+                        onClick={onClose}
+                        variant="outline"
+                        size="sm"
+                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 
+                               dark:hover:text-gray-200"
+                      >
+                        <XMarkIcon className="h-5 w-5" />
+                      </ButtonUI>
+                    </div>
                   </div>
 
                   {/* Search Bar */}

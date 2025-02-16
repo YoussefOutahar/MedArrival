@@ -111,6 +111,31 @@ export class ProductService {
         );
         return response.data;
     }
+
+    async downloadPriceComponentsExcel(clientId: number): Promise<Blob> {
+        const response = await axiosInstance.get(
+            `${this.baseUrl}/client/${clientId}/price-components/excel`,
+            {
+                responseType: 'blob'
+            }
+        );
+        return response.data;
+    }
+    
+    async uploadPriceComponentsExcel(clientId: number, file: File): Promise<void> {
+        const formData = new FormData();
+        formData.append('file', file);
+    
+        await axiosInstance.post(
+            `${this.baseUrl}/client/${clientId}/price-components/excel`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+    }
 }
 
 export const productService = new ProductService();
