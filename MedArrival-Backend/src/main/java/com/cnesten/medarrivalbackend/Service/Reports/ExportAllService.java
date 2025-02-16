@@ -20,7 +20,8 @@ public class ExportAllService {
     private final ProductPricingReportService productPricingReportService;
     private final MonthlyProductReportService monthlyProductReportService;
     private final ClientSalesForecastService clientSalesForecastService;
-    private final ExcelExportService excelExportService;
+    private final InvoiceReportService invoiceReportService;
+    private final ReceiptReportService receiptReportService;
     private final ArrivalService arrivalService;
 
     public byte[] generateExportAll(LocalDateTime startDate, LocalDateTime endDate) throws IOException {
@@ -28,7 +29,7 @@ public class ExportAllService {
             // First, get all arrivals for the period and generate their invoice reports
             List<Arrival> arrivals = arrivalService.findByDateRange(startDate, endDate);
             for (Arrival arrival : arrivals) {
-                try (ByteArrayInputStream arrivalStream = new ByteArrayInputStream(excelExportService.generateInvoiceExcel(arrival));
+                try (ByteArrayInputStream arrivalStream = new ByteArrayInputStream(invoiceReportService.generateInvoiceExcel(arrival));
                      Workbook arrivalWorkbook = new XSSFWorkbook(arrivalStream)) {
                     copySheets(arrivalWorkbook, combinedWorkbook,
                             "Arrival " + arrival.getInvoiceNumber() + " - ");
@@ -39,18 +40,22 @@ public class ExportAllService {
             byte[] pricingReport = productPricingReportService.generatePricingReport(startDate, endDate);
             byte[] monthlyReport = monthlyProductReportService.generateMonthlyProductReport(startDate, endDate);
             byte[] forecastReport = clientSalesForecastService.generateClientSalesForecastReport(startDate, endDate);
+            byte[] receiptReport = receiptReportService.generateReceiptReport(startDate, endDate);
 
             // Copy sheets from each report
             try (ByteArrayInputStream pricingStream = new ByteArrayInputStream(pricingReport);
                  ByteArrayInputStream monthlyStream = new ByteArrayInputStream(monthlyReport);
                  ByteArrayInputStream forecastStream = new ByteArrayInputStream(forecastReport);
+                 ByteArrayInputStream receiptStream = new ByteArrayInputStream(receiptReport);
                  Workbook pricingWorkbook = new XSSFWorkbook(pricingStream);
                  Workbook monthlyWorkbook = new XSSFWorkbook(monthlyStream);
-                 Workbook forecastWorkbook = new XSSFWorkbook(forecastStream)) {
+                 Workbook forecastWorkbook = new XSSFWorkbook(forecastStream);
+                 Workbook receiptWorkbook = new XSSFWorkbook(receiptStream)) {
 
                 copySheets(pricingWorkbook, combinedWorkbook, "Pricing - ");
                 copySheets(monthlyWorkbook, combinedWorkbook, "Monthly - ");
                 copySheets(forecastWorkbook, combinedWorkbook, "Forecast - ");
+                copySheets(receiptWorkbook, combinedWorkbook, "Receipt - ");
             }
 
             // Write to byte array

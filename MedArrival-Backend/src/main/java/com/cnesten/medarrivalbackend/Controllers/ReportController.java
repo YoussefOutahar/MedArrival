@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class ReportController {
     private final ArrivalService arrivalService;
-    private final ExcelExportService excelService;
+    private final InvoiceReportService excelService;
     private final ProductPricingReportService productPricingReportService;
     private final MonthlyProductReportService monthlyProductReportService;
     private final ClientSalesForecastService clientSalesForecastService;

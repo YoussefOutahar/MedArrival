@@ -23,6 +23,10 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 public class ReceiptReportService {
+    private static final int TITLE_ROW = 0;
+    private static final int HEADER_ROW = 1;
+    private static final int DATA_START_ROW = 2;
+
     private final ArrivalRepository arrivalRepository;
     private final ClientRepository clientRepository;
 
@@ -42,38 +46,19 @@ public class ReceiptReportService {
     }
 
     private byte[] generateExcelReport(List<Arrival> arrivals, Client specificClient, LocalDateTime startDate) {
-        try {
-            Workbook workbook = new XSSFWorkbook();
+        try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Récapitulatif Facturation");
 
-            // Set column widths
-            sheet.setColumnWidth(0, 5000);  // Le client
-            sheet.setColumnWidth(1, 6000);  // Le produit RP
-            sheet.setColumnWidth(2, 3000);  // Qtée commandé
-            sheet.setColumnWidth(3, 3000);  // Qtée livrée
-            sheet.setColumnWidth(4, 4000);  // Prix Unitaire de vente
-            sheet.setColumnWidth(5, 4000);  // PU de vente selon la G
-            sheet.setColumnWidth(6, 3000);  // Contrôle
-            sheet.setColumnWidth(7, 4000);  // Mt Total Fact
-            sheet.setColumnWidth(8, 4000);  // N°de Facture de Vente
-            sheet.setColumnWidth(9, 3000);  // Ecart
-            sheet.setColumnWidth(10, 6000); // Justification des écarts
-            sheet.setColumnWidth(11, 6000); // Remarques
-
-            // Create title
+            setupColumns(sheet);
             createTitle(sheet, workbook, startDate);
-
-            // Create headers
             createHeaders(sheet, workbook);
+            fillData(sheet, workbook, arrivals, specificClient);
 
-            // Fill data
-            int rowNum = 2;
-            for (Arrival arrival : arrivals) {
-                for (Sale sale : arrival.getSales()) {
-                    if (specificClient == null || sale.getClient().getId().equals(specificClient.getId())) {
-                        Row row = sheet.createRow(rowNum++);
-                        fillDataRow(row, workbook, sale, arrival);
-                    }
+            // Adjust all rows to fit content
+            for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    row.setHeight((short)-1);
                 }
             }
 
@@ -86,27 +71,48 @@ public class ReceiptReportService {
         }
     }
 
+    private void setupColumns(Sheet sheet) {
+        sheet.setColumnWidth(0, 6000);  // Le client
+        sheet.setColumnWidth(1, 8000);  // Le produit RP
+        sheet.setColumnWidth(2, 4500);  // Qtée commandé
+        sheet.setColumnWidth(3, 4500);  // Qtée livrée
+        sheet.setColumnWidth(4, 4500);  // Prix Unitaire de vente
+        sheet.setColumnWidth(5, 4500);  // PU de vente selon la G
+        sheet.setColumnWidth(6, 4500);  // Contrôle
+        sheet.setColumnWidth(7, 4500);  // Mt Total Fact
+        sheet.setColumnWidth(8, 4500);  // N°de Facture de Vente
+        sheet.setColumnWidth(9, 4500);  // Ecart
+        sheet.setColumnWidth(10, 8000); // Justification des écarts
+        sheet.setColumnWidth(11, 8000); // Remarques
+    }
+
+    private void addCommonStyleProperties(CellStyle style) {
+        style.setWrapText(true);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+    }
+
     private void createTitle(Sheet sheet, Workbook workbook, LocalDateTime startDate) {
-        Row titleRow = sheet.createRow(0);
+        Row titleRow = sheet.createRow(TITLE_ROW);
+        titleRow.setHeight((short)-1);
         Cell titleCell = titleRow.createCell(0);
 
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("fr"));
-        titleCell.setCellValue("TABLEAU RECAPITULATIF DE FACTURATION POUR " + startDate.format(monthFormatter).toUpperCase());
+        titleCell.setCellValue("TABLEAU RECAPITULATIF DE FACTURATION POUR " +
+                startDate.format(monthFormatter).toUpperCase());
 
-        CellStyle titleStyle = workbook.createCellStyle();
-        titleStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
-        titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        Font titleFont = workbook.createFont();
-        titleFont.setBold(true);
-        titleStyle.setFont(titleFont);
-        titleStyle.setAlignment(HorizontalAlignment.CENTER);
-
-        titleCell.setCellStyle(titleStyle);
+        titleCell.setCellStyle(createTitleStyle(workbook));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 11));
     }
 
     private void createHeaders(Sheet sheet, Workbook workbook) {
-        Row headerRow = sheet.createRow(1);
+        Row headerRow = sheet.createRow(HEADER_ROW);
+        headerRow.setHeight((short)-1);
+        CellStyle headerStyle = createHeaderStyle(workbook);
+
         String[] headers = {
                 "Le client",
                 "Le produit RP",
@@ -122,14 +128,6 @@ public class ReceiptReportService {
                 "Remarques"
         };
 
-        CellStyle headerStyle = workbook.createCellStyle();
-        headerStyle.setFillForegroundColor(IndexedColors.CORAL.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setColor(IndexedColors.WHITE.getIndex());
-        headerStyle.setFont(headerFont);
-
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
@@ -137,33 +135,48 @@ public class ReceiptReportService {
         }
     }
 
-    private void fillDataRow(Row row, Workbook workbook, Sale sale, Arrival arrival) {
-        CellStyle numberStyle = workbook.createCellStyle();
-        numberStyle.setDataFormat(workbook.createDataFormat().getFormat("#,##0.00"));
+    private void fillData(Sheet sheet, Workbook workbook, List<Arrival> arrivals, Client specificClient) {
+        CellStyle numberStyle = createNumberStyle(workbook);
+        CellStyle nonConformStyle = createNonConformStyle(workbook);
+        CellStyle conformStyle = createConformStyle(workbook);
+        CellStyle dataStyle = createDataStyle(workbook);
 
-        CellStyle nonConformStyle = workbook.createCellStyle();
-        nonConformStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-        nonConformStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        Font nonConformFont = workbook.createFont();
-        nonConformFont.setBold(true);
-        nonConformStyle.setFont(nonConformFont);
+        int rowNum = DATA_START_ROW;
+        for (Arrival arrival : arrivals) {
+            for (Sale sale : arrival.getSales()) {
+                if (specificClient == null || sale.getClient().getId().equals(specificClient.getId())) {
+                    Row row = sheet.createRow(rowNum++);
+                    row.setHeight((short)-1);
+                    fillDataRow(row, sale, arrival, dataStyle, numberStyle, conformStyle, nonConformStyle);
+                }
+            }
+        }
+    }
 
-        CellStyle conformStyle = workbook.createCellStyle();
-        conformStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
-        conformStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+    private void fillDataRow(Row row, Sale sale, Arrival arrival,
+                             CellStyle dataStyle, CellStyle numberStyle,
+                             CellStyle conformStyle, CellStyle nonConformStyle) {
 
         // Client name
-        row.createCell(0).setCellValue(sale.getClient().getName());
+        Cell clientCell = row.createCell(0);
+        clientCell.setCellValue(sale.getClient().getName());
+        clientCell.setCellStyle(dataStyle);
 
         // Product name
+        Cell productCell = row.createCell(1);
         String productName = sale.getProduct() != null ? sale.getProduct().getName() : "Produit inconnu";
-        row.createCell(1).setCellValue(productName);
+        productCell.setCellValue(productName);
+        productCell.setCellStyle(dataStyle);
 
         // Expected quantity
-        row.createCell(2).setCellValue(sale.getExpectedQuantity());
+        Cell expectedQtyCell = row.createCell(2);
+        expectedQtyCell.setCellValue(sale.getExpectedQuantity());
+        expectedQtyCell.setCellStyle(numberStyle);
 
         // Actual quantity
-        row.createCell(3).setCellValue(sale.getQuantity());
+        Cell actualQtyCell = row.createCell(3);
+        actualQtyCell.setCellValue(sale.getQuantity());
+        actualQtyCell.setCellStyle(numberStyle);
 
         // Calculate unit prices
         float saleUnitPrice = sale.getPriceComponents().stream()
@@ -177,7 +190,7 @@ public class ReceiptReportService {
         unitPriceCell.setCellValue(saleUnitPrice);
         unitPriceCell.setCellStyle(numberStyle);
 
-        // Reference price (same as sale price since it's historical)
+        // Reference price
         Cell refPriceCell = row.createCell(5);
         refPriceCell.setCellValue(saleUnitPrice);
         refPriceCell.setCellStyle(numberStyle);
@@ -185,14 +198,8 @@ public class ReceiptReportService {
         // Control status
         Cell controlCell = row.createCell(6);
         boolean productExists = sale.getProduct() != null;
-
-        if (!productExists) {
-            controlCell.setCellValue("non conforme");
-            controlCell.setCellStyle(nonConformStyle);
-        } else {
-            controlCell.setCellValue("conforme");
-            controlCell.setCellStyle(conformStyle);
-        }
+        controlCell.setCellValue(productExists ? "conforme" : "non conforme");
+        controlCell.setCellStyle(productExists ? conformStyle : nonConformStyle);
 
         // Total amount
         Cell totalCell = row.createCell(7);
@@ -200,16 +207,82 @@ public class ReceiptReportService {
         totalCell.setCellStyle(numberStyle);
 
         // Invoice number
-        row.createCell(8).setCellValue("Facture N°" + arrival.getInvoiceNumber());
+        Cell invoiceCell = row.createCell(8);
+        invoiceCell.setCellValue("Facture N°" + arrival.getInvoiceNumber());
+        invoiceCell.setCellStyle(dataStyle);
 
-        // Price difference (should be 0 since we're using same price)
+        // Price difference
         Cell diffCell = row.createCell(9);
         diffCell.setCellValue(0);
         diffCell.setCellStyle(numberStyle);
 
-        // Add explanation for non-conforming entries
+        // Explanation for non-conforming entries
         if (!productExists) {
-            row.createCell(10).setCellValue("Produit non trouvé dans le système");
+            Cell explanationCell = row.createCell(10);
+            explanationCell.setCellValue("Produit non trouvé dans le système");
+            explanationCell.setCellStyle(dataStyle);
         }
+    }
+
+    private CellStyle createTitleStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 14);
+        style.setFont(font);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        addCommonStyleProperties(style);
+        return style;
+    }
+
+    private CellStyle createHeaderStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setColor(IndexedColors.WHITE.getIndex());
+        style.setFont(font);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.CORAL.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        addCommonStyleProperties(style);
+        return style;
+    }
+
+    private CellStyle createDataStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.LEFT);
+        addCommonStyleProperties(style);
+        return style;
+    }
+
+    private CellStyle createNumberStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.setDataFormat(workbook.createDataFormat().getFormat("#,##0.00"));
+        style.setAlignment(HorizontalAlignment.RIGHT);
+        addCommonStyleProperties(style);
+        return style;
+    }
+
+    private CellStyle createNonConformStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        style.setFont(font);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        addCommonStyleProperties(style);
+        return style;
+    }
+
+    private CellStyle createConformStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        addCommonStyleProperties(style);
+        return style;
     }
 }
