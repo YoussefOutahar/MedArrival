@@ -8,7 +8,7 @@ services:
         ports:
             - "8080:8080"
         environment:
-            - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/Med-Arrival
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/Med-Arrival
             - SPRING_DATASOURCE_USERNAME=admin
             - SPRING_DATASOURCE_PASSWORD=root
             - SPRING_PROFILES_ACTIVE=docker
@@ -19,7 +19,7 @@ services:
             - SERVER_TOMCAT_ACCEPT_COUNT=100
             - TZ=UTC
         networks:
-            - app-network
+            - shared-network
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
             interval: 30s
@@ -36,7 +36,7 @@ services:
         ports:
             - "3000:80"
         networks:
-            - app-network
+            - shared-network
         security_opt:
             - no-new-privileges:true
         healthcheck:
