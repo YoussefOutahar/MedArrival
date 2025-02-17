@@ -8,9 +8,6 @@ services:
         ports:
             - "8080:8080"
         environment:
-            - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/Med-Arrival
-            - SPRING_DATASOURCE_USERNAME=admin
-            - SPRING_DATASOURCE_PASSWORD=root
             - SPRING_PROFILES_ACTIVE=docker
             - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom
             - SERVER_TOMCAT_MAX_THREADS=200
