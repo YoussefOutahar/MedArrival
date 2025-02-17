@@ -82,5 +82,4 @@ services:
 
 networks:
   shared-network:
-    name: shared-network
     driver: bridge
