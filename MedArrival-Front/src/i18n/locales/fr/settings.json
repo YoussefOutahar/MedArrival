@@ -214,6 +214,7 @@
         "noSearchResults": "Aucun résultat trouvé",
         "tryDifferentSearch": "Essayez différents termes de recherche",
         "actions": {
+            "title": "Actions",
             "add": "Ajouter",
             "edit": "Modifier",
             "delete": "Supprimer",

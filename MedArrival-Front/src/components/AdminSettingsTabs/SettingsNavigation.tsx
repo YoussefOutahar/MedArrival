@@ -1,4 +1,4 @@
-import { Package, ListTree, Building2, Users } from 'lucide-react';
+import { Package, Building2, Users } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { PATHS } from '@/routes/paths';
 import { cn } from '@/lib/utils';

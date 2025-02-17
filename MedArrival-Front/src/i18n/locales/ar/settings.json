@@ -113,6 +113,10 @@
                 "current": "الحالي"
             }
         },
+        "import": {
+            "csv": "تحميل نموذج CSV",
+            "excel": "تحميل نموذج Excel"
+        },
         "buttons": {
             "add": "إضافة منتج",
             "update": "تحديث المنتج",
@@ -207,6 +211,10 @@
             },
             "priceUpdated": "تم تحديث السعر بنجاح",
             "updateFailed": "فشل تحديث السعر"
+        },
+        "import": {
+            "csv": "تحميل نموذج CSV",
+            "excel": "تحميل نموذج Excel"
         }
     },
     "common": {
@@ -214,6 +222,7 @@
         "noSearchResults": "لم يتم العثور على نتائج",
         "tryDifferentSearch": "جرب كلمات بحث مختلفة",
         "actions": {
+            "title": "الإجراءات",
             "add": "إضافة",
             "edit": "تعديل",
             "delete": "حذف",
