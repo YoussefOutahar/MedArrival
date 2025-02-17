@@ -1,0 +1,277 @@
+{
+    "header": {
+        "title": "الفواتير"
+    },
+    "emptyState": {
+        "title": "لم يتم العثور على عملاء",
+        "description": "ابدأ بإنشاء عميل جديد"
+    },
+    "errors": {
+        "fetchFailed": "فشل في جلب العملاء",
+        "noReceipts": "لم يتم العثور على فواتير لهذا العميل",
+        "actionFailed": "فشل في {{action}}"
+    },
+    "receipts": {
+        "header": {
+            "title": "الفواتير"
+        },
+        "search": {
+            "placeholder": "البحث عن العملاء..."
+        },
+        "actions": {
+            "viewAttachments": "عرض المرفقات",
+            "newReceipt": "فاتورة جديدة",
+            "viewReceipts": "عرض الفواتير"
+        },
+        "addReceipt": {
+            "title": "فاتورة جديدة لـ {{clientName}}",
+            "basicInfo": {
+                "title": "المعلومات الأساسية",
+                "fields": {
+                    "receiptNumber": {
+                        "label": "رقم الفاتورة*",
+                        "placeholder": "أدخل رقم الفاتورة"
+                    },
+                    "receiptDate": {
+                        "label": "تاريخ الفاتورة*"
+                    },
+                    "referenceNumber": {
+                        "label": "الرقم المرجعي",
+                        "placeholder": "أدخل الرقم المرجعي"
+                    },
+                    "tvaPercentage": {
+                        "label": "نسبة الضريبة",
+                        "placeholder": "أدخل نسبة الضريبة"
+                    },
+                    "paymentTerms": {
+                        "label": "شروط الدفع",
+                        "placeholder": "أدخل شروط الدفع"
+                    },
+                    "issuingDepartment": {
+                        "label": "القسم المصدر",
+                        "placeholder": "أدخل القسم المصدر"
+                    },
+                    "iceNumber": {
+                        "label": "رقم ICE",
+                        "placeholder": "أدخل رقم ICE"
+                    },
+                    "bankAccount": {
+                        "label": "الحساب البنكي",
+                        "placeholder": "أدخل الحساب البنكي"
+                    },
+                    "bankDetails": {
+                        "label": "التفاصيل البنكية",
+                        "placeholder": "أدخل التفاصيل البنكية"
+                    },
+                    "deliveryRef": {
+                        "label": "مرجع التسليم",
+                        "placeholder": "أدخل مرجع التسليم"
+                    },
+                    "deliveryNoteNumbers": {
+                        "label": "أرقام إشعار التسليم",
+                        "placeholder": "أدخل أرقام إشعار التسليم"
+                    }
+                }
+            },
+            "items": {
+                "title": "العناصر",
+                "countLabel": "{{count}} عنصر",
+                "addButton": "إضافة عنصر",
+                "addAnotherButton": "إضافة عنصر آخر",
+                "emptyState": {
+                    "title": "لا توجد عناصر",
+                    "description": "ابدأ بإضافة عنصر جديد إلى فاتورتك"
+                },
+                "item": {
+                    "title": "العنصر #{{number}}",
+                    "fields": {
+                        "product": {
+                            "label": "المنتج*",
+                            "placeholder": "اختر منتجاً",
+                            "available": "متوفر: {{count}}"
+                        },
+                        "unitPrice": {
+                            "label": "سعر الوحدة*"
+                        },
+                        "articleCode": {
+                            "label": "رمز المنتج"
+                        },
+                        "lotNumber": {
+                            "label": "رقم المجموعة"
+                        },
+                        "unit": {
+                            "label": "الوحدة"
+                        },
+                        "calibrationDate": {
+                            "label": "تاريخ المعايرة"
+                        },
+                        "expirationDate": {
+                            "label": "تاريخ انتهاء الصلاحية"
+                        },
+                        "description": {
+                            "label": "الوصف"
+                        }
+                    },
+                    "subtotal": "المجموع الفرعي"
+                }
+            },
+            "attachments": {
+                "title": "المرفقات",
+                "dropzone": {
+                    "text": "اسحب وأفلت الملفات هنا، أو انقر للاختيار",
+                    "activeText": "أفلت الملفات هنا...",
+                    "subtext": "PDF, PNG, JPG حتى 10MB"
+                },
+                "ocr": {
+                    "label": "التعرف الضوئي على النصوص",
+                    "processing": "جارٍ معالجة النص...",
+                    "result": "نتيجة التعرف الضوئي:"
+                },
+                "language": {
+                    "label": "اللغة",
+                    "options": {
+                        "french": "الفرنسية",
+                        "arabic": "العربية",
+                        "both": "العربية + الفرنسية"
+                    }
+                }
+            },
+            "summary": {
+                "title": "الملخص",
+                "totalHT": "المجموع بدون ضريبة",
+                "totalTTC": "المجموع مع الضريبة"
+            },
+            "buttons": {
+                "cancel": "إلغاء",
+                "create": "إنشاء الفاتورة",
+                "creating": "جارٍ الإنشاء..."
+            }
+        },
+        "list": {
+            "status": {
+                "delivered": "تم التسليم",
+                "pending": "قيد الانتظار"
+            },
+            "emptyState": {
+                "title": "لم يتم العثور على فواتير",
+                "description": "ابدأ بإنشاء فاتورة جديدة."
+            },
+            "filters": {
+                "startDate": "تاريخ البداية",
+                "endDate": "تاريخ النهاية",
+                "filter": "تصفية"
+            },
+            "table": {
+                "columns": {
+                    "receiptNumber": "رقم الفاتورة",
+                    "date": "التاريخ",
+                    "amount": "المبلغ",
+                    "status": "الحالة",
+                    "actions": "الإجراءات"
+                }
+            }
+        }
+    },
+    "clientReceipts": {
+        "header": {
+            "title": "{{clientName}} - الفواتير"
+        },
+        "buttons": {
+            "newReceipt": "فاتورة جديدة",
+            "filter": "تطبيق التصفية",
+            "back": "رجوع"
+        },
+        "filters": {
+            "title": "تصفية الفواتير",
+            "startDate": "تاريخ البداية",
+            "endDate": "تاريخ النهاية"
+        },
+        "table": {
+            "title": "قائمة الفواتير",
+            "headers": {
+                "receiptNumber": "رقم الفاتورة",
+                "date": "التاريخ",
+                "amount": "المبلغ",
+                "status": "الحالة",
+                "actions": "الإجراءات"
+            }
+        },
+        "status": {
+            "delivered": "تم التسليم",
+            "pending": "قيد الانتظار"
+        },
+        "actions": {
+            "print": "طباعة الفاتورة",
+            "download": "تحميل الفاتورة",
+            "email": "إرسال بالبريد الإلكتروني"
+        },
+        "emptyState": {
+            "title": "لم يتم العثور على فواتير",
+            "description": "ابدأ بإنشاء فاتورة جديدة"
+        },
+        "success": {
+            "printed": "تم إرسال الفاتورة إلى الطابعة",
+            "downloaded": "تم تحميل الفاتورة بنجاح",
+            "emailed": "تم إرسال الفاتورة بالبريد الإلكتروني"
+        },
+        "errors": {
+            "fetchFailed": "فشل في جلب الفواتير",
+            "printFailed": "فشل في طباعة الفاتورة",
+            "downloadFailed": "فشل في تحميل الفاتورة",
+            "emailFailed": "فشل في إرسال الفاتورة بالبريد الإلكتروني"
+        }
+    },
+    "attachments": {
+        "header": {
+            "title": "مرفقات الفاتورة"
+        },
+        "buttons": {
+            "upload": "رفع مرفق جديد",
+            "back": "رجوع"
+        },
+        "list": {
+            "title": "المرفقات",
+            "addedOn": "تمت الإضافة في {{date}}",
+            "fileSize": "{{size}} بايت",
+            "downloadTooltip": "تحميل المرفق",
+            "deleteTooltip": "حذف المرفق"
+        },
+        "emptyState": {
+            "title": "لا توجد مرفقات",
+            "description": "ابدأ برفع مرفق جديد"
+        },
+        "receiptDetails": {
+            "title": "تفاصيل الفاتورة",
+            "receiptNumber": "رقم الفاتورة",
+            "date": "التاريخ",
+            "amount": "المبلغ الإجمالي",
+            "referenceNumber": "الرقم المرجعي",
+            "iceNumber": "رقم ICE",
+            "deliveryNotes": "إشعارات التسليم"
+        },
+        "success": {
+            "uploaded": "تم رفع المرفق بنجاح",
+            "deleted": "تم حذف المرفق بنجاح"
+        },
+        "errors": {
+            "fetchFailed": "فشل في جلب المرفقات",
+            "uploadFailed": "فشل في رفع المرفق",
+            "downloadFailed": "فشل في تحميل المرفق",
+            "deleteFailed": "فشل في حذف المرفق"
+        },
+        "confirmDelete": "هل أنت متأكد من حذف هذا المرفق؟",
+        "uploadRestrictions": {
+            "title": "قيود الرفع",
+            "description": "أنواع الملفات المسموح بها: PDF، JPG، PNG. الحجم الأقصى: 10 ميجابايت"
+        }
+    },
+    "actions": {
+        "viewAttachments": "عرض المرفقات",
+        "newReceipt": "فاتورة جديدة",
+        "viewReceipts": "عرض الفواتير"
+    },
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "مارشيه"
+    }
+}

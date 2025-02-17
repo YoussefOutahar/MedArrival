@@ -18,6 +18,18 @@
         "salesForecast": {
             "name": "Sales Forecast Report",
             "description": "Client-wise sales predictions and analysis"
+        },
+        "clientReceipt": {
+            "name": "Client Receipt Report",
+            "description": "Detailed client-specific transaction report"
+        },
+        "allReceipts": {
+            "name": "All Receipts Report",
+            "description": "Complete overview of all transaction receipts"
+        },
+        "downloadAll": {
+            "name": "Download All Reports",
+            "description": "Export all available reports in one file"
         }
     },
     "filters": {
@@ -26,21 +38,22 @@
         "endDate": "End Date",
         "supplier": {
             "label": "Supplier",
-            "placeholder": "All Suppliers"
+            "placeholder": "Select supplier"
         },
-        "productCategory": {
-            "label": "Product Category",
-            "placeholder": "All Categories"
+        "arrival": {
+            "search": "Search Arrival",
+            "searchPlaceholder": "Search by invoice number..."
         },
-        "status": {
-            "label": "Status",
-            "placeholder": "All Statuses"
+        "client": {
+            "label": "Client",
+            "placeholder": "Select client"
         }
     },
     "preview": {
         "title": "Report Preview",
         "heading": "Report Preview",
-        "description": "Configure your filters and generate the report to see a preview"
+        "description": "Configure your filters and generate the report to see a preview",
+        "generatePreview": "Generate Preview"
     },
     "actions": {
         "emailReport": "Email Report",
@@ -49,13 +62,16 @@
         "generating": "Generating..."
     },
     "toast": {
-        "selectDates": "Please select both start and end dates",
         "selectSupplier": "Please select a supplier",
-        "notImplemented": "Report type not implemented",
+        "selectArrival": "Please select an arrival",
+        "selectDates": "Please select both start and end dates",
+        "selectClient": "Please select a client",
+        "invalidDateRange": "End date must be after start date",
+        "invalidReportType": "Invalid report type",
         "success": "Report generated successfully",
         "error": "Failed to generate report",
         "printSuccess": "Print dialog opened",
         "printError": "Failed to print report",
-        "emailError": "Email functionality not implemented yet"
+        "emailNotImplemented": "Email functionality not implemented yet"
     }
 }

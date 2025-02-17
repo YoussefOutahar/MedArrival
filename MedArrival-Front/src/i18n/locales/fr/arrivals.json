@@ -7,7 +7,9 @@
     "filters": {
         "searchPlaceholder": "Rechercher par numéro de facture...",
         "searchButton": "Rechercher",
-        "filterDateButton": "Filtrer par Date"
+        "filterDateButton": "Filtrer par Date",
+        "startDate": "Date de Début",
+        "endDate": "Date de Fin"
     },
     "table": {
         "columns": {
@@ -21,13 +23,9 @@
         "downloadExcel": "Excel",
         "expandedDetails": {
             "title": "Détails des Ventes",
-            "columns": {
-                "product": "Produit",
-                "client": "Client",
-                "quantity": "Quantité",
-                "totalAmount": "Montant Total",
-                "saleDate": "Date de Vente"
-            }
+            "quantity": "Quantité",
+            "totalAmount": "Montant Total",
+            "saleDate": "Date de Vente"
         }
     },
     "pagination": {
@@ -42,11 +40,26 @@
         "title": "Aucune arrivée",
         "description": "Commencez par créer une nouvelle arrivée."
     },
-    "loading": "Chargement...",
-    "toast": {
-        "fetchError": "Échec de la récupération des arrivées",
-        "filterError": "Échec du filtrage des arrivées",
-        "downloadSuccess": "Rapport téléchargé avec succès",
-        "downloadError": "Échec du téléchargement du rapport"
+    "exportDialog": {
+        "title": "Exporter les Données",
+        "startDate": "Date de Début",
+        "endDate": "Date de Fin",
+        "cancel": "Annuler",
+        "export": "Exporter",
+        "exporting": "Exportation en cours..."
+    },
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "Marcher"
+    },
+    "priceComponents": {
+        "default": "Prix par Défaut",
+        "custom": "Prix Personnalisé",
+        "PURCHASE_PRICE": "Prix d'Achat",
+        "TRANSPORT": "Transport",
+        "STORAGE": "Stockage",
+        "TRANSIT": "Transit",
+        "DUANE": "Douane",
+        "AMSSNUR": "AMSSNUR"
     }
 }

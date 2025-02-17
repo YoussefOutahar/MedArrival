@@ -7,7 +7,9 @@
     "filters": {
         "searchPlaceholder": "Search by invoice number...",
         "searchButton": "Search",
-        "filterDateButton": "Filter by Date"
+        "filterDateButton": "Filter by Date",
+        "startDate": "Start Date",
+        "endDate": "End Date"
     },
     "table": {
         "columns": {
@@ -21,13 +23,9 @@
         "downloadExcel": "Excel",
         "expandedDetails": {
             "title": "Sales Details",
-            "columns": {
-                "product": "Product",
-                "client": "Client",
-                "quantity": "Quantity",
-                "totalAmount": "Total Amount",
-                "saleDate": "Sale Date"
-            }
+            "quantity": "Quantity",
+            "totalAmount": "Total Amount",
+            "saleDate": "Sale Date"
         }
     },
     "pagination": {
@@ -42,11 +40,26 @@
         "title": "No arrivals",
         "description": "Get started by creating a new arrival."
     },
-    "loading": "Loading...",
-    "toast": {
-        "fetchError": "Failed to fetch arrivals",
-        "filterError": "Failed to filter arrivals",
-        "downloadSuccess": "Report downloaded successfully",
-        "downloadError": "Failed to download report"
+    "exportDialog": {
+        "title": "Export Data",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "cancel": "Cancel",
+        "export": "Export",
+        "exporting": "Exporting..."
+    },
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "Marcher"
+    },
+    "priceComponents": {
+        "default": "Default Price",
+        "custom": "Custom Price",
+        "PURCHASE_PRICE": "Purchase Price",
+        "TRANSPORT": "Transport",
+        "STORAGE": "Storage",
+        "TRANSIT": "Transit",
+        "DUANE": "Customs",
+        "AMSSNUR": "AMSSNUR"
     }
 }

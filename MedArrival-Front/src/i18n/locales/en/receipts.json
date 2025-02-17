@@ -1,0 +1,277 @@
+{
+    "header": {
+        "title": "Receipts"
+    },
+    "emptyState": {
+        "title": "No clients found",
+        "description": "Get started by creating a new client."
+    },
+    "errors": {
+        "fetchFailed": "Failed to fetch clients",
+        "noReceipts": "No receipts found for this client",
+        "actionFailed": "Failed to {{action}}"
+    },
+    "receipts": {
+        "header": {
+            "title": "Receipts"
+        },
+        "search": {
+            "placeholder": "Search clients..."
+        },
+        "actions": {
+            "viewAttachments": "View Attachments",
+            "newReceipt": "New Receipt",
+            "viewReceipts": "View Receipts"
+        },
+        "addReceipt": {
+            "title": "New Receipt for {{clientName}}",
+            "basicInfo": {
+                "title": "Basic Information",
+                "fields": {
+                    "receiptNumber": {
+                        "label": "Receipt Number*",
+                        "placeholder": "Enter receipt number"
+                    },
+                    "receiptDate": {
+                        "label": "Receipt Date*"
+                    },
+                    "referenceNumber": {
+                        "label": "Reference Number",
+                        "placeholder": "Enter reference number"
+                    },
+                    "tvaPercentage": {
+                        "label": "TVA Percentage",
+                        "placeholder": "Enter TVA percentage"
+                    },
+                    "paymentTerms": {
+                        "label": "Payment Terms",
+                        "placeholder": "Enter payment terms"
+                    },
+                    "issuingDepartment": {
+                        "label": "Issuing Department",
+                        "placeholder": "Enter issuing department"
+                    },
+                    "iceNumber": {
+                        "label": "ICE Number",
+                        "placeholder": "Enter ICE number"
+                    },
+                    "bankAccount": {
+                        "label": "Bank Account",
+                        "placeholder": "Enter bank account"
+                    },
+                    "bankDetails": {
+                        "label": "Bank Details",
+                        "placeholder": "Enter bank details"
+                    },
+                    "deliveryRef": {
+                        "label": "Delivery Reference",
+                        "placeholder": "Enter delivery reference"
+                    },
+                    "deliveryNoteNumbers": {
+                        "label": "Delivery Note Numbers",
+                        "placeholder": "Enter delivery note numbers"
+                    }
+                }
+            },
+            "items": {
+                "title": "Items",
+                "countLabel": "{{count}} items",
+                "addButton": "Add Item",
+                "addAnotherButton": "Add Another Item",
+                "emptyState": {
+                    "title": "No items",
+                    "description": "Get started by adding a new item to your receipt"
+                },
+                "item": {
+                    "title": "Item #{{number}}",
+                    "fields": {
+                        "product": {
+                            "label": "Product*",
+                            "placeholder": "Select a product",
+                            "available": "Available: {{count}}"
+                        },
+                        "unitPrice": {
+                            "label": "Unit Price*"
+                        },
+                        "articleCode": {
+                            "label": "Article Code"
+                        },
+                        "lotNumber": {
+                            "label": "Lot Number"
+                        },
+                        "unit": {
+                            "label": "Unit"
+                        },
+                        "calibrationDate": {
+                            "label": "Calibration Date"
+                        },
+                        "expirationDate": {
+                            "label": "Expiration Date"
+                        },
+                        "description": {
+                            "label": "Description"
+                        }
+                    },
+                    "subtotal": "Subtotal"
+                }
+            },
+            "attachments": {
+                "title": "Attachments",
+                "dropzone": {
+                    "text": "Drag and drop files here, or click to select",
+                    "activeText": "Drop the files here...",
+                    "subtext": "PDF, PNG, JPG up to 10MB"
+                },
+                "ocr": {
+                    "label": "OCR",
+                    "processing": "Processing OCR...",
+                    "result": "OCR Text:"
+                },
+                "language": {
+                    "label": "Language",
+                    "options": {
+                        "french": "French",
+                        "arabic": "Arabic",
+                        "both": "Arabic + French"
+                    }
+                }
+            },
+            "summary": {
+                "title": "Summary",
+                "totalHT": "Total HT",
+                "totalTTC": "Total TTC"
+            },
+            "buttons": {
+                "cancel": "Cancel",
+                "create": "Create Receipt",
+                "creating": "Creating..."
+            }
+        },
+        "list": {
+            "status": {
+                "delivered": "Delivered",
+                "pending": "Pending"
+            },
+            "emptyState": {
+                "title": "No receipts found",
+                "description": "Create a new receipt to get started."
+            },
+            "filters": {
+                "startDate": "Start Date",
+                "endDate": "End Date",
+                "filter": "Filter"
+            },
+            "table": {
+                "columns": {
+                    "receiptNumber": "Receipt Number",
+                    "date": "Date",
+                    "amount": "Amount",
+                    "status": "Status",
+                    "actions": "Actions"
+                }
+            }
+        }
+    },
+    "clientReceipts": {
+        "header": {
+            "title": "{{clientName}} - Receipts"
+        },
+        "buttons": {
+            "newReceipt": "New Receipt",
+            "filter": "Apply Filter",
+            "back": "Back"
+        },
+        "filters": {
+            "title": "Filter Receipts",
+            "startDate": "Start Date",
+            "endDate": "End Date"
+        },
+        "table": {
+            "title": "Receipts List",
+            "headers": {
+                "receiptNumber": "Receipt Number",
+                "date": "Date",
+                "amount": "Amount",
+                "status": "Status",
+                "actions": "Actions"
+            }
+        },
+        "status": {
+            "delivered": "Delivered",
+            "pending": "Pending"
+        },
+        "actions": {
+            "print": "Print Receipt",
+            "download": "Download Receipt",
+            "email": "Email Receipt"
+        },
+        "emptyState": {
+            "title": "No receipts found",
+            "description": "Create a new receipt to get started."
+        },
+        "success": {
+            "printed": "Receipt sent to printer",
+            "downloaded": "Receipt downloaded successfully",
+            "emailed": "Receipt sent by email"
+        },
+        "errors": {
+            "fetchFailed": "Failed to fetch receipts",
+            "printFailed": "Failed to print receipt",
+            "downloadFailed": "Failed to download receipt",
+            "emailFailed": "Failed to email receipt"
+        }
+    },
+    "attachments": {
+        "header": {
+            "title": "Receipt Attachments"
+        },
+        "buttons": {
+            "upload": "Upload New Attachment",
+            "back": "Back"
+        },
+        "list": {
+            "title": "Attachments",
+            "addedOn": "Added {{date}}",
+            "fileSize": "{{size}} bytes",
+            "downloadTooltip": "Download attachment",
+            "deleteTooltip": "Delete attachment"
+        },
+        "emptyState": {
+            "title": "No attachments",
+            "description": "Upload a new attachment to get started."
+        },
+        "receiptDetails": {
+            "title": "Receipt Details",
+            "receiptNumber": "Receipt Number",
+            "date": "Date",
+            "amount": "Total Amount",
+            "referenceNumber": "Reference Number",
+            "iceNumber": "ICE Number",
+            "deliveryNotes": "Delivery Notes"
+        },
+        "success": {
+            "uploaded": "Attachment uploaded successfully",
+            "deleted": "Attachment deleted successfully"
+        },
+        "errors": {
+            "fetchFailed": "Failed to fetch attachments",
+            "uploadFailed": "Failed to upload attachment",
+            "downloadFailed": "Failed to download attachment",
+            "deleteFailed": "Failed to delete attachment"
+        },
+        "confirmDelete": "Are you sure you want to delete this attachment?",
+        "uploadRestrictions": {
+            "title": "Upload Restrictions",
+            "description": "Allowed file types: PDF, JPG, PNG. Maximum size: 10MB"
+        }
+    },
+    "actions": {
+        "viewAttachments": "View Attachments",
+        "newReceipt": "New Receipt",
+        "viewReceipts": "View Receipts"
+    },
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "Marcher"
+    }
+}

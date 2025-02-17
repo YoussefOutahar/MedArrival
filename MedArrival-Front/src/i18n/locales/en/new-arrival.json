@@ -1,7 +1,8 @@
 {
-    "header": {
-        "title": "New Arrival",
-        "backToArrivals": "Back to Arrivals"
+    "actions": {
+        "cancel": "Cancel",
+        "create": "Create Arrival",
+        "creating": "Creating..."
     },
     "basicInfo": {
         "title": "Basic Information",
@@ -17,60 +18,61 @@
             "label": "Arrival Date"
         }
     },
+    "header": {
+        "title": "New Arrival",
+        "backToArrivals": "Back to Arrivals"
+    },
     "sales": {
         "title": "Sales",
         "form": {
-            "product": {
-                "label": "Product",
-                "placeholder": "Select product"
-            },
             "client": {
                 "label": "Client",
                 "placeholder": "Select client"
             },
-            "quantity": {
-                "label": "Quantity"
+            "product": {
+                "label": "Product",
+                "placeholder": "Select product",
+                "selectClientFirst": "Please select a client first",
+                "loading": "Loading products...",
+                "noProducts": "No products available"
             },
-            "unitPrice": {
-                "label": "Unit Price",
-                "override": "Override price"
+            "quantity": {
+                "label": "Quantity",
+                "placeholder": "Enter quantity"
             },
             "expectedDelivery": {
                 "label": "Expected Delivery"
             },
-            "addButton": "Add Sale"
+            "conform": {
+                "label": "Conformity",
+                "conformText": "Conform",
+                "nonConformText": "Non-conform"
+            }
+        },
+        "actions": {
+            "add": "Add Sale"
         },
         "table": {
             "product": "Product",
             "client": "Client",
+            "status": "Status",
             "quantity": "Quantity",
-            "unitPrice": "Unit Price",
             "totalAmount": "Total Amount",
             "expectedDelivery": "Expected Delivery",
-            "priceStatus": "Price Status",
             "actions": "Actions",
-            "customPrice": "Custom Price",
-            "defaultPrice": "Default Price"
+            "conform": "Conform",
+            "nonConform": "Non-conform"
         },
         "noSales": {
             "title": "No sales",
             "description": "Add sales to this arrival using the form above."
         }
     },
-    "actions": {
-        "cancel": "Cancel",
-        "create": "Create Arrival",
-        "creating": "Creating..."
-    },
     "errors": {
-        "fetchFailed": "Failed to fetch data",
-        "requiredFields": "Please fill in all required fields",
-        "createFailed": "Failed to create arrival",
-        "selectProductClient": "Please select a product and client",
-        "invalidQuantity": "Please enter a valid quantity",
-        "invalidPrice": "Please enter a valid unit price"
+        "productsFetchFailed": "Failed to fetch products"
     },
-    "success": {
-        "created": "Arrival created successfully"
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "Marcher"
     }
 }

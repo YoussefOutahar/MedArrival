@@ -62,6 +62,16 @@
             "totalCost": "Coût total",
             "actions": "Actions"
         },
+        "priceComponents": {
+            "title": "Composants du Prix",
+            "storage": "Stockage",
+            "transport": "Transport",
+            "purchasePrice": "Prix d'Achat",
+            "amssnur": "AMSSNUR",
+            "duane": "Douane",
+            "transit": "Transit",
+            "totalPrice": "Prix Total: ${{amount}}"
+        },
         "form": {
             "title": {
                 "add": "Ajouter un nouveau produit",
@@ -148,9 +158,8 @@
         "description": "Gérer vos relations et informations clients",
         "table": {
             "name": "Nom du client",
-            "productsSold": "Produits vendus",
-            "type": "Type de client",
             "address": "Adresse",
+            "type": "Type de client",
             "products": "Produits",
             "actions": "Actions"
         },
@@ -164,17 +173,12 @@
                     "label": "Nom du client*",
                     "placeholder": "Entrez le nom du client"
                 },
-                "type": {
-                    "label": "Type de client*",
-                    "placeholder": "Sélectionnez le type de client"
-                },
                 "address": {
                     "label": "Adresse*",
                     "placeholder": "Entrez l'adresse"
                 },
-                "quantity": {
-                    "label": "Quantité",
-                    "placeholder": "Entrez la quantité"
+                "type": {
+                    "label": "Type de client*"
                 }
             }
         },
@@ -206,6 +210,9 @@
         }
     },
     "common": {
+        "search": "Rechercher",
+        "noSearchResults": "Aucun résultat trouvé",
+        "tryDifferentSearch": "Essayez différents termes de recherche",
         "actions": {
             "add": "Ajouter",
             "edit": "Modifier",
@@ -215,49 +222,41 @@
             "update": "Mettre à jour",
             "save": "Enregistrer",
             "close": "Fermer",
-            "download": {
-                "csv": "Télécharger le modèle CSV",
-                "excel": "Télécharger le modèle Excel"
-            },
             "import": "Importer",
-            "importing": "Importation en cours"
-        },
-        "status": {
-            "loading": "Chargement...",
             "importing": "Importation...",
-            "updating": "Mise à jour...",
-            "deleting": "Suppression...",
-            "processing": "Traitement..."
-        },
-        "pagination": {
-            "previous": "Précédent",
-            "next": "Suivant",
-            "page": "Page",
-            "of": "sur"
+            "download": "Télécharger le modèle",
+            "upload": "Téléverser"
         },
         "messages": {
+            "success": {
+                "created": "Créé avec succès",
+                "updated": "Mis à jour avec succès",
+                "deleted": "Supprimé avec succès",
+                "uploaded": "Fichier téléversé avec succès",
+                "reverted": "Retour aux prix par défaut",
+                "imported": "{{count}} éléments importés avec succès"
+            },
             "errors": {
                 "required": "Veuillez remplir tous les champs obligatoires",
                 "fetchFailed": "Échec de la récupération des données",
                 "createFailed": "Échec de la création",
                 "updateFailed": "Échec de la mise à jour",
                 "deleteFailed": "Échec de la suppression",
-                "importFailed": "Échec de l'importation",
-                "downloadFailed": "Échec du téléchargement du modèle"
-            },
-            "success": {
-                "created": "Créé avec succès",
-                "updated": "Mis à jour avec succès",
-                "deleted": "Supprimé avec succès",
-                "imported": "{{count}} éléments importés avec succès"
+                "uploadFailed": "Échec du téléversement du fichier",
+                "downloadFailed": "Échec du téléchargement du modèle",
+                "revertFailed": "Échec du retour aux prix par défaut",
+                "importFailed": "Échec de l'importation des données"
             },
             "confirmation": {
                 "delete": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ? Cette action ne peut pas être annulée."
             }
         },
-        "emptyState": {
-            "title": "Aucun élément trouvé",
-            "description": "Commencez par ajouter un nouvel élément"
+        "pagination": {
+            "showing": "Affichage de {{from}} à {{to}} sur {{total}} résultats",
+            "previous": "Précédent",
+            "next": "Suivant",
+            "page": "Page",
+            "of": "sur"
         }
     }
 }

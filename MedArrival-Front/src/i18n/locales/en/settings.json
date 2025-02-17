@@ -62,6 +62,16 @@
             "totalCost": "Total Cost",
             "actions": "Actions"
         },
+        "priceComponents": {
+            "title": "Price Components",
+            "storage": "Storage",
+            "transport": "Transport",
+            "purchasePrice": "Purchase Price",
+            "amssnur": "AMSSNUR",
+            "duane": "Customs",
+            "transit": "Transit",
+            "totalPrice": "Total Price: ${{amount}}"
+        },
         "form": {
             "title": {
                 "add": "Add New Product",
@@ -148,9 +158,8 @@
         "description": "Manage your client relationships and information",
         "table": {
             "name": "Client Name",
-            "productsSold": "Products Sold",
-            "type": "Client Type",
             "address": "Address",
+            "type": "Client Type",
             "products": "Products",
             "actions": "Actions"
         },
@@ -164,29 +173,24 @@
                     "label": "Client Name*",
                     "placeholder": "Enter client name"
                 },
-                "type": {
-                    "label": "Client Type*",
-                    "placeholder": "Select client type"
-                },
                 "address": {
                     "label": "Address*",
                     "placeholder": "Enter address"
                 },
-                "quantity": {
-                    "label": "Quantity",
-                    "placeholder": "Enter quantity"
+                "type": {
+                    "label": "Client Type*"
                 }
             }
+        },
+        "types": {
+            "marcher": "Marcher",
+            "rp": "RP"
         },
         "buttons": {
             "add": "Add Client",
             "update": "Update Client",
             "delete": "Delete Client",
             "manageProducts": "Manage Products"
-        },
-        "types": {
-            "marcher": "Marcher",
-            "rp": "RP"
         },
         "products": {
             "title": "Products for {{client}}",
@@ -206,6 +210,9 @@
         }
     },
     "common": {
+        "search": "Search",
+        "noSearchResults": "No results found",
+        "tryDifferentSearch": "Try different search terms",
         "actions": {
             "add": "Add",
             "edit": "Edit",
@@ -215,49 +222,41 @@
             "update": "Update",
             "save": "Save",
             "close": "Close",
-            "download": {
-                "csv": "Download CSV Template",
-                "excel": "Download Excel Template"
-            },
             "import": "Import",
-            "importing": "Importing..."
-        },
-        "status": {
-            "loading": "Loading...",
             "importing": "Importing...",
-            "updating": "Updating...",
-            "deleting": "Deleting...",
-            "processing": "Processing..."
-        },
-        "pagination": {
-            "previous": "Previous",
-            "next": "Next",
-            "page": "Page",
-            "of": "of"
+            "download": "Download Template",
+            "upload": "Upload"
         },
         "messages": {
+            "success": {
+                "created": "Created successfully",
+                "updated": "Updated successfully",
+                "deleted": "Deleted successfully",
+                "uploaded": "File uploaded successfully",
+                "reverted": "Reverted to default prices",
+                "imported": "Successfully imported {{count}} items"
+            },
             "errors": {
                 "required": "Please fill in all required fields",
                 "fetchFailed": "Failed to fetch data",
                 "createFailed": "Failed to create",
                 "updateFailed": "Failed to update",
                 "deleteFailed": "Failed to delete",
-                "importFailed": "Failed to import",
-                "downloadFailed": "Failed to download template"
-            },
-            "success": {
-                "created": "Created successfully",
-                "updated": "Updated successfully",
-                "deleted": "Deleted successfully",
-                "imported": "Successfully imported {{count}} items"
+                "uploadFailed": "Failed to upload file",
+                "downloadFailed": "Failed to download template",
+                "revertFailed": "Failed to revert prices",
+                "importFailed": "Failed to import data"
             },
             "confirmation": {
                 "delete": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
             }
         },
-        "emptyState": {
-            "title": "No items found",
-            "description": "Get started by adding a new item"
+        "pagination": {
+            "showing": "Showing {{from}} to {{to}} of {{total}} results",
+            "previous": "Previous",
+            "next": "Next",
+            "page": "Page",
+            "of": "of"
         }
     }
 }

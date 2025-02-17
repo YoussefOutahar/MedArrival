@@ -62,6 +62,16 @@
             "totalCost": "التكلفة الإجمالية",
             "actions": "الإجراءات"
         },
+        "priceComponents": {
+            "title": "مكونات السعر",
+            "storage": "التخزين",
+            "transport": "النقل",
+            "purchasePrice": "سعر الشراء",
+            "amssnur": "أمسنور",
+            "duane": "الجمارك",
+            "transit": "العبور",
+            "totalPrice": "السعر الإجمالي: ${{amount}}"
+        },
         "form": {
             "title": {
                 "add": "إضافة منتج جديد",
@@ -148,9 +158,8 @@
         "description": "إدارة علاقات ومعلومات العملاء",
         "table": {
             "name": "اسم العميل",
-            "productsSold": "المنتجات المباعة",
-            "type": "نوع العميل",
             "address": "العنوان",
+            "type": "نوع العميل",
             "products": "المنتجات",
             "actions": "الإجراءات"
         },
@@ -164,17 +173,12 @@
                     "label": "اسم العميل*",
                     "placeholder": "أدخل اسم العميل"
                 },
-                "type": {
-                    "label": "نوع العميل*",
-                    "placeholder": "اختر نوع العميل"
-                },
                 "address": {
                     "label": "العنوان*",
                     "placeholder": "أدخل العنوان"
                 },
-                "quantity": {
-                    "label": "الكمية",
-                    "placeholder": "أدخل الكمية"
+                "type": {
+                    "label": "نوع العميل*"
                 }
             }
         },
@@ -199,13 +203,16 @@
                 "category": "الفئة",
                 "currentPrice": "السعر الحالي",
                 "newPrice": "السعر الجديد",
-                "actions": "إجراءات"
+                "actions": "الإجراءات"
             },
             "priceUpdated": "تم تحديث السعر بنجاح",
             "updateFailed": "فشل تحديث السعر"
         }
     },
     "common": {
+        "search": "بحث",
+        "noSearchResults": "لم يتم العثور على نتائج",
+        "tryDifferentSearch": "جرب كلمات بحث مختلفة",
         "actions": {
             "add": "إضافة",
             "edit": "تعديل",
@@ -215,49 +222,41 @@
             "update": "تحديث",
             "save": "حفظ",
             "close": "إغلاق",
-            "download": {
-                "csv": "تحميل نموذج CSV",
-                "excel": "تحميل نموذج Excel"
-            },
             "import": "استيراد",
-            "importing": "جارٍ الاستيراد..."
-        },
-        "status": {
-            "loading": "جارٍ التحميل...",
             "importing": "جارٍ الاستيراد...",
-            "updating": "جارٍ التحديث...",
-            "deleting": "جارٍ الحذف...",
-            "processing": "جارٍ المعالجة..."
-        },
-        "pagination": {
-            "previous": "السابق",
-            "next": "التالي",
-            "page": "صفحة",
-            "of": "من"
+            "download": "تحميل النموذج",
+            "upload": "رفع"
         },
         "messages": {
+            "success": {
+                "created": "تم الإنشاء بنجاح",
+                "updated": "تم التحديث بنجاح",
+                "deleted": "تم الحذف بنجاح",
+                "uploaded": "تم رفع الملف بنجاح",
+                "reverted": "تم العودة إلى الأسعار الافتراضية",
+                "imported": "تم استيراد {{count}} عنصر بنجاح"
+            },
             "errors": {
                 "required": "يرجى ملء جميع الحقول المطلوبة",
                 "fetchFailed": "فشل في جلب البيانات",
                 "createFailed": "فشل في الإنشاء",
                 "updateFailed": "فشل في التحديث",
                 "deleteFailed": "فشل في الحذف",
-                "importFailed": "فشل في الاستيراد",
-                "downloadFailed": "فشل في تحميل النموذج"
-            },
-            "success": {
-                "created": "تم الإنشاء بنجاح",
-                "updated": "تم التحديث بنجاح",
-                "deleted": "تم الحذف بنجاح",
-                "imported": "تم استيراد {{count}} عنصر بنجاح"
+                "uploadFailed": "فشل في رفع الملف",
+                "downloadFailed": "فشل في تحميل النموذج",
+                "revertFailed": "فشل في العودة إلى الأسعار الافتراضية",
+                "importFailed": "فشل في استيراد البيانات"
             },
             "confirmation": {
                 "delete": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
             }
         },
-        "emptyState": {
-            "title": "لم يتم العثور على عناصر",
-            "description": "ابدأ بإضافة عنصر جديد"
+        "pagination": {
+            "showing": "عرض {{from}} إلى {{to}} من {{total}} نتيجة",
+            "previous": "السابق",
+            "next": "التالي",
+            "page": "صفحة",
+            "of": "من"
         }
     }
 }

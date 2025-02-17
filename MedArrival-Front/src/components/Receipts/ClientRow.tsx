@@ -1,7 +1,9 @@
+// ClientRow.tsx
 import React from 'react';
 import { Plus, FileText, Paperclip } from 'lucide-react';
 import { ClientDTO } from '@/models/ClientDTO';
 import { ACTIONS } from './Actions';
+import { useTranslation } from 'react-i18next';
 
 interface ClientRowProps {
     client: ClientDTO;
@@ -9,6 +11,12 @@ interface ClientRowProps {
 }
 
 const ClientRow: React.FC<ClientRowProps> = ({ client, onAction }) => {
+    const { t } = useTranslation('receipts');
+
+    const getClientTypeLabel = (type: string) => {
+        return t(`clientType.${type}`);
+    };
+
     return (
         <div className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <div className="flex-1">
@@ -23,7 +31,7 @@ const ClientRow: React.FC<ClientRowProps> = ({ client, onAction }) => {
                     </div>
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                         bg-primary-100 dark:bg-primary-900/20 text-primary-800 dark:text-primary-200">
-                        {client.clientType}
+                        {getClientTypeLabel(client.clientType)}
                     </span>
                 </div>
             </div>
@@ -32,21 +40,21 @@ const ClientRow: React.FC<ClientRowProps> = ({ client, onAction }) => {
                 <button
                     onClick={() => onAction(ACTIONS.VIEW_ATTACHMENTS, client.id)}
                     className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-                    title={ACTIONS.VIEW_ATTACHMENTS}
+                    title={t('actions.viewAttachments')}
                 >
                     <Paperclip className="h-5 w-5" />
                 </button>
                 <button
                     onClick={() => onAction(ACTIONS.NEW_RECEIPT, client.id)}
                     className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-                    title={ACTIONS.NEW_RECEIPT}
+                    title={t('actions.newReceipt')}
                 >
                     <Plus className="h-5 w-5" />
                 </button>
                 <button
                     onClick={() => onAction(ACTIONS.VIEW_RECEIPTS, client.id)}
                     className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
-                    title={ACTIONS.VIEW_RECEIPTS}
+                    title={t('actions.viewReceipts')}
                 >
                     <FileText className="h-5 w-5" />
                 </button>

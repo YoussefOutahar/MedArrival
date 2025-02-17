@@ -7,7 +7,9 @@
     "filters": {
         "searchPlaceholder": "البحث برقم الفاتورة...",
         "searchButton": "بحث",
-        "filterDateButton": "تصفية حسب التاريخ"
+        "filterDateButton": "تصفية حسب التاريخ",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية"
     },
     "table": {
         "columns": {
@@ -21,13 +23,9 @@
         "downloadExcel": "إكسل",
         "expandedDetails": {
             "title": "تفاصيل المبيعات",
-            "columns": {
-                "product": "المنتج",
-                "client": "العميل",
-                "quantity": "الكمية",
-                "totalAmount": "المبلغ الإجمالي",
-                "saleDate": "تاريخ البيع"
-            }
+            "quantity": "الكمية",
+            "totalAmount": "المبلغ الإجمالي",
+            "saleDate": "تاريخ البيع"
         }
     },
     "pagination": {
@@ -42,11 +40,26 @@
         "title": "لا توجد وصولات",
         "description": "ابدأ بإنشاء وصول جديد."
     },
-    "loading": "جارٍ التحميل...",
-    "toast": {
-        "fetchError": "فشل في جلب الوصولات",
-        "filterError": "فشل في تصفية الوصولات",
-        "downloadSuccess": "تم تحميل التقرير بنجاح",
-        "downloadError": "فشل في تحميل التقرير"
+    "exportDialog": {
+        "title": "تصدير البيانات",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية",
+        "cancel": "إلغاء",
+        "export": "تصدير",
+        "exporting": "جارٍ التصدير..."
+    },
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "مارشيه"
+    },
+    "priceComponents": {
+        "default": "السعر الافتراضي",
+        "custom": "سعر مخصص",
+        "PURCHASE_PRICE": "سعر الشراء",
+        "TRANSPORT": "النقل",
+        "STORAGE": "التخزين",
+        "TRANSIT": "العبور",
+        "DUANE": "الجمارك",
+        "AMSSNUR": "أمسنور"
     }
 }

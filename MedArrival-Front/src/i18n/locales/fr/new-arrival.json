@@ -1,7 +1,8 @@
 {
-    "header": {
-        "title": "Nouvelle Arrivée",
-        "backToArrivals": "Retour aux Arrivées"
+    "actions": {
+        "cancel": "Annuler",
+        "create": "Créer l'Arrivée",
+        "creating": "Création en cours..."
     },
     "basicInfo": {
         "title": "Informations de Base",
@@ -17,60 +18,61 @@
             "label": "Date d'Arrivée"
         }
     },
+    "header": {
+        "title": "Nouvelle Arrivée",
+        "backToArrivals": "Retour aux Arrivées"
+    },
     "sales": {
         "title": "Ventes",
         "form": {
-            "product": {
-                "label": "Produit",
-                "placeholder": "Sélectionnez un produit"
-            },
             "client": {
                 "label": "Client",
                 "placeholder": "Sélectionnez un client"
             },
-            "quantity": {
-                "label": "Quantité"
+            "product": {
+                "label": "Produit",
+                "placeholder": "Sélectionnez un produit",
+                "selectClientFirst": "Veuillez d'abord sélectionner un client",
+                "loading": "Chargement des produits...",
+                "noProducts": "Aucun produit disponible"
             },
-            "unitPrice": {
-                "label": "Prix Unitaire",
-                "override": "Remplacer le prix"
+            "quantity": {
+                "label": "Quantité",
+                "placeholder": "Entrez la quantité"
             },
             "expectedDelivery": {
                 "label": "Livraison Prévue"
             },
-            "addButton": "Ajouter une Vente"
+            "conform": {
+                "label": "Conformité",
+                "conformText": "Conforme",
+                "nonConformText": "Non-conforme"
+            }
+        },
+        "actions": {
+            "add": "Ajouter une Vente"
         },
         "table": {
             "product": "Produit",
             "client": "Client",
+            "status": "Statut",
             "quantity": "Quantité",
-            "unitPrice": "Prix Unitaire",
             "totalAmount": "Montant Total",
             "expectedDelivery": "Livraison Prévue",
-            "priceStatus": "Statut du Prix",
             "actions": "Actions",
-            "customPrice": "Prix Personnalisé",
-            "defaultPrice": "Prix par Défaut"
+            "conform": "Conforme",
+            "nonConform": "Non-conforme"
         },
         "noSales": {
             "title": "Aucune vente",
             "description": "Ajoutez des ventes à cette arrivée en utilisant le formulaire ci-dessus."
         }
     },
-    "actions": {
-        "cancel": "Annuler",
-        "create": "Créer l'Arrivée",
-        "creating": "Création en cours..."
-    },
     "errors": {
-        "fetchFailed": "Échec de la récupération des données",
-        "requiredFields": "Veuillez remplir tous les champs obligatoires",
-        "createFailed": "Échec de la création de l'arrivée",
-        "selectProductClient": "Veuillez sélectionner un produit et un client",
-        "invalidQuantity": "Veuillez entrer une quantité valide",
-        "invalidPrice": "Veuillez entrer un prix valide"
+        "productsFetchFailed": "Échec du chargement des produits"
     },
-    "success": {
-        "created": "Arrivée créée avec succès"
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "Marcher"
     }
 }

@@ -1,7 +1,8 @@
 {
-    "header": {
-        "title": "وصول جديد",
-        "backToArrivals": "العودة إلى الوصولات"
+    "actions": {
+        "cancel": "إلغاء",
+        "create": "إنشاء وصول",
+        "creating": "جارٍ الإنشاء..."
     },
     "basicInfo": {
         "title": "المعلومات الأساسية",
@@ -17,60 +18,61 @@
             "label": "تاريخ الوصول"
         }
     },
+    "header": {
+        "title": "وصول جديد",
+        "backToArrivals": "العودة إلى الوصولات"
+    },
     "sales": {
         "title": "المبيعات",
         "form": {
-            "product": {
-                "label": "المنتج",
-                "placeholder": "اختر المنتج"
-            },
             "client": {
                 "label": "العميل",
                 "placeholder": "اختر العميل"
             },
-            "quantity": {
-                "label": "الكمية"
+            "product": {
+                "label": "المنتج",
+                "placeholder": "اختر المنتج",
+                "selectClientFirst": "الرجاء اختيار العميل أولاً",
+                "loading": "جارٍ تحميل المنتجات...",
+                "noProducts": "لا توجد منتجات متاحة"
             },
-            "unitPrice": {
-                "label": "سعر الوحدة",
-                "override": "تجاوز السعر"
+            "quantity": {
+                "label": "الكمية",
+                "placeholder": "أدخل الكمية"
             },
             "expectedDelivery": {
                 "label": "موعد التسليم المتوقع"
             },
-            "addButton": "إضافة بيع"
+            "conform": {
+                "label": "المطابقة",
+                "conformText": "مطابق",
+                "nonConformText": "غير مطابق"
+            }
+        },
+        "actions": {
+            "add": "إضافة مبيعات"
         },
         "table": {
             "product": "المنتج",
             "client": "العميل",
+            "status": "الحالة",
             "quantity": "الكمية",
-            "unitPrice": "سعر الوحدة",
             "totalAmount": "المبلغ الإجمالي",
             "expectedDelivery": "موعد التسليم المتوقع",
-            "priceStatus": "حالة السعر",
             "actions": "الإجراءات",
-            "customPrice": "سعر مخصص",
-            "defaultPrice": "السعر الافتراضي"
+            "conform": "مطابق",
+            "nonConform": "غير مطابق"
         },
         "noSales": {
             "title": "لا توجد مبيعات",
             "description": "أضف مبيعات لهذا الوصول باستخدام النموذج أعلاه."
         }
     },
-    "actions": {
-        "cancel": "إلغاء",
-        "create": "إنشاء وصول",
-        "creating": "جاري الإنشاء..."
-    },
     "errors": {
-        "fetchFailed": "فشل في جلب البيانات",
-        "requiredFields": "يرجى ملء جميع الحقول المطلوبة",
-        "createFailed": "فشل في إنشاء الوصول",
-        "selectProductClient": "يرجى اختيار منتج وعميل",
-        "invalidQuantity": "يرجى إدخال كمية صحيحة",
-        "invalidPrice": "يرجى إدخال سعر صحيح"
+        "productsFetchFailed": "فشل في جلب المنتجات"
     },
-    "success": {
-        "created": "تم إنشاء الوصول بنجاح"
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "مارشيه"
     }
 }

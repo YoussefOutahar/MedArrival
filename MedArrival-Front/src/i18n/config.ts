@@ -7,6 +7,7 @@ import enDashboard from './locales/en/dashboard.json';
 import enArrivals from './locales/en/arrivals.json';
 import enNewArrival from './locales/en/new-arrival.json';
 import enRepports from './locales/en/reports.json';
+import enReceipts from './locales/en/receipts.json';
 import enSettings from './locales/en/settings.json';
 import enNavigation from './locales/en/navigation.json';
 
@@ -15,6 +16,7 @@ import frDashboard from './locales/fr/dashboard.json';
 import frArrivals from './locales/fr/arrivals.json';
 import frNewArrival from './locales/fr/new-arrival.json';
 import frRepports from './locales/fr/reports.json';
+import frReceipts from './locales/fr/receipts.json';
 import frSettings from './locales/fr/settings.json';
 import frNavigation from './locales/fr/navigation.json';
 
@@ -23,6 +25,7 @@ import arDashboard from './locales/ar/dashboard.json';
 import arArrivals from './locales/ar/arrivals.json';
 import arNewArrival from './locales/ar/new-arrival.json';
 import arRepports from './locales/ar/reports.json';
+import arReceipts from './locales/ar/receipts.json';
 import arSettings from './locales/ar/settings.json';
 import arNavigation from './locales/ar/navigation.json';
 
@@ -43,6 +46,7 @@ i18n
                 arrivals: enArrivals,
                 newArrival: enNewArrival,
                 reports: enRepports,
+                receipts: enReceipts,
                 settings: enSettings,
                 navigation: enNavigation
             },
@@ -51,6 +55,7 @@ i18n
                 arrivals: frArrivals,
                 newArrival: frNewArrival,
                 reports: frRepports,
+                receipts: frReceipts,
                 settings: frSettings,
                 navigation: frNavigation
             },
@@ -59,6 +64,7 @@ i18n
                 arrivals: arArrivals,
                 newArrival: arNewArrival,
                 reports: arRepports,
+                receipts: arReceipts,
                 settings: arSettings,
                 navigation: arNavigation
             }

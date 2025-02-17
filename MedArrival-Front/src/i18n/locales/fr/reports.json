@@ -18,6 +18,18 @@
         "salesForecast": {
             "name": "Rapport de Prévision des Ventes",
             "description": "Prévisions et analyse des ventes par client"
+        },
+        "clientReceipt": {
+            "name": "Rapport de Reçu Client",
+            "description": "Rapport détaillé des transactions par client"
+        },
+        "allReceipts": {
+            "name": "Rapport de Tous les Reçus",
+            "description": "Aperçu complet de tous les reçus de transaction"
+        },
+        "downloadAll": {
+            "name": "Télécharger Tous les Rapports",
+            "description": "Exporter tous les rapports disponibles en un seul fichier"
         }
     },
     "filters": {
@@ -26,21 +38,22 @@
         "endDate": "Date de Fin",
         "supplier": {
             "label": "Fournisseur",
-            "placeholder": "Tous les Fournisseurs"
+            "placeholder": "Sélectionnez un fournisseur"
         },
-        "productCategory": {
-            "label": "Catégorie de Produit",
-            "placeholder": "Toutes les Catégories"
+        "arrival": {
+            "search": "Rechercher une Arrivée",
+            "searchPlaceholder": "Rechercher par numéro de facture..."
         },
-        "status": {
-            "label": "Statut",
-            "placeholder": "Tous les Statuts"
+        "client": {
+            "label": "Client",
+            "placeholder": "Sélectionnez un client"
         }
     },
     "preview": {
         "title": "Aperçu du Rapport",
         "heading": "Aperçu du Rapport",
-        "description": "Configurez vos filtres et générez le rapport pour voir un aperçu"
+        "description": "Configurez vos filtres et générez le rapport pour voir un aperçu",
+        "generatePreview": "Générer l'Aperçu"
     },
     "actions": {
         "emailReport": "Envoyer par Email",
@@ -49,13 +62,16 @@
         "generating": "Génération en cours..."
     },
     "toast": {
-        "selectDates": "Veuillez sélectionner une date de début et de fin",
         "selectSupplier": "Veuillez sélectionner un fournisseur",
-        "notImplemented": "Type de rapport non implémenté",
+        "selectArrival": "Veuillez sélectionner une arrivée",
+        "selectDates": "Veuillez sélectionner une date de début et de fin",
+        "selectClient": "Veuillez sélectionner un client",
+        "invalidDateRange": "La date de fin doit être postérieure à la date de début",
+        "invalidReportType": "Type de rapport invalide",
         "success": "Rapport généré avec succès",
         "error": "Échec de la génération du rapport",
         "printSuccess": "Boîte de dialogue d'impression ouverte",
         "printError": "Échec de l'impression du rapport",
-        "emailError": "La fonctionnalité d'email n'est pas encore implémentée"
+        "emailNotImplemented": "La fonctionnalité d'email n'est pas encore implémentée"
     }
 }

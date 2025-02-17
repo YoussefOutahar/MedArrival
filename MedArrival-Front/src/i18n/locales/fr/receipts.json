@@ -1,0 +1,277 @@
+{
+    "header": {
+        "title": "Factures"
+    },
+    "emptyState": {
+        "title": "Aucun client trouvé",
+        "description": "Commencez par créer un nouveau client."
+    },
+    "errors": {
+        "fetchFailed": "Échec du chargement des clients",
+        "noReceipts": "Aucune facture trouvée pour ce client",
+        "actionFailed": "Échec de l'action {{action}}"
+    },
+    "receipts": {
+        "header": {
+            "title": "Factures"
+        },
+        "search": {
+            "placeholder": "Rechercher des clients..."
+        },
+        "actions": {
+            "viewAttachments": "Voir les Pièces Jointes",
+            "newReceipt": "Nouvelle Facture",
+            "viewReceipts": "Voir les Factures"
+        },
+        "addReceipt": {
+            "title": "Nouvelle Facture pour {{clientName}}",
+            "basicInfo": {
+                "title": "Informations de Base",
+                "fields": {
+                    "receiptNumber": {
+                        "label": "Numéro de Facture*",
+                        "placeholder": "Entrez le numéro de facture"
+                    },
+                    "receiptDate": {
+                        "label": "Date de Facture*"
+                    },
+                    "referenceNumber": {
+                        "label": "Numéro de Référence",
+                        "placeholder": "Entrez le numéro de référence"
+                    },
+                    "tvaPercentage": {
+                        "label": "Pourcentage TVA",
+                        "placeholder": "Entrez le pourcentage TVA"
+                    },
+                    "paymentTerms": {
+                        "label": "Conditions de Paiement",
+                        "placeholder": "Entrez les conditions de paiement"
+                    },
+                    "issuingDepartment": {
+                        "label": "Département Émetteur",
+                        "placeholder": "Entrez le département émetteur"
+                    },
+                    "iceNumber": {
+                        "label": "Numéro ICE",
+                        "placeholder": "Entrez le numéro ICE"
+                    },
+                    "bankAccount": {
+                        "label": "Compte Bancaire",
+                        "placeholder": "Entrez le compte bancaire"
+                    },
+                    "bankDetails": {
+                        "label": "Détails Bancaires",
+                        "placeholder": "Entrez les détails bancaires"
+                    },
+                    "deliveryRef": {
+                        "label": "Référence de Livraison",
+                        "placeholder": "Entrez la référence de livraison"
+                    },
+                    "deliveryNoteNumbers": {
+                        "label": "Numéros de Bon de Livraison",
+                        "placeholder": "Entrez les numéros de bon de livraison"
+                    }
+                }
+            },
+            "items": {
+                "title": "Articles",
+                "countLabel": "{{count}} articles",
+                "addButton": "Ajouter un Article",
+                "addAnotherButton": "Ajouter un Autre Article",
+                "emptyState": {
+                    "title": "Aucun article",
+                    "description": "Commencez par ajouter un nouvel article à votre facture"
+                },
+                "item": {
+                    "title": "Article #{{number}}",
+                    "fields": {
+                        "product": {
+                            "label": "Produit*",
+                            "placeholder": "Sélectionnez un produit",
+                            "available": "Disponible: {{count}}"
+                        },
+                        "unitPrice": {
+                            "label": "Prix Unitaire*"
+                        },
+                        "articleCode": {
+                            "label": "Code Article"
+                        },
+                        "lotNumber": {
+                            "label": "Numéro de Lot"
+                        },
+                        "unit": {
+                            "label": "Unité"
+                        },
+                        "calibrationDate": {
+                            "label": "Date de Calibration"
+                        },
+                        "expirationDate": {
+                            "label": "Date d'Expiration"
+                        },
+                        "description": {
+                            "label": "Description"
+                        }
+                    },
+                    "subtotal": "Sous-total"
+                }
+            },
+            "attachments": {
+                "title": "Pièces Jointes",
+                "dropzone": {
+                    "text": "Glissez-déposez les fichiers ici, ou cliquez pour sélectionner",
+                    "activeText": "Déposez les fichiers ici...",
+                    "subtext": "PDF, PNG, JPG jusqu'à 10MB"
+                },
+                "ocr": {
+                    "label": "OCR",
+                    "processing": "Traitement OCR en cours...",
+                    "result": "Texte OCR:"
+                },
+                "language": {
+                    "label": "Langue",
+                    "options": {
+                        "french": "Français",
+                        "arabic": "Arabe",
+                        "both": "Arabe + Français"
+                    }
+                }
+            },
+            "summary": {
+                "title": "Résumé",
+                "totalHT": "Total HT",
+                "totalTTC": "Total TTC"
+            },
+            "buttons": {
+                "cancel": "Annuler",
+                "create": "Créer la Facture",
+                "creating": "Création en cours..."
+            }
+        },
+        "list": {
+            "status": {
+                "delivered": "Livré",
+                "pending": "En attente"
+            },
+            "emptyState": {
+                "title": "Aucune facture trouvée",
+                "description": "Commencez par créer une nouvelle facture."
+            },
+            "filters": {
+                "startDate": "Date de Début",
+                "endDate": "Date de Fin",
+                "filter": "Filtrer"
+            },
+            "table": {
+                "columns": {
+                    "receiptNumber": "Numéro de Facture",
+                    "date": "Date",
+                    "amount": "Montant",
+                    "status": "Statut",
+                    "actions": "Actions"
+                }
+            }
+        }
+    },
+    "clientReceipts": {
+        "header": {
+            "title": "{{clientName}} - Factures"
+        },
+        "buttons": {
+            "newReceipt": "Nouvelle Facture",
+            "filter": "Appliquer le Filtre",
+            "back": "Retour"
+        },
+        "filters": {
+            "title": "Filtrer les Factures",
+            "startDate": "Date de Début",
+            "endDate": "Date de Fin"
+        },
+        "table": {
+            "title": "Liste des Factures",
+            "headers": {
+                "receiptNumber": "Numéro de Facture",
+                "date": "Date",
+                "amount": "Montant",
+                "status": "Statut",
+                "actions": "Actions"
+            }
+        },
+        "status": {
+            "delivered": "Livré",
+            "pending": "En attente"
+        },
+        "actions": {
+            "print": "Imprimer la Facture",
+            "download": "Télécharger la Facture",
+            "email": "Envoyer par Email"
+        },
+        "emptyState": {
+            "title": "Aucune facture trouvée",
+            "description": "Commencez par créer une nouvelle facture."
+        },
+        "success": {
+            "printed": "Facture envoyée à l'imprimante",
+            "downloaded": "Facture téléchargée avec succès",
+            "emailed": "Facture envoyée par email"
+        },
+        "errors": {
+            "fetchFailed": "Échec du chargement des factures",
+            "printFailed": "Échec de l'impression de la facture",
+            "downloadFailed": "Échec du téléchargement de la facture",
+            "emailFailed": "Échec de l'envoi de la facture par email"
+        }
+    },
+    "attachments": {
+        "header": {
+            "title": "Pièces Jointes de la Facture"
+        },
+        "buttons": {
+            "upload": "Téléverser une Nouvelle Pièce Jointe",
+            "back": "Retour"
+        },
+        "list": {
+            "title": "Pièces Jointes",
+            "addedOn": "Ajouté le {{date}}",
+            "fileSize": "{{size}} octets",
+            "downloadTooltip": "Télécharger la pièce jointe",
+            "deleteTooltip": "Supprimer la pièce jointe"
+        },
+        "emptyState": {
+            "title": "Aucune pièce jointe",
+            "description": "Commencez par téléverser une nouvelle pièce jointe."
+        },
+        "receiptDetails": {
+            "title": "Détails de la Facture",
+            "receiptNumber": "Numéro de Facture",
+            "date": "Date",
+            "amount": "Montant Total",
+            "referenceNumber": "Numéro de Référence",
+            "iceNumber": "Numéro ICE",
+            "deliveryNotes": "Bons de Livraison"
+        },
+        "success": {
+            "uploaded": "Pièce jointe téléversée avec succès",
+            "deleted": "Pièce jointe supprimée avec succès"
+        },
+        "errors": {
+            "fetchFailed": "Échec du chargement des pièces jointes",
+            "uploadFailed": "Échec du téléversement de la pièce jointe",
+            "downloadFailed": "Échec du téléchargement de la pièce jointe",
+            "deleteFailed": "Échec de la suppression de la pièce jointe"
+        },
+        "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette pièce jointe ?",
+        "uploadRestrictions": {
+            "title": "Restrictions de Téléversement",
+            "description": "Types de fichiers autorisés : PDF, JPG, PNG. Taille maximale : 10 Mo"
+        }
+    },
+    "actions": {
+        "viewAttachments": "Voir les Pièces Jointes",
+        "newReceipt": "Nouvelle Facture",
+        "viewReceipts": "Voir les Factures"
+    },
+    "clientType": {
+        "CLIENT_RP": "RP",
+        "CLIENT_MARCHER": "Marcher"
+    }
+}

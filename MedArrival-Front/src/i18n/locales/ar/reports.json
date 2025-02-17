@@ -18,6 +18,18 @@
         "salesForecast": {
             "name": "تقرير توقعات المبيعات",
             "description": "توقعات وتحليل المبيعات حسب العميل"
+        },
+        "clientReceipt": {
+            "name": "تقرير إيصالات العميل",
+            "description": "تقرير تفصيلي للمعاملات الخاصة بالعميل"
+        },
+        "allReceipts": {
+            "name": "تقرير جميع الإيصالات",
+            "description": "نظرة شاملة لجميع إيصالات المعاملات"
+        },
+        "downloadAll": {
+            "name": "تحميل جميع التقارير",
+            "description": "تصدير جميع التقارير المتاحة في ملف واحد"
         }
     },
     "filters": {
@@ -26,21 +38,22 @@
         "endDate": "تاريخ النهاية",
         "supplier": {
             "label": "المورد",
-            "placeholder": "جميع الموردين"
+            "placeholder": "اختر المورد"
         },
-        "productCategory": {
-            "label": "فئة المنتج",
-            "placeholder": "جميع الفئات"
+        "arrival": {
+            "search": "البحث عن وصول",
+            "searchPlaceholder": "البحث برقم الفاتورة..."
         },
-        "status": {
-            "label": "الحالة",
-            "placeholder": "جميع الحالات"
+        "client": {
+            "label": "العميل",
+            "placeholder": "اختر العميل"
         }
     },
     "preview": {
         "title": "معاينة التقرير",
         "heading": "معاينة التقرير",
-        "description": "قم بتكوين عوامل التصفية وإنشاء التقرير لرؤية المعاينة"
+        "description": "قم بتكوين عوامل التصفية وإنشاء التقرير لرؤية المعاينة",
+        "generatePreview": "إنشاء معاينة"
     },
     "actions": {
         "emailReport": "إرسال بالبريد",
@@ -49,13 +62,16 @@
         "generating": "جارٍ الإنشاء..."
     },
     "toast": {
+        "selectSupplier": "الرجاء اختيار مورد",
+        "selectArrival": "الرجاء اختيار وصول",
         "selectDates": "الرجاء تحديد تاريخ البداية والنهاية",
-        "selectSupplier": "الرجاء تحديد مورد",
-        "notImplemented": "نوع التقرير غير منفذ",
+        "selectClient": "الرجاء اختيار عميل",
+        "invalidDateRange": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية",
+        "invalidReportType": "نوع التقرير غير صالح",
         "success": "تم إنشاء التقرير بنجاح",
         "error": "فشل في إنشاء التقرير",
         "printSuccess": "تم فتح نافذة الطباعة",
         "printError": "فشل في طباعة التقرير",
-        "emailError": "وظيفة البريد الإلكتروني غير منفذة بعد"
+        "emailNotImplemented": "وظيفة البريد الإلكتروني غير منفذة بعد"
     }
 }
