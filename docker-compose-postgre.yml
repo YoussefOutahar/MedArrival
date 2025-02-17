@@ -9,9 +9,11 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: postgre_db
+      POSTGRES_DB: Med-Arrival
     volumes:
       - /var/lib/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - shared-network
     restart: unless-stopped
 
   pgadmin:
@@ -24,9 +26,11 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
+    networks:
+      - shared-network 
     restart: unless-stopped
 
 networks:
   shared-network:
     name: shared-network
-    external: true
+    driver: bridge
