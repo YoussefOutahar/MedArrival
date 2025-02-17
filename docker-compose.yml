@@ -5,18 +5,20 @@ services:
             context: ./MedArrival-Backend
             args:
                 - GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
-        ports:
-            - "8080:8080"
+        network_mode: "host"
         environment:
             - SPRING_PROFILES_ACTIVE=docker
             - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/Med-Arrival
+            - SPRING_DATASOURCE_USERNAME=admin
+            - SPRING_DATASOURCE_PASSWORD=root
             - SERVER_TOMCAT_MAX_THREADS=200
             - SERVER_TOMCAT_MIN_SPARE_THREADS=20
             - SERVER_TOMCAT_MAX_CONNECTIONS=10000
             - SERVER_TOMCAT_ACCEPT_COUNT=100
             - TZ=UTC
-        extra_hosts:
-            - "host.docker.internal:host-gateway"
+        ports:
+            - "8080:8080"
         networks:
             - app-network
         healthcheck:
