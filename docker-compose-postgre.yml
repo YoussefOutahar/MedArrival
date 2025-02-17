@@ -25,3 +25,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     restart: unless-stopped
+
+  networks:
+    shared-network:
+      name: shared-network
+      external: true

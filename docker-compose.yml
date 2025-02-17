@@ -5,20 +5,21 @@ services:
             context: ./MedArrival-Backend
             args:
                 - GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
-        network_mode: "host"  # This means no separate Docker network
+        ports:
+            - "8080:8080"
         environment:
-            - SPRING_PROFILES_ACTIVE=docker
-            - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom
-            - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/Med-Arrival
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/Med-Arrival
             - SPRING_DATASOURCE_USERNAME=admin
             - SPRING_DATASOURCE_PASSWORD=root
+            - SPRING_PROFILES_ACTIVE=docker
+            - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom
             - SERVER_TOMCAT_MAX_THREADS=200
             - SERVER_TOMCAT_MIN_SPARE_THREADS=20
             - SERVER_TOMCAT_MAX_CONNECTIONS=10000
             - SERVER_TOMCAT_ACCEPT_COUNT=100
             - TZ=UTC
-        ports:
-            - "8080:8080"
+        networks:
+            - app-network
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
             interval: 30s
@@ -32,9 +33,10 @@ services:
         build:
             context: ./MedArrival-Front
             dockerfile: Dockerfile
-        network_mode: "host"  # Use host network for frontend too
         ports:
             - "3000:80"
+        networks:
+            - app-network
         security_opt:
             - no-new-privileges:true
         healthcheck:
@@ -42,3 +44,8 @@ services:
             interval: 30s
             timeout: 10s
             retries: 5
+
+networks:
+    app-network:
+        external:
+            name: shared-network
