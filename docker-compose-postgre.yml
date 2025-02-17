@@ -14,6 +14,11 @@ services:
       - /var/lib/postgresql/data:/var/lib/postgresql/data
     networks:
       - shared-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d Med-Arrival"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
   pgadmin:
