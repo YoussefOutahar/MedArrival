@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgre_db
     volumes:
-      - C:\Docker\PostgreSQL:/var/lib/postgresql/data
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
     restart: unless-stopped
 
   pgadmin:
