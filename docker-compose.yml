@@ -1,51 +1,86 @@
 services:
-    backend:
-        container_name: backend
-        build:
-            context: ./MedArrival-Backend
-            args:
-                - GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
-        ports:
-            - "8080:8080"
-        environment:
-            - SPRING_PROFILES_ACTIVE=docker
-            - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom
-            - SERVER_TOMCAT_MAX_THREADS=200
-            - SERVER_TOMCAT_MIN_SPARE_THREADS=20
-            - SERVER_TOMCAT_MAX_CONNECTIONS=10000
-            - SERVER_TOMCAT_ACCEPT_COUNT=100
-            - TZ=UTC
-        networks:
-            - shared-network
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-            interval: 30s
-            timeout: 10s
-            retries: 5
-        depends_on:
-            postgres:
-                condition: service_healthy
-        security_opt:
-            - no-new-privileges:true
+  backend:
+    container_name: backend
+    build:
+      context: ./MedArrival-Backend
+      args:
+        - GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom
+      - SERVER_TOMCAT_MAX_THREADS=200
+      - SERVER_TOMCAT_MIN_SPARE_THREADS=20
+      - SERVER_TOMCAT_MAX_CONNECTIONS=10000
+      - SERVER_TOMCAT_ACCEPT_COUNT=100
+      - TZ=UTC
+    networks:
+      - shared-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
 
-    frontend:
-        container_name: frontend
-        build:
-            context: ./MedArrival-Front
-            dockerfile: Dockerfile
-        ports:
-            - "3000:80"
-        networks:
-            - shared-network
-        security_opt:
-            - no-new-privileges:true
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:80"]
-            interval: 30s
-            timeout: 10s
-            retries: 5
+  postgres:
+    container_name: container-pg
+    image: postgres:16
+    hostname: localhost
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: Med-Arrival
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - shared-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d Med-Arrival" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: container-pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    networks:
+      - shared-network
+    restart: unless-stopped
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./MedArrival-Front
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    networks:
+      - shared-network
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 networks:
-    shared-network:
-        name: shared-network
-        driver: bridge
+  shared-network:
+    name: shared-network
+    driver: bridge
